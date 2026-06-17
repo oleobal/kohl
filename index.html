@@ -1,44 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
-</head>
-<body>
-    <script src="script.js" type="module"></script>
-
-    
-        <!-- Container for the beverage cards -->
-        <div id="beverage-cards-container">
-            <!-- Example Card will be dynamically added here or as a template -->
-            <div class="beverage-card">
-                <h3>Beverage Details</h3>
-                <div class="field-group">
-                    <label for="mass">Mass:</label>
-                    <input type="text" id="mass" name="mass" placeholder="Enter mass (e.g., 10 kg)">
-                </div>
-                <div class="field-group">
-                    <label for="volume">Volume:</label>
-                    <input type="text" id="volume" name="volume" placeholder="Enter volume (e.g., 5 L)">
-                </div>
-                <div class="field-group">
-                    <label for="abv">ABV:</label>
-                    <input type="text" id="abv" name="abv" placeholder="Enter ABV (%)">
-                </div>
-                <div class="field-group">
-                    <label for="density">Density:</label>
-                    <input type="text" id="density" name="density" placeholder="Enter density (e.g., 1000 kg/L)">
-                </div>
-                <div class="field-group">
-                    <label for="lpa">LPA:</label>
-                    <input type="text" id="lpa" name="lpa" placeholder="Enter LPA (e.g., 5 g/L)">
-                </div>
-            </div>
-        </div>
-
-        <!-- Button to add more cards -->
-        <button id="add-card-btn">Add Another Beverage Card</button>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kohl</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

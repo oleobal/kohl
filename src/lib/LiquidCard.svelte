@@ -1,24 +1,57 @@
 <script lang="ts">
   import { normalizeLiquid } from "./liquid";
-  import type { Liquid, NormalizedLiquid } from "./liquid";
-  let { liquid = $bindable(), inert = false } : { liquid : Liquid, inert : boolean } = $props()
-  let normalizedLiquid = $derived(normalizeLiquid(liquid))
+  import type { Result } from "./util";
+  import type { Liquid, NormalizedLiquid, ErrorLiquid } from "./liquid";
+  
+  let { liquid = $bindable(), inertLiquid = undefined } : { liquid : Liquid, inertLiquid : Result<NormalizedLiquid, ErrorLiquid> | undefined} = $props()
+  let normalizedLiquid = $derived(normalizeLiquid(inertLiquid?inertLiquid:liquid))
+  let inert = $derived(inertLiquid?true:false)
+  
+  
+  let elementID=crypto.randomUUID()
   
   function valueOrError(keyName: string) : string {
-    if (normalizedLiquid && typeof normalizedLiquid[keyName as keyof NormalizedLiquid] === "number") { return (normalizedLiquid[keyName as keyof NormalizedLiquid] as number).toFixed(keyName == "density" ? 5 : 3) }
-    else if (normalizedLiquid.error && normalizedLiquid.error[keyName as keyof NormalizedLiquid["error"]]) { return normalizedLiquid?.error[keyName as keyof NormalizedLiquid["error"]] }
+    if (normalizedLiquid.ok) {
+      const l = normalizedLiquid.value;
+      if (typeof l[keyName as keyof NormalizedLiquid] === "number") { return (l[keyName as keyof NormalizedLiquid] as number).toFixed(keyName == "density" ? 5 : 3) }
+    } else {
+      const e = normalizedLiquid.error;
+      if (e[keyName as keyof ErrorLiquid]) {return e[keyName as keyof ErrorLiquid] }
+    }
     return "—"
   }
+  
 </script>
 
 <style>
-  .field {
+  .container {
     display: flex;
+    gap: 20px;
+    border: 1px solid black;
+    padding: 5px;
     justify-content: space-between;
-    gap: 5px;
   }
-  .field > input {
-    width: 60px;
+  .container-inert {
+    border: 1px solid green;
+    color: green;
+  }
+  .container-error{
+    border-color:  hsl(34, 100%, 40%);
+  }
+  
+  .quantity, .makeup {
+    display: grid;
+    gap: 2px 10px;
+    flex-grow: 1;
+    grid-auto-rows: min-content;
+  }
+  .quantity {
+    grid-template-columns: min-content 1fr;
+    justify-items: start;
+  }
+  .makeup {
+    grid-template-columns: 1fr min-content;
+    justify-items: end;
   }
   
   input[type="number"]::-webkit-outer-spin-button,
@@ -27,94 +60,94 @@
   }
   input[type="number"] {
     appearance: textfield;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
   }
-
-
-  .container {
-    display: flex;
-    gap: 5px;
-    border: 1px solid black;
-    padding: 5px;
-    justify-content: space-between;
-    
+  
+  .value {
+    width: 100%;
+    height: 100%;
   }
-  .container-inert {
-    border: 1px solid green;
-    color: green;
+  
+  .value-label {
+    align-self: center;
   }
+  
   
   ::placeholder {
     color: blue;
-    opacity: 1; /* Firefox */
+    opacity: 1;
+  }
+  
+  .container-error  ::placeholder {
+    color: hsl(34, 100%, 40%);
   }
 </style>
 
-<div class={{"container": true, "container-inert": inert}} >
-  <div class="quantity" style="display: flex; flex-direction: column;">
-    <div class="field">
-      vol
-      
-      {#if inert}
-        {normalizedLiquid?.volume?normalizedLiquid.volume.toFixed(3):"—"}
-      {:else}
-        <input type="number" bind:value={liquid.volume} placeholder={valueOrError("volume")}/>
-      {/if}
-    </div>
-    <div class="field">
-      mass
-      
-      {#if inert}
-        {normalizedLiquid?.mass?normalizedLiquid.mass.toFixed(3):"—"}
-      {:else}
-        <input type="number" bind:value={liquid.mass} placeholder={valueOrError("mass")}/>
-      {/if}
-    </div>
+<div class={{
+  "container": true,
+  "container-inert": inert,
+  "container-error": !normalizedLiquid.ok && normalizedLiquid.error.cause !== "uninitialized" && !inert
+  }} >
+  <div class="quantity">
+    <label class="value-label" for="in-volume-{elementID}">vol</label>
+    
+    {#if inert}
+      <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.volume.toFixed(3):"—"}</span>
+    {:else}
+      <input class="value" id="in-volume-{elementID}" type="number" bind:value={liquid.volume} placeholder={valueOrError("volume")}/>
+    {/if}
+    
+    
+    <label class="value-label" for="in-mass-{elementID}">mass</label>
+    
+    {#if inert}
+      <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.mass.toFixed(3):"—"}</span>
+    {:else}
+      <input class="value" id="in-mass-{elementID}" type="number" bind:value={liquid.mass} placeholder={valueOrError("mass")}/>
+    {/if}
     
   </div>
-  <div class="makeup" style="display: flex; flex-direction: column;">
-    <div class="field">
+  <div class="makeup">
       {#if inert}
-        {normalizedLiquid?.ABV?normalizedLiquid.ABV.toFixed(3):"—"}
+        <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.ABV.toFixed(3):"—"}</span>
       {:else}
-        <input type="number" bind:value={liquid.ABV} placeholder={valueOrError("ABV")}/>
+        <input class="value" id="in-abv-{elementID}" type="number" bind:value={liquid.ABV} placeholder={valueOrError("ABV")}/>
       {/if}
       
-      <span title="alcohol by volume (%)">ABV</span>
-    </div>
-    <div class="field">
+      <label class="value-label" for="in-abv-{elementID}" title="alcohol by volume (%)">ABV</label>
+
       {#if inert}
-        {normalizedLiquid?.LPA?normalizedLiquid.LPA.toFixed(3):"—"}
+        <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.LPA.toFixed(3):"—"}</span>
       {:else}
-        <input type="number" bind:value={liquid.LPA} placeholder={valueOrError("LPA")}/>
+        <input class="value" id="in-lpa-{elementID}" type="number" bind:value={liquid.LPA} placeholder={valueOrError("LPA")}/>
       {/if}
-      <span title="liters of pure alcohol">LPA</span>
-    </div>
-    <div class="field">
+      <label class="value-label" for="in-lpa-{elementID}" title="liters of pure alcohol">LPA</label>
+
       {#if inert}
-        {normalizedLiquid?.density?normalizedLiquid.density.toFixed(3):"—"}
+        <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.density.toFixed(5):"—"}</span>
       {:else}
-        <input type="number" bind:value={liquid.density} placeholder={valueOrError("density")}/>
+        <input class="value" id="in-density-{elementID}" type="number" bind:value={liquid.density} placeholder={valueOrError("density")}/>
       {/if}
       
-      <span title="density (kg/L)">dens</span>
-    </div>
-    <div class="field">
+      <label class="value-label" for="in-density-{elementID}" title="density (kg/L)">dens</label>
+
       {#if inert}
-        {normalizedLiquid?.ABM?normalizedLiquid.ABM.toFixed(3):"—"}
+        <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.ABM.toFixed(3):"—"}</span>
       {:else}
-        <input type="number" bind:value={liquid.ABM} placeholder={valueOrError("ABM")}/>
+        <input class="value" id="in-density-{elementID}" type="number" bind:value={liquid.ABM} placeholder={valueOrError("ABM")}/>
       {/if}
       
-      <span title="alcohol by mass (%)">ABM</span>
-    </div>
-    <div class="field">
+      <label class="value-label" for="in-density-{elementID}" title="alcohol by mass (%)">ABM</label>
+
       {#if inert}
-        {normalizedLiquid?.KPA?normalizedLiquid.KPA.toFixed(3):"—"}
+        <span class="value">{normalizedLiquid.ok?normalizedLiquid.value.KPA.toFixed(3):"—"}</span>
       {:else}
-        <input type="number" bind:value={liquid.KPA} placeholder={valueOrError("KPA")}/>
+        <input class="value" id="in-kpa-{elementID}" type="number" bind:value={liquid.KPA} placeholder={valueOrError("KPA")}/>
       {/if}
       
-      <span title="kilograms of pure alcohol">KPA</span>
-    </div>
+      <label class="value-label" for="in-kpa-{elementID}" title="kilograms of pure alcohol">KPA</label>
+
   </div>
 </div>

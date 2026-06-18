@@ -2,9 +2,11 @@
   import { sumLiquids, type Liquid } from './lib/liquid';
   import LiquidCard from './lib/LiquidCard.svelte';
   
+  let title: string = $state("Compiling Calculator")
+  
   let liquids : Liquid[] = $state([{}])
   
-  let sumOfLiquids : Liquid = $derived(sumLiquids(liquids))
+  let sumOfLiquids = $derived(sumLiquids(liquids))
   
   function addLiquid() {
     liquids.push({})
@@ -37,20 +39,43 @@
 <style>
   .container {
     display: flex;
+    justify-content: center;
+    
+  }
+  .liquids {
+    display: flex;
     flex-direction: column;
     gap: 10px;
     margin: 10px 0;
+    max-width: 500px;
+    flex-grow: 1;
+  }
+  
+  .title {
+    text-align: center;
+    padding: 0;
+    margin: 0;
   }
 </style>
 
-<div class="container">
-  {#each liquids as _, i}<LiquidCard bind:liquid={liquids[i]} inert={false}/>{/each}
-  <div style="flex-grow: 1; display: flex; justify-content: center;">
-    <button onclick={addLiquid}>+</button>
-  </div>
-  
-</div>
 
-<div>
-  <LiquidCard liquid={sumOfLiquids} inert={true}/>
+<svelte:head>
+   <title>{title}</title>
+</svelte:head>
+
+
+<div class="container">
+  
+  <div class="liquids">
+    <h1 class="title" bind:textContent={title} contenteditable="true">Liquid Calculator</h1>
+    {#each liquids as _, i}<LiquidCard bind:liquid={liquids[i]} inertLiquid={undefined}/>{/each}
+    <div style="flex-grow: 1; display: flex; justify-content: center;">
+      <button onclick={addLiquid} style="width: 40px; height: 40px;">+</button>
+    </div>
+    <div>
+      <LiquidCard liquid={{}} inertLiquid={sumOfLiquids}/>
+    </div>
+  </div>
+
+
 </div>

@@ -4,6 +4,9 @@
  * all values at 20C
  */
 
+export const DENSITY_ETHANOL = 0.78934;
+export const DENSITY_WATER = 0.99823;
+
 export const densityByABM = [
   { abm: 0.0, density: 0.99823 },
   { abm: 0.1, density: 0.99804 },
@@ -2015,8 +2018,8 @@ export const densityByABV = [
 export function getDensityFromABV(abv: number) {
   var x0 = 0,
     x1 = 100,
-    y0 = 0.99823,
-    y1 = 0.78934;
+    y0 = DENSITY_WATER,
+    y1 = DENSITY_ETHANOL;
   densityByABV.forEach(({ abv: a, density: d }) => {
     if (a < abv) {
       x0 = a;
@@ -2033,8 +2036,8 @@ export function getDensityFromABV(abv: number) {
 export function getDensityFromABM(abm: number) {
   var x0 = 0,
     x1 = 100,
-    y0 = 0.99823,
-    y1 = 0.78934;
+    y0 = DENSITY_WATER,
+    y1 = DENSITY_ETHANOL;
   densityByABM.forEach(({ abm: a, density: d }) => {
     if (a < abm) {
       x0 = a;
@@ -2049,8 +2052,8 @@ export function getDensityFromABM(abm: number) {
 }
 
 export function getABVFromDensity(density: number) {
-  var x0 = 1,
-    x1 = 0.78,
+  var x0 = DENSITY_WATER,
+    x1 = DENSITY_ETHANOL,
     y0 = 0,
     y1 = 100;
   densityByABV.forEach(({ abv: a, density: d }) => {
@@ -2068,8 +2071,8 @@ export function getABVFromDensity(density: number) {
 }
 
 export function getABMFromDensity(density: number) {
-  var x0 = 1,
-    x1 = 0.78,
+  var x0 = DENSITY_WATER,
+    x1 = DENSITY_ETHANOL,
     y0 = 0,
     y1 = 100;
   densityByABM.forEach(({ abm: a, density: d }) => {

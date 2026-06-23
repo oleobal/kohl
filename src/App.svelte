@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { sumLiquids, type Liquid } from './lib/liquid';
   import LiquidCard from './lib/LiquidCard.svelte';
+  import { StateObject } from './lib/proto/marshall';
   
   let title: string = $state("Compiling Calculator")
   
@@ -11,6 +13,27 @@
   function addLiquid() {
     liquids.push({})
   }
+  
+  
+  onMount(() => {
+    if (window.location.hash) {
+      const loadedState = StateObject.decode(Uint8Array.fromBase64(window.location.hash.substring(1)))
+      console.debug("loaded timers", loadedState)
+      title = loadedState.title;
+      liquids = loadedState.liquids;
+      
+    }
+  })
+  $effect(() => {
+    if (title != "Compiling Calculator" || Object.keys(liquids[0]).length != 0) {
+      let exportObject: StateObject = {
+        title: title,
+        liquids: $state.snapshot(liquids),
+      }
+      
+      window.location.hash = "#" + StateObject.encode(exportObject).finish().toBase64()
+    }
+  })
   
   
   window.onbeforeunload = (event) => {

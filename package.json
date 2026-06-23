@@ -8,7 +8,8 @@
     "build": "vite build",
     "build-github-pages": "vite build --base=/kohl/",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "proto": "cd src/protobuf && protoc --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_out=../../src/lib/proto *"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
@@ -18,5 +19,8 @@
     "svelte-check": "^4.4.8",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "ts-proto": "^2.11.8"
   }
 }

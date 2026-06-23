@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+message StateObject {
+	string title = 1;
+	repeated Liquid liquids = 2;
+}
+
+message Liquid {
+  optional double mass = 1;
+  optional double volume = 2;
+  
+  optional double ABV = 3;
+  optional double LPA = 4;
+  optional double density = 5;
+  optional double ABM = 6;
+  optional double KPA = 7;
+}

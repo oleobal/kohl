@@ -1,3 +1,5 @@
+import { isEither, left, right, type Either } from "@sweet-monads/either";
+
 import {
   getDensityFromABV,
   getDensityFromABM,
@@ -6,9 +8,6 @@ import {
   DENSITY_ETHANOL,
   DENSITY_WATER,
 } from "./density.js";
-
-import type { Result } from "./util.js";
-import { ok, err } from "./util.js";
 
 export interface Liquid {
   mass?: number; // in kg
@@ -34,6 +33,7 @@ export interface NormalizedLiquid {
 
 export interface ErrorLiquid {
   cause?: any;
+
   mass?: string;
   volume?: string;
 
@@ -53,10 +53,10 @@ function countNumberArgs(...args: any[]): number {
 }
 
 export function normalizeLiquid(
-  liquid: Liquid | Result<NormalizedLiquid, ErrorLiquid>,
-): Result<NormalizedLiquid, ErrorLiquid> {
-  if (Object.hasOwn(liquid, "ok")) {
-    return liquid as Result<NormalizedLiquid, ErrorLiquid>;
+  liquid: Liquid | Either<ErrorLiquid, NormalizedLiquid>,
+): Either<ErrorLiquid, NormalizedLiquid> {
+  if (isEither(liquid)) {
+    return liquid as Either<ErrorLiquid, NormalizedLiquid>;
   } else {
     liquid = liquid as Liquid;
   }
@@ -74,11 +74,11 @@ export function normalizeLiquid(
   result = { ...result, ...liquid };
   switch (countNumberArgs(liquid.mass, liquid.volume)) {
     case 0:
-      return err({ cause: "uninitialized" });
+      return left({ cause: "uninitialized" });
     case 1:
       break;
     default:
-      return err({
+      return left({
         cause:
           "conflicting parameters: only one of mass and volume must be given",
         mass: "conflict",
@@ -86,7 +86,7 @@ export function normalizeLiquid(
       });
   }
   if (result?.mass === 0 || result?.volume === 0) {
-    return ok({
+    return right({
       mass: 0,
       volume: 0,
       ABV: 0,
@@ -107,11 +107,11 @@ export function normalizeLiquid(
     )
   ) {
     case 0:
-      return err({ cause: "uninitialized" });
+      return left({ cause: "uninitialized" });
     case 1:
       break;
     default:
-      return err({
+      return left({
         cause:
           "conflicting parameters: only one of ABV, LPA, density, ABM and KPA must be given",
         ABV: "conflict",
@@ -150,7 +150,7 @@ export function normalizeLiquid(
   if (result.density != null) {
     let error = setQuantityBasedOnDensity();
     if (error) {
-      return err(error); // this is obviously the wrong way round but I'll fix it later
+      return left(error); // this is obviously the wrong way round but I'll fix it later
     }
     result.ABV = getABVFromDensity(result.density);
     result.LPA = (result.ABV / 100) * (result.volume as number);
@@ -160,7 +160,7 @@ export function normalizeLiquid(
     result.density = getDensityFromABM(result.ABM);
     let error = setQuantityBasedOnDensity();
     if (error) {
-      return err(error); // this is obviously the wrong way round but I'll fix it later
+      return left(error); // this is obviously the wrong way round but I'll fix it later
     }
     result.ABV = getABVFromDensity(result.density);
     result.KPA = (result.ABM / 100) * (result.mass as number);
@@ -169,7 +169,7 @@ export function normalizeLiquid(
     result.density = getDensityFromABV(result.ABV);
     let error = setQuantityBasedOnDensity();
     if (error) {
-      return err(error); // this is obviously the wrong way round but I'll fix it later
+      return left(error); // this is obviously the wrong way round but I'll fix it later
     }
     result.LPA = (result.ABV / 100) * (result.volume as number);
     result.ABM = getABMFromDensity(result.density);
@@ -185,7 +185,7 @@ export function normalizeLiquid(
       result.density = getDensityFromABM(result.ABM);
       let error = setQuantityBasedOnDensity();
       if (error) {
-        return err(error); // this is obviously the wrong way round but I'll fix it later
+        return left(error); // this is obviously the wrong way round but I'll fix it later
       }
       result.ABV = getABVFromDensity(result.density);
     } else if (result.volume) {
@@ -193,39 +193,31 @@ export function normalizeLiquid(
       result.density = getDensityFromABV(result.ABV);
       let error = setQuantityBasedOnDensity();
       if (error) {
-        return err(error); // this is obviously the wrong way round but I'll fix it later
+        return left(error); // this is obviously the wrong way round but I'll fix it later
       }
       result.ABM = getABMFromDensity(result.density);
     }
   }
 
-  return ok(result as NormalizedLiquid);
+  return right(result as NormalizedLiquid);
 }
 
 export function sumLiquids(
   liquids: Liquid[],
-): Result<NormalizedLiquid, ErrorLiquid> {
-  let result = liquids
+): Either<ErrorLiquid, NormalizedLiquid> {
+  return liquids
     .map((it) => normalizeLiquid(it))
     .reduce(
       (acc, liquid) => {
-        if (liquid.ok) {
+        if (liquid.isRight() && acc.isRight()) {
           acc.value.mass += liquid.value.mass;
           acc.value.KPA += liquid.value.KPA;
           return acc;
         } else {
-          return {
-            ok: false,
-            value: { mass: 0, KPA: 0 },
-          };
+          return left({ cause: "incoherence" });
         }
       },
-      { ok: true, value: { mass: 0, KPA: 0 } },
-    );
-
-  if (result.ok) {
-    return normalizeLiquid(result.value);
-  } else {
-    return { ok: false, error: { cause: "incoherence" } };
-  }
+      right({ mass: 0, KPA: 0 }),
+    )
+    .chain(normalizeLiquid);
 }

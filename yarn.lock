@@ -179,6 +179,18 @@
     obug "^2.1.0"
     vitefu "^1.1.2"
 
+"@sweet-monads/either@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@sweet-monads/either/-/either-3.3.1.tgz#79e174a41af925d84f334ac2702fb99fde0c0002"
+  integrity sha512-9Yi6KITRWJ1dIiO2XD5HTa3P2KSYIuZBMOHNqpDetpFTjwe5WJJqjCIIc0Bw1mkTfAbqhLhDov6BGK8MEGrLXQ==
+  dependencies:
+    "@sweet-monads/interfaces" "^3.3.0"
+
+"@sweet-monads/interfaces@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@sweet-monads/interfaces/-/interfaces-3.3.0.tgz#7ec79b5ec02c513488abb9be268f15dc371c56cd"
+  integrity sha512-66akGvjPD4lizQy+w4JSltJilc2w/QPdw8lPAniLJGHwyjmrw9xMJLx76Q/GDnbCU59Werses4aZJLWOlJrL5A==
+
 "@tsconfig/svelte@^5.0.8":
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/@tsconfig/svelte/-/svelte-5.0.8.tgz#4c0c85e17cf8efb1e079459e1cebbeed80680509"

@@ -18,7 +18,7 @@
   onMount(() => {
     if (window.location.hash) {
       const loadedState = StateObject.decode(Uint8Array.fromBase64(window.location.hash.substring(1)))
-      console.debug("loaded timers", loadedState)
+      console.debug("loaded app state", loadedState)
       title = loadedState.title;
       liquids = loadedState.liquids;
       

@@ -36,7 +36,7 @@
     color: green;
   }
   .container-error{
-    border-color:  hsl(34, 100%, 40%);
+    border-color: hsl(34, 100%, 40%);
   }
   
   .quantity, .makeup {

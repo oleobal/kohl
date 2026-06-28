@@ -62,31 +62,56 @@ function countNumberArgs(...args: any[]): number {
   return total;
 }
 
-function normalizeLiquidMakeup(
+export function normalizeLiquidMakeup(
   m: LiquidMakeup,
 ): Either<ErrorLiquid, NormalizedLiquidMakeup> {
-  if (m.ABM) {
+  switch (countNumberArgs(m.ABV, m.ABM, m.density)) {
+    case 0:
+      return left({ cause: "uninitialized" });
+    case 1:
+      break;
+    default:
+      return left({
+        cause: "provide only one of ABV, LPA and density",
+        ABV: "conflict",
+        ABM: "conflict",
+        density: "conflict",
+      });
+  }
+  if (m.ABM != null) {
+    if (m.ABM < 0 || m.ABM > 100) {
+      return left({ cause: "impossible ABM" });
+    }
     const d = getDensityFromABM(m.ABM);
     return right({
       ABM: m.ABM,
       density: d,
       ABV: getABVFromDensity(d),
     });
-  } else if (m.ABV) {
+  } else if (m.ABV != null) {
+    if (m.ABV < 0 || m.ABV > 100) {
+      return left({ cause: "impossible ABV" });
+    }
     const d = getDensityFromABV(m.ABV);
     return right({
       ABV: m.ABV,
       density: d,
       ABM: getABMFromDensity(d),
     });
-  } else if (m.density) {
+  } else if (m.density != null) {
+    if (m.density < DENSITY_ETHANOL) {
+      return left({ cause: "density below that of pure ethanol" });
+    }
+    if (m.density > DENSITY_WATER) {
+      return left({ cause: "density above that of pure water" });
+    }
     return right({
       ABV: getABVFromDensity(m.density),
       density: m.density,
       ABM: getABMFromDensity(m.density),
     });
   }
-  return left({ cause: "no makeup as abstract proportion given" });
+  return left({ cause: "uninitialized" });
 }
 
 export function normalizeLiquid(
@@ -116,8 +141,7 @@ export function normalizeLiquid(
       break;
     default:
       return left({
-        cause:
-          "conflicting parameters: only one of mass and volume must be given",
+        cause: "provide only one of mass and volume",
         mass: "conflict",
         volume: "conflict",
       });
@@ -149,8 +173,7 @@ export function normalizeLiquid(
       break;
     default:
       return left({
-        cause:
-          "conflicting parameters: only one of ABV, LPA, density, ABM and KPA must be given",
+        cause: "provide only one of ABV, LPA, density, KPA and LPA",
         ABV: "conflict",
         ABM: "conflict",
         density: "conflict",

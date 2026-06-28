@@ -1,4 +1,10 @@
-import { isEither, left, right, type Either } from "@sweet-monads/either";
+import {
+  isEither,
+  left,
+  merge,
+  right,
+  type Either,
+} from "@sweet-monads/either";
 
 import {
   getDensityFromABV,
@@ -9,26 +15,30 @@ import {
   DENSITY_WATER,
 } from "./density.js";
 
-export interface Liquid {
-  mass?: number; // in kg
-  volume?: number; // in litres
-
+export interface LiquidMakeup {
   ABV?: number; // alcohol by volume, percentage
-  LPA?: number; // litres of pure alcohol
   density?: number; // in kg/L
   ABM?: number; // alcohol by mass, percentage
+}
+
+export interface Liquid extends LiquidMakeup {
+  mass?: number; // in kg
+  volume?: number; // in litres
+  LPA?: number; // litres of pure alcohol
   KPA?: number; // kilograms of pure alcohol
 }
 
-export interface NormalizedLiquid {
-  mass: number;
-  volume: number;
+export interface NormalizedLiquidMakeup {
+  ABV: number; // alcohol by volume, percentage
+  density: number; // in kg/L
+  ABM: number; // alcohol by mass, percentage
+}
 
-  ABV: number;
-  LPA: number;
-  density: number;
-  ABM: number;
-  KPA: number;
+export interface NormalizedLiquid extends NormalizedLiquidMakeup {
+  mass: number; // in kg
+  volume: number; // in litres
+  LPA: number; // litres of pure alcohol
+  KPA: number; // kilograms of pure alcohol
 }
 
 export interface ErrorLiquid {
@@ -50,6 +60,33 @@ function countNumberArgs(...args: any[]): number {
     total += typeof arg === "number" ? 1 : 0;
   }
   return total;
+}
+
+function normalizeLiquidMakeup(
+  m: LiquidMakeup,
+): Either<ErrorLiquid, NormalizedLiquidMakeup> {
+  if (m.ABM) {
+    const d = getDensityFromABM(m.ABM);
+    return right({
+      ABM: m.ABM,
+      density: d,
+      ABV: getABVFromDensity(d),
+    });
+  } else if (m.ABV) {
+    const d = getDensityFromABV(m.ABV);
+    return right({
+      ABV: m.ABV,
+      density: d,
+      ABM: getABMFromDensity(d),
+    });
+  } else if (m.density) {
+    return right({
+      ABV: getABVFromDensity(m.density),
+      density: m.density,
+      ABM: getABMFromDensity(m.density),
+    });
+  }
+  return left({ cause: "no makeup as abstract proportion given" });
 }
 
 export function normalizeLiquid(
@@ -220,4 +257,117 @@ export function sumLiquids(
       right({ mass: 0, KPA: 0 }),
     )
     .chain(normalizeLiquid);
+}
+
+/** return the proportion of liquid 1 to achieve final ABM (so it's between 0 and 1)
+ */
+function computeRectificationSplit(
+  ABM1: number,
+  ABM2: number,
+  finalABM: number,
+): Either<ErrorLiquid, number> {
+  if (
+    !(
+      (ABM1 <= finalABM && finalABM <= ABM2) ||
+      (ABM1 >= finalABM && finalABM >= ABM2)
+    )
+  ) {
+    return left({
+      cause: "final ABV should be between base and rectifier",
+    } as ErrorLiquid);
+  }
+  const midpoint = finalABM - Math.min(ABM1, ABM2);
+  const range = Math.abs(ABM2 - ABM1);
+  if (ABM1 < ABM2) {
+    return right(1 - midpoint / range);
+  } else {
+    return right(midpoint / range);
+  }
+}
+
+export function solveWithStartingQuantity(
+  base: Liquid,
+  rectifier: LiquidMakeup,
+  final: LiquidMakeup,
+): Either<
+  ErrorLiquid,
+  { rectifier: NormalizedLiquid; final: NormalizedLiquid }
+> {
+  return merge([
+    normalizeLiquid(base),
+    normalizeLiquidMakeup(rectifier),
+    normalizeLiquidMakeup(final),
+  ]).chain(([b, r, f]) => {
+    let s = computeRectificationSplit(b.ABM, r.ABM, f.ABM);
+    if (s.isLeft()) {
+      return left(s.value);
+    }
+    const split = s.unwrap();
+
+    const f_mass = b.mass * (1 / split);
+    const r_mass = f_mass - b.mass;
+
+    return merge([
+      normalizeLiquid({
+        ...{
+          mass: r_mass,
+        },
+        ...rectifier,
+      }),
+      normalizeLiquid({
+        ...{
+          mass: f_mass,
+        },
+        ...final,
+      }),
+    ]).chain(([comp_r, comp_f]) => {
+      return right({
+        rectifier: comp_r,
+        final: comp_f,
+      });
+    });
+  });
+}
+
+export function solveWithFinalQuantity(
+  base: LiquidMakeup,
+  rectifier: LiquidMakeup,
+  final: Liquid,
+): Either<
+  ErrorLiquid,
+  { base: NormalizedLiquid; rectifier: NormalizedLiquid }
+> {
+  return merge([
+    normalizeLiquidMakeup(base),
+    normalizeLiquidMakeup(rectifier),
+    normalizeLiquid(final),
+  ]).chain(([b, r, f]) => {
+    let s = computeRectificationSplit(b.ABM, r.ABM, f.ABM);
+    if (s.isLeft()) {
+      return left(s.value);
+    }
+    const split = s.unwrap();
+    const b_mass = f.mass * split;
+    const r_mass = f.mass - b_mass;
+
+    return merge([
+      normalizeLiquid({
+        ...{
+          mass: b_mass,
+        },
+        ...base,
+      }),
+      normalizeLiquid({
+        ...{
+          mass: r_mass,
+        },
+        ...rectifier,
+      }),
+    ]).chain(([comp_r, comp_f]) => {
+      return right({
+        base: comp_f,
+        rectifier: comp_r,
+      });
+    });
+  });
 }

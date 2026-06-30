@@ -5,10 +5,11 @@
   import { StateObject } from './lib/proto/marshall';
   import { left, right, type Either } from '@sweet-monads/either';
   
-  import {liquids} from "./lib/state.svelte"
+  import {appSettings, liquids} from "./lib/state.svelte"
   import { countNonNullKeys } from './lib/util';
+  import { choices as localeChoices, localize } from './lib/locales';
   
-  let title: string = $state("Compiling Calculator")
+  let title: string = $state(localize("compiling_calculator", true))
   
   let forcedResult: Liquid = $state({})
   
@@ -80,6 +81,10 @@
     } else {
       addLiquid()
     }
+    
+    if (localeChoices.indexOf(navigator.language) != -1) {
+        appSettings.locale = navigator.language;
+      }
   })
   $effect(() => {
     if (title != "Compiling Calculator" || Object.keys(liquids).length != 0) {
@@ -148,7 +153,7 @@
 <div class="container">
   
   <div class="liquids">
-    <h1 class="title" bind:textContent={title} contenteditable="true">Liquid Calculator</h1>
+    <h1 class="title" bind:textContent={title} contenteditable="true"></h1>
     {#each liquids.ids as id}<LiquidCard id={id} bind:liquid={liquids.data[id]} computed={computed[id]}/>{/each}
     <div style="flex-grow: 1; display: flex; justify-content: center;">
       <button onclick={() => {addLiquid()}} style="width: 40px; height: 40px;">+</button>

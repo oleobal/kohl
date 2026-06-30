@@ -2,6 +2,7 @@
   import { isEither, type Either } from "@sweet-monads/either";
   import { normalizeLiquid, normalizeLiquidMakeup } from "./liquid";
   import type { Liquid, NormalizedLiquid, ErrorLiquid, LiquidMakeup, NormalizedLiquidMakeup } from "./liquid";
+  import { localize } from "./locales";
   
   let { id, liquid = $bindable(), computed = undefined } : {id: string, liquid: Liquid, computed : Either<ErrorLiquid, NormalizedLiquid> | undefined} = $props()
   let normalizedLiquid = $derived(normalizeLiquid(computed||liquid))
@@ -131,10 +132,10 @@
   
   <div class="left">
     <div class="quantity">
-      <label class="value-label" for="in-volume-{id}">vol</label>
+      <label class="value-label" for="in-volume-{id}" title={localize("vol_long")}>{localize("vol_short")}</label>
       <input class="value" id="in-volume-{id}" type="number" bind:value={liquid.volume} placeholder={valueOrError("volume")}/>
       
-      <label class="value-label" for="in-mass-{id}">mass</label>
+      <label class="value-label" for="in-mass-{id}" title={localize("mass_long")}>{localize("mass_short")}</label>
       <input class="value" id="in-mass-{id}" type="number" bind:value={liquid.mass} placeholder={valueOrError("mass")}/>
     </div>
     {#if errorMessage}
@@ -144,20 +145,20 @@
   <div class="right">
     <div class="makeup">
       <input class="value" id="in-abv-{id}" type="number" bind:value={liquid.ABV} placeholder={valueOrError("ABV")}/>
+      <label class="value-label" for="in-abv-{id}" title={localize("abv_long")}>{localize("abv_short")}</label>
       
-      <label class="value-label" for="in-abv-{id}" title="alcohol by volume (%)">ABV</label>
       <input class="value" id="in-lpa-{id}" type="number" bind:value={liquid.LPA} placeholder={valueOrError("LPA")}/>
+      <label class="value-label" for="in-lpa-{id}" title={localize("lpa_long")}>{localize("lpa_short")}</label>
       
-      <label class="value-label" for="in-lpa-{id}" title="liters of pure alcohol">LPA</label>
       <input class="value" id="in-density-{id}" type="number" bind:value={liquid.density} placeholder={valueOrError("density")}/>
+      <label class="value-label" for="in-density-{id}" title={localize("dens_long")}>{localize("dens_short")}</label>
       
-      <label class="value-label" for="in-density-{id}" title="density (kg/L)">dens</label>
       <input class="value" id="in-density-{id}" type="number" bind:value={liquid.ABM} placeholder={valueOrError("ABM")}/>
+      <label class="value-label" for="in-density-{id}" title={localize("abm_long")}>{localize("abm_short")}</label>
       
-      <label class="value-label" for="in-density-{id}" title="alcohol by mass (%)">ABM</label>
       <input class="value" id="in-kpa-{id}" type="number" bind:value={liquid.KPA} placeholder={valueOrError("KPA")}/>
+      <label class="value-label" for="in-kpa-{id}" title={localize("kpa_long")}>{localize("kpa_short")}</label>
       
-      <label class="value-label" for="in-kpa-{id}" title="kilograms of pure alcohol">KPA</label>
     </div>
   </div>
   

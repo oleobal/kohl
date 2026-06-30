@@ -63,8 +63,13 @@ function countNumberArgs(...args: any[]): number {
 }
 
 export function normalizeLiquidMakeup(
-  m: LiquidMakeup,
+  m: LiquidMakeup | Either<ErrorLiquid, NormalizedLiquidMakeup>,
 ): Either<ErrorLiquid, NormalizedLiquidMakeup> {
+  if (isEither(m)) {
+    return m as Either<ErrorLiquid, NormalizedLiquidMakeup>;
+  } else {
+    m = m as LiquidMakeup;
+  }
   switch (countNumberArgs(m.ABV, m.ABM, m.density)) {
     case 0:
       return left({ cause: "uninitialized" });
@@ -111,7 +116,7 @@ export function normalizeLiquidMakeup(
       ABM: getABMFromDensity(m.density),
     });
   }
-  return left({ cause: "uninitialized" });
+  return left({ cause: "unreachable" });
 }
 
 export function normalizeLiquid(
@@ -274,6 +279,12 @@ export function sumLiquids(
           acc.value.KPA += liquid.value.KPA;
           return acc;
         } else {
+          if (
+            (liquid.isRight() || liquid.value.cause == "uninitialized") &&
+            (acc.isRight() || acc.value.cause == "uninitialized")
+          ) {
+            return left({ cause: "uninitialized" });
+          }
           return left({ cause: "incoherence" });
         }
       },
@@ -309,9 +320,9 @@ function computeRectificationSplit(
 }
 
 export function solveWithStartingQuantity(
-  base: Liquid,
-  rectifier: LiquidMakeup,
-  final: LiquidMakeup,
+  base: Liquid | Either<ErrorLiquid, NormalizedLiquid>,
+  rectifier: LiquidMakeup | Either<ErrorLiquid, NormalizedLiquidMakeup>,
+  final: LiquidMakeup | Either<ErrorLiquid, NormalizedLiquidMakeup>,
 ): Either<
   ErrorLiquid,
   { rectifier: NormalizedLiquid; final: NormalizedLiquid }
@@ -330,6 +341,7 @@ export function solveWithStartingQuantity(
     const f_mass = b.mass * (1 / split);
     const r_mass = f_mass - b.mass;
 
+    console.log("dayum", b, r, f);
     return merge([
       normalizeLiquid({
         ...{
@@ -353,9 +365,9 @@ export function solveWithStartingQuantity(
 }
 
 export function solveWithFinalQuantity(
-  base: LiquidMakeup,
-  rectifier: LiquidMakeup,
-  final: Liquid,
+  base: LiquidMakeup | Either<ErrorLiquid, NormalizedLiquidMakeup>,
+  rectifier: LiquidMakeup | Either<ErrorLiquid, NormalizedLiquidMakeup>,
+  final: Liquid | Either<ErrorLiquid, NormalizedLiquid>,
 ): Either<
   ErrorLiquid,
   { base: NormalizedLiquid; rectifier: NormalizedLiquid }
@@ -386,9 +398,9 @@ export function solveWithFinalQuantity(
         },
         ...rectifier,
       }),
-    ]).chain(([comp_r, comp_f]) => {
+    ]).chain(([comp_b, comp_r]) => {
       return right({
-        base: comp_f,
+        base: comp_b,
         rectifier: comp_r,
       });
     });

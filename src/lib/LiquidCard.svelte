@@ -1,16 +1,23 @@
 <script lang="ts">
-  import type { Either } from "@sweet-monads/either";
+  import { isEither, type Either } from "@sweet-monads/either";
   import { normalizeLiquid, normalizeLiquidMakeup } from "./liquid";
   import type { Liquid, NormalizedLiquid, ErrorLiquid, LiquidMakeup, NormalizedLiquidMakeup } from "./liquid";
   
-  let { liquid = $bindable(), inertLiquid = undefined } : { liquid : Liquid, inertLiquid : Either<ErrorLiquid, NormalizedLiquid> | undefined} = $props()
-  let normalizedLiquid = $derived(normalizeLiquid(inertLiquid?inertLiquid:liquid))
-  let normalizedLiquidMakeup = $derived(normalizeLiquidMakeup((inertLiquid?inertLiquid:liquid) as LiquidMakeup))
-  let inert = $derived(inertLiquid?true:false)
+  let { id, liquid = $bindable(), computed = undefined } : {id: string, liquid: Liquid, computed : Either<ErrorLiquid, NormalizedLiquid> | undefined} = $props()
+  let normalizedLiquid = $derived(normalizeLiquid(computed||liquid))
+  let normalizedLiquidMakeup = $derived(normalizeLiquidMakeup((computed||liquid) as LiquidMakeup))
   
-  let errorMessage: string | false = $derived(!inert && ((normalizedLiquid.isLeft() && normalizedLiquid.value.cause !== "uninitialized" && normalizedLiquid.value.cause) || (normalizedLiquidMakeup.isLeft() && normalizedLiquidMakeup.value.cause !== "uninitialized" && normalizedLiquidMakeup.value.cause)))
+  let isResult = $derived(id === "result")
+  let hasComputed = $derived.by(() => {
+    if (isEither(computed)) { return computed.isRight() }
+    return false
+  })
+  let errorMessage: string | false = $derived(
+    (isEither(computed) && computed.isLeft() && computed.value.cause !== "uninitialized" && computed.value.cause)
+    || ((normalizedLiquid.isLeft() && normalizedLiquid.value.cause !== "uninitialized" && normalizedLiquid.value.cause)
+    || (normalizedLiquidMakeup.isLeft() && normalizedLiquidMakeup.value.cause !== "uninitialized" && normalizedLiquidMakeup.value.cause))
+  )
   
-  let elementID=crypto.randomUUID()
   
   function valueOrError(keyName: string) : string {
     if (normalizedLiquid.isRight()) {
@@ -36,13 +43,36 @@
     padding: 5px 10px;
     justify-content: space-between;
   }
-  .container-inert {
-    border: 1px solid green;
-    color: green;
+  ::placeholder {
+    color: var(--l-blue);
+    opacity: 1;
+  }
+  
+  .container-computed ::placeholder {
+    color: var(--l-purple);
+  }
+  
+  .container-result ::placeholder {
+    color: var(--l-green);
+  }
+  
+  
+  .container-error  ::placeholder {
+    color: var(--l-orange);
+  }
+  
+  .container-computed{
+    border-color: var(--l-purple);
+  }
+  .container-result {
+    border-color: var(--l-green);
+    color: var(--l-green);
   }
   .container-error{
-    border-color: hsl(34, 100%, 40%);
+    border-color: var(--l-orange);
   }
+  
+  
   
   .left, .right {
     flex-grow: 1;
@@ -83,17 +113,10 @@
   }
   
   
-  ::placeholder {
-    color: blue;
-    opacity: 1;
-  }
-  
-  .container-error  ::placeholder {
-    color: hsl(34, 100%, 40%);
-  }
+
   .error-message {
     padding: 10px;
-    color: hsl(34, 100%, 40%);
+    color: var(--l-orange);
     font-size: 12pt;
     overflow-y: scroll;
   }
@@ -101,29 +124,18 @@
 
 <div class={{
   "container": true,
-  "container-inert": inert,
-  "container-error": errorMessage
+  "container-result": isResult,
+  "container-error": errorMessage,
+  "container-computed": hasComputed,
   }} >
   
   <div class="left">
     <div class="quantity">
-      <label class="value-label" for="in-volume-{elementID}">vol</label>
+      <label class="value-label" for="in-volume-{id}">vol</label>
+      <input class="value" id="in-volume-{id}" type="number" bind:value={liquid.volume} placeholder={valueOrError("volume")}/>
       
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.volume.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-volume-{elementID}" type="number" bind:value={liquid.volume} placeholder={valueOrError("volume")}/>
-      {/if}
-      
-      
-      <label class="value-label" for="in-mass-{elementID}">mass</label>
-      
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.mass.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-mass-{elementID}" type="number" bind:value={liquid.mass} placeholder={valueOrError("mass")}/>
-      {/if}
-      
+      <label class="value-label" for="in-mass-{id}">mass</label>
+      <input class="value" id="in-mass-{id}" type="number" bind:value={liquid.mass} placeholder={valueOrError("mass")}/>
     </div>
     {#if errorMessage}
       <div class="error-message">{errorMessage}</div>
@@ -131,44 +143,21 @@
   </div>
   <div class="right">
     <div class="makeup">
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.ABV.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-abv-{elementID}" type="number" bind:value={liquid.ABV} placeholder={valueOrError("ABV")}/>
-      {/if}
+      <input class="value" id="in-abv-{id}" type="number" bind:value={liquid.ABV} placeholder={valueOrError("ABV")}/>
       
-      <label class="value-label" for="in-abv-{elementID}" title="alcohol by volume (%)">ABV</label>
-
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.LPA.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-lpa-{elementID}" type="number" bind:value={liquid.LPA} placeholder={valueOrError("LPA")}/>
-      {/if}
-      <label class="value-label" for="in-lpa-{elementID}" title="liters of pure alcohol">LPA</label>
-
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.density.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-density-{elementID}" type="number" bind:value={liquid.density} placeholder={valueOrError("density")}/>
-      {/if}
+      <label class="value-label" for="in-abv-{id}" title="alcohol by volume (%)">ABV</label>
+      <input class="value" id="in-lpa-{id}" type="number" bind:value={liquid.LPA} placeholder={valueOrError("LPA")}/>
       
-      <label class="value-label" for="in-density-{elementID}" title="density (kg/L)">dens</label>
-
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.ABM.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-density-{elementID}" type="number" bind:value={liquid.ABM} placeholder={valueOrError("ABM")}/>
-      {/if}
+      <label class="value-label" for="in-lpa-{id}" title="liters of pure alcohol">LPA</label>
+      <input class="value" id="in-density-{id}" type="number" bind:value={liquid.density} placeholder={valueOrError("density")}/>
       
-      <label class="value-label" for="in-density-{elementID}" title="alcohol by mass (%)">ABM</label>
-
-      {#if inert}
-        <span class="value">{normalizedLiquid.fold(() => "—", v => v.KPA.toFixed(3))}</span>
-      {:else}
-        <input class="value" id="in-kpa-{elementID}" type="number" bind:value={liquid.KPA} placeholder={valueOrError("KPA")}/>
-      {/if}
+      <label class="value-label" for="in-density-{id}" title="density (kg/L)">dens</label>
+      <input class="value" id="in-density-{id}" type="number" bind:value={liquid.ABM} placeholder={valueOrError("ABM")}/>
       
-      <label class="value-label" for="in-kpa-{elementID}" title="kilograms of pure alcohol">KPA</label>
+      <label class="value-label" for="in-density-{id}" title="alcohol by mass (%)">ABM</label>
+      <input class="value" id="in-kpa-{id}" type="number" bind:value={liquid.KPA} placeholder={valueOrError("KPA")}/>
+      
+      <label class="value-label" for="in-kpa-{id}" title="kilograms of pure alcohol">KPA</label>
     </div>
   </div>
   

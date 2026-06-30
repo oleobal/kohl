@@ -4,4 +4,9 @@
   box-sizing: border-box;
 
   font-size: 15pt;
+
+  --l-blue: hsl(240, 100%, 40%);
+  --l-green: hsl(120, 100%, 25%);
+  --l-purple: hsl(300, 100%, 40%);
+  --l-orange: hsl(34, 100%, 40%);
 }

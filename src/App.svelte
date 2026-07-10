@@ -6,7 +6,7 @@
   import { left, right, type Either } from '@sweet-monads/either';
   
   import {appSettings, liquids} from "./lib/state.svelte"
-  import { countNonNullKeys } from './lib/util';
+  import { countNonNullKeys, removeNullValues } from './lib/util';
   import { choices as localeChoices, localize } from './lib/locales';
   
   let title: string = $state(localize("compiling_calculator", true))
@@ -91,7 +91,7 @@
       let l = $state.snapshot(liquids)
       let exportObject: StateObject = {
         title: title,
-        liquids: $state.snapshot(liquids.ids).map((id) => l.data[id]),
+        liquids: $state.snapshot(liquids.ids).map((id) => removeNullValues(l.data[id])),
       }
       
       window.location.hash = "#" + StateObject.encode(exportObject).finish().toBase64()
@@ -164,4 +164,4 @@
   </div>
 
 
-</div>s
+</div>

@@ -14,6 +14,7 @@ import {
   DENSITY_ETHANOL,
   DENSITY_WATER,
 } from "./density.js";
+import { removeNullValues } from "./util.js";
 
 export interface LiquidMakeup {
   ABV?: number; // alcohol by volume, percentage
@@ -68,11 +69,11 @@ export function normalizeLiquidMakeup(
   if (isEither(m)) {
     return m as Either<ErrorLiquid, NormalizedLiquidMakeup>;
   } else {
-    m = m as LiquidMakeup;
+    m = removeNullValues(m) as LiquidMakeup;
   }
   switch (countNumberArgs(m.ABV, m.ABM, m.density)) {
     case 0:
-      return left({ cause: "uninitialized" });
+      return left({ cause: "uninitialized", error: new Error() });
     case 1:
       break;
     default:
@@ -125,7 +126,7 @@ export function normalizeLiquid(
   if (isEither(liquid)) {
     return liquid as Either<ErrorLiquid, NormalizedLiquid>;
   } else {
-    liquid = liquid as Liquid;
+    liquid = removeNullValues(liquid) as Liquid;
   }
   let result: Liquid = {
     mass: undefined,
@@ -141,7 +142,7 @@ export function normalizeLiquid(
   result = { ...result, ...liquid };
   switch (countNumberArgs(liquid.mass, liquid.volume)) {
     case 0:
-      return left({ cause: "uninitialized" });
+      return left({ cause: "uninitialized", error: new Error() });
     case 1:
       break;
     default:
@@ -152,15 +153,17 @@ export function normalizeLiquid(
       });
   }
   if (result?.mass === 0 || result?.volume === 0) {
-    return right({
-      mass: 0,
-      volume: 0,
-      ABV: 0,
-      ABM: 0,
-      density: 1,
-      KPA: 0,
-      LPA: 0,
-    });
+    return normalizeLiquidMakeup(result).chain((m) =>
+      right({
+        ...{
+          mass: 0,
+          volume: 0,
+          KPA: 0,
+          LPA: 0,
+        },
+        ...m,
+      }),
+    );
   }
 
   switch (
@@ -173,7 +176,7 @@ export function normalizeLiquid(
     )
   ) {
     case 0:
-      return left({ cause: "uninitialized" });
+      return left({ cause: "uninitialized", error: new Error() });
     case 1:
       break;
     default:
@@ -283,7 +286,7 @@ export function sumLiquids(
             (liquid.isRight() || liquid.value.cause == "uninitialized") &&
             (acc.isRight() || acc.value.cause == "uninitialized")
           ) {
-            return left({ cause: "uninitialized" });
+            return left({ cause: "uninitialized", error: new Error() });
           }
           return left({ cause: "incoherence" });
         }
@@ -341,19 +344,18 @@ export function solveWithStartingQuantity(
     const f_mass = b.mass * (1 / split);
     const r_mass = f_mass - b.mass;
 
-    console.log("dayum", b, r, f);
     return merge([
       normalizeLiquid({
         ...{
           mass: r_mass,
         },
-        ...rectifier,
+        ...removeNullValues(rectifier),
       }),
       normalizeLiquid({
         ...{
           mass: f_mass,
         },
-        ...final,
+        ...removeNullValues(final),
       }),
     ]).chain(([comp_r, comp_f]) => {
       return right({
@@ -390,13 +392,13 @@ export function solveWithFinalQuantity(
         ...{
           mass: b_mass,
         },
-        ...base,
+        ...removeNullValues(base),
       }),
       normalizeLiquid({
         ...{
           mass: r_mass,
         },
-        ...rectifier,
+        ...removeNullValues(rectifier),
       }),
     ]).chain(([comp_b, comp_r]) => {
       return right({

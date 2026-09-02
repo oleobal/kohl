@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { normalizeLiquid, normalizeLiquidMakeup, solveWithFinalQuantity, solveWithStartingQuantity, sumLiquids, type ErrorLiquid, type Liquid, type NormalizedLiquid } from './lib/liquid';
-  import LiquidCard from './lib/LiquidCard.svelte';
+  import LiquidCard from './components/LiquidCard.svelte';
   import { StateObject } from './lib/proto/marshall';
   import { left, right, type Either } from '@sweet-monads/either';
   
@@ -123,6 +123,12 @@
 </script>
 
 <style>
+  .topbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
   .container {
     display: flex;
     justify-content: center;
@@ -151,17 +157,20 @@
 
 
 <div class="container">
-  
-  <div class="liquids">
-    <h1 class="title" bind:textContent={title} contenteditable="true"></h1>
-    {#each liquids.ids as id}<LiquidCard id={id} bind:liquid={liquids.data[id]} computed={computed[id]}/>{/each}
-    <div style="flex-grow: 1; display: flex; justify-content: center;">
-      <button onclick={() => {addLiquid()}} style="width: 40px; height: 40px;">+</button>
+  <div>
+    <div class="topbar">
+      <button>?</button>
+      <button>=</button>
     </div>
-    <div>
-      <LiquidCard id="result" bind:liquid={forcedResult} computed={computed["result"]}/>
+    <div class="liquids">
+      <h1 class="title" bind:textContent={title} contenteditable="true"></h1>
+      {#each liquids.ids as id}<LiquidCard id={id} bind:liquid={liquids.data[id]} computed={computed[id]}/>{/each}
+      <div style="flex-grow: 1; display: flex; justify-content: center;">
+        <button onclick={() => {addLiquid()}} style="width: 40px; height: 40px;">+</button>
+      </div>
+      <div>
+        <LiquidCard id="result" bind:liquid={forcedResult} computed={computed["result"]}/>
+      </div>
     </div>
   </div>
-
-
 </div>

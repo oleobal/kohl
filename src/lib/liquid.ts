@@ -6,20 +6,14 @@ import {
   type Either,
 } from "@sweet-monads/either";
 
-import {
-  getDensityFromABV,
-  getDensityFromABM,
-  getABMFromDensity,
-  getABVFromDensity,
-  DENSITY_ETHANOL,
-  DENSITY_WATER,
-} from "./density.js";
+import { Table, DENSITY_ETHANOL_40C, DENSITY_WATER_0C } from "./density.js";
 import { removeNullValues } from "./util.js";
 
 export interface LiquidMakeup {
   ABV?: number; // alcohol by volume, percentage
-  density?: number; // in kg/L
+  density?: number; // in g/L
   ABM?: number; // alcohol by mass, percentage
+  temp?: number; // degrees C
 }
 
 export interface Liquid extends LiquidMakeup {
@@ -31,8 +25,9 @@ export interface Liquid extends LiquidMakeup {
 
 export interface NormalizedLiquidMakeup {
   ABV: number; // alcohol by volume, percentage
-  density: number; // in kg/L
+  density: number; // in g/L
   ABM: number; // alcohol by mass, percentage
+  temp: number; // degrees C
 }
 
 export interface NormalizedLiquid extends NormalizedLiquidMakeup {
@@ -105,10 +100,10 @@ export function normalizeLiquidMakeup(
       ABM: getABMFromDensity(d),
     });
   } else if (m.density != null) {
-    if (m.density < DENSITY_ETHANOL) {
+    if (m.density < DENSITY_ETHANOL_40C) {
       return left({ cause: "density below that of pure ethanol" });
     }
-    if (m.density > DENSITY_WATER) {
+    if (m.density > DENSITY_WATER_0C) {
       return left({ cause: "density above that of pure water" });
     }
     return right({
@@ -129,6 +124,8 @@ export function normalizeLiquid(
     liquid = removeNullValues(liquid) as Liquid;
   }
   let result: Liquid = {
+    temp: undefined,
+
     mass: undefined,
     volume: undefined,
 
@@ -140,6 +137,11 @@ export function normalizeLiquid(
   };
 
   result = { ...result, ...liquid };
+
+  if (typeof result.temp !== "number") {
+    result.temp = 20;
+  }
+
   switch (countNumberArgs(liquid.mass, liquid.volume)) {
     case 0:
       return left({ cause: "uninitialized", error: new Error() });
@@ -193,8 +195,8 @@ export function normalizeLiquid(
   function setQuantityBasedOnDensity(): ErrorLiquid | undefined {
     if (
       !result.density ||
-      result.density < DENSITY_ETHANOL ||
-      result.density > DENSITY_WATER
+      result.density < DENSITY_ETHANOL_40C ||
+      result.density > DENSITY_WATER_0C
     ) {
       return {
         cause: "invalid density",

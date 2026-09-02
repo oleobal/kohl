@@ -1,3 +1,4 @@
+import { Table } from "./density";
 import type { Liquid } from "./liquid";
 
 export let appSettings: { [key: string]: any } = $state({
@@ -11,3 +12,5 @@ export let liquids: {
   ids: [],
   data: {},
 });
+
+export let table: Table = $state(new Table());

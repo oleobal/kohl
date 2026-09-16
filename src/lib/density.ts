@@ -65,24 +65,14 @@ export class Table {
           temperature == 20
             ? (dens / (pureEthanolDensityAt20C as number)) * abm
             : // there is an issue here, the values don't match
-              adjustForSurfaceTension(
-                (adjustForGlassExpansion(
-                  this.tables[20].dens.abm.nearest(
-                    { abm: abm } as Point,
-                    1,
-                  )[0][0].dens,
-                  temperature,
-                ) /
-                  this.tables[20].dens.abm.nearest(
-                    { abm: 100 } as Point,
-                    1,
-                  )[0][0].dens) *
-                  abm,
-                3,
-                dens,
-                abm,
+              (adjustForGlassExpansion(
+                this.tables[20].dens.abm.nearest({ abm: abm } as Point, 1)[0][0]
+                  .dens,
                 temperature,
-              ),
+              ) /
+                this.tables[20].dens.abm.nearest({ abm: 100 } as Point, 1)[0][0]
+                  .dens) *
+              abm,
       };
     });
 

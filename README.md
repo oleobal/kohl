@@ -51,16 +51,16 @@ Formulae:
 
 Fundamental tables:
 
-| table | description           | computation                             | status | note                             |
-| ----- | --------------------- | --------------------------------------- | ------ | -------------------------------- |
-| I     | ϱ <- p, t             | apply F<sub>base</sub>                  | done   |                                  |
-| II    | ϱ <- q, t             | read p from IVb, apply F<sub>base</sub> |        |                                  |
-| IIIa  | ϱ<sub>20°C</sub> <- p | apply F<sub>base</sub>                  |        |                                  |
-| IIIb  | q <- p                | apply F<sub>ABV</sub>                   |        |                                  |
-| IVa   | ϱ<sub>20°C</sub> <- q | read p from IVb, apply F<sub>base</sub> |        |                                  |
-| IVb   | p <- q                | interpolate from IIIb                   |        |                                  |
-| Va    | p <- ϱ<sub>20°C</sub> | interpolate from IIIa                   |        |                                  |
-| Vb    | q <- ϱ<sub>20°C</sub> | interpolate from IVa                    |        | R22 says "interpolate from IIIb" |
+| table | description           | computation                             | status    | note                             |
+| ----- | --------------------- | --------------------------------------- | --------- | -------------------------------- |
+| I     | ϱ <- p, t             | apply F<sub>base</sub>                  | compliant |                                  |
+| II    | ϱ <- q, t             | read p from IVb, apply F<sub>base</sub> | **wrong** |                                  |
+| IIIa  | ϱ<sub>20°C</sub> <- p | apply F<sub>base</sub>                  | compliant |                                  |
+| IIIb  | q <- p                | apply F<sub>ABV</sub>                   | compliant |                                  |
+| IVa   | ϱ<sub>20°C</sub> <- q | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
+| IVb   | p <- q                | interpolate from IIIb                   | compliant |                                  |
+| Va    | p <- ϱ<sub>20°C</sub> | interpolate from IIIa                   | **wrong** |                                  |
+| Vb    | q <- ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb" |
 
 Practical tables:
 

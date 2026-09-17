@@ -17,7 +17,7 @@
   <thead>
     <tr>
       <td style="font-size: small;">
-        ϱ<sub>20°C</sub>
+        ϱ<sub>20°C</sub>&nbsp;(g/L)
       </td>
       {#each decimals as decimal}
         <td
@@ -49,7 +49,7 @@
               title={preciseDensity +
                 " g/L → " +
                 calculatedTable.getABMFromDensity(preciseDensity, 20) +
-                " %mas"}
+                " %mass"}
             >
               {calculatedTable.getABMFromDensity(preciseDensity, 20).toFixed(2)}
             </td>

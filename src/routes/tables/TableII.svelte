@@ -37,8 +37,8 @@
   <thead>
     <tr>
       <td style="font-size: small;">
-        <p>→ t (°C)</p>
-        <p>↓ q (%vol)</p>
+        <p>→&nbsp;t&nbsp;(°C)</p>
+        <p>↓&nbsp;q&nbsp;(%<sub>vol</sub>)</p>
       </td>
       {#each temperatures as temperature}
         <td

@@ -37,8 +37,8 @@
   <thead>
     <tr>
       <td style="font-size: small;">
-        <p>→ t (°C)</p>
-        <p>↓ p (%mas)</p>
+        <p>→&nbsp;t&nbsp;(°C)</p>
+        <p>↓&nbsp;q&nbsp;(%<sub>mass</sub>)</p>
       </td>
       {#each temperatures as temperature}
         <td
@@ -71,7 +71,7 @@
               class={{ "even-column": (temperature + 20) % 10 < 5 }}
               style="text-align: right; font-variant-numeric: lining-nums;"
               title={abm +
-                " %mas, " +
+                " %mass, " +
                 temperature +
                 "°C → " +
                 calculatedTable.getDensityFromABM(abm, temperature) +

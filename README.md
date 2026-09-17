@@ -18,23 +18,23 @@ See it running at https://oleobal.github.io/kohl/
 - no reloads, no submit buttons, as little clicking as possible
 - usable on a phone under the midday sun
 
-## OIML table tracker
+## OIML tables
 
 We check program correctness by comparing our results with those of the OIML, which are the legal standard. OIML gives us formulae as well as table of results.
 
 Variables:
 
-| variable          | description                                                  |
-| ----------------- | ------------------------------------------------------------ |
-| ϱ (rho)           | density (g/L)                                                |
-| ϱ<sub>20°C</sub>  | density (g/L) the liquid _would have_ at 20°C                |
-| ϱ<sub>meas.</sub> | density (g/L) as measured by a glass areometer               |
-| p                 | alcohol fraction by mass                                     |
-| p<sub>meas.</sub> | alcohol fraction by mass as measured by a glass alcoholmeter |
-| t                 | temperature (°C)                                             |
-| q                 | alcohol by volume[^ABV]                                      |
-| q<sub>meas.</sub> | alcohol by volume as measured by a glass alcoholmeter        |
-| α                 | expansion coefficient of glass                               |
+| variable          | unit             | description                                                  |
+| ----------------- | ---------------- | ------------------------------------------------------------ |
+| ϱ (rho)           | g/L              | density                                                      |
+| ϱ<sub>20°C</sub>  | g/L              | density the liquid _would have_ at 20°C                      |
+| ϱ<sub>meas.</sub> | g/L              | density as measured by a glass areometer                     |
+| p                 | %<sub>mass</sub> | alcohol fraction by mass                                     |
+| p<sub>meas.</sub> | %<sub>mass</sub> | alcohol fraction by mass as measured by a glass alcoholmeter |
+| t                 | °C               | temperature                                                  |
+| q                 | %<sub>vol</sub>  | alcohol by volume[^ABV]                                      |
+| q<sub>meas.</sub> | %<sub>vol</sub>  | alcohol by volume as measured by a glass alcoholmeter        |
+| α                 |                  | expansion coefficient of glass                               |
 
 Formulae:
 
@@ -47,29 +47,29 @@ Formulae:
 
 Fundamental tables:
 
-| table | description           | computation                             | status    | note                                        |
-| ----- | --------------------- | --------------------------------------- | --------- | ------------------------------------------- |
-| I     | ϱ <- p, t             | apply F<sub>base</sub>                  | compliant |                                             |
-| II    | ϱ <- q, t             | read p from IVb, apply F<sub>base</sub> | **wrong** | only 20°C values are correct (ie table IVa) |
-| IIIa  | ϱ<sub>20°C</sub> <- p | apply F<sub>base</sub>                  | compliant |                                             |
-| IIIb  | q <- p                | apply F<sub>ABV</sub>                   | compliant |                                             |
-| IVa   | ϱ<sub>20°C</sub> <- q | read p from IVb, apply F<sub>base</sub> | compliant |                                             |
-| IVb   | p <- q                | interpolate from IIIb                   | compliant |                                             |
-| Va    | p <- ϱ<sub>20°C</sub> | interpolate from IIIa                   | compliant |                                             |
-| Vb    | q <- ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb"            |
+| table | description          | computation                             | status    | note                             |
+| ----- | -------------------- | --------------------------------------- | --------- | -------------------------------- |
+| I     | ϱ ← p, t             | apply F<sub>base</sub>                  | compliant |                                  |
+| II    | ϱ ← q, t             | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
+| IIIa  | ϱ<sub>20°C</sub> ← p | apply F<sub>base</sub>                  | compliant |                                  |
+| IIIb  | q ← p                | apply F<sub>ABV</sub>                   | compliant |                                  |
+| IVa   | ϱ<sub>20°C</sub> ← q | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
+| IVb   | p ← q                | interpolate from IIIb                   | compliant |                                  |
+| Va    | p ← ϱ<sub>20°C</sub> | interpolate from IIIa                   | compliant |                                  |
+| Vb    | q ← ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb" |
 
 Source document for fundamental tables: https://www.oiml.org/en/files/pdf_r/r022-e75.pdf
 
 Practical tables:
 
-| table | description               | computation                                                         | status | note |
-| ----- | ------------------------- | ------------------------------------------------------------------- | ------ | ---- |
-| VI    | p <- ϱ, t                 | interpolate from I                                                  | TBD    |      |
-| VII   | q <- ϱ, t                 | read VI, apply F<sub>ABV</sub>                                      | TBD    |      |
-| VIIIa | p <- p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI       | TBD    |      |
-| VIIIb | q <- q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub> for α, read VII | TBD    |      |
-| IXa   | p <- ϱ, t                 | apply F<sub>α</sub>, read VI                                        | TBD    |      |
-| IXb   | q <- ϱ, t                 | apply F<sub>α</sub>, read VII                                       | TBD    |      |
+| table | description              | computation                                                         | status | note |
+| ----- | ------------------------ | ------------------------------------------------------------------- | ------ | ---- |
+| VI    | p ← ϱ, t                 | interpolate from I                                                  | TBD    |      |
+| VII   | q ← ϱ, t                 | read VI, apply F<sub>ABV</sub>                                      | TBD    |      |
+| VIIIa | p ← p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI       | TBD    |      |
+| VIIIb | q ← q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub> for α, read VII | TBD    |      |
+| IXa   | p ← ϱ, t                 | apply F<sub>α</sub>, read VI                                        | TBD    |      |
+| IXb   | q ← ϱ, t                 | apply F<sub>α</sub>, read VII                                       | TBD    |      |
 
 Source document for practical tables: https://op.europa.eu/en/publication-detail/-/publication/05b3e747-f169-424e-af99-9a6879fb44f3
 

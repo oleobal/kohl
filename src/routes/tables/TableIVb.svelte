@@ -11,7 +11,7 @@
 <table>
   <thead>
     <tr>
-      <td style="font-size: small;"> q </td>
+      <td style="font-size: small;"> q&nbsp(%<sub>vol</sub>) </td>
       {#each decimals as decimal}
         <td
           class={{ "even-column": decimal % 2 < 1 }}
@@ -42,7 +42,7 @@
                 decimal / 10 +
                 " %vol → " +
                 calculatedTable.getABMFromABV(abv + decimal / 10, 20) +
-                " %mas"}
+                " %mass"}
             >
               {calculatedTable.getABMFromABV(abv + decimal / 10, 20).toFixed(2)}
             </td>

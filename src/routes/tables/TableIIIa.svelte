@@ -11,7 +11,7 @@
 <table>
   <thead>
     <tr>
-      <td style="font-size: small;"> p </td>
+      <td style="font-size: small;"> p&nbsp(%<sub>mass</sub>) </td>
       {#each decimals as decimal}
         <td
           class={{ "even-column": decimal % 2 < 1 }}
@@ -40,7 +40,7 @@
               style="text-align: right; font-variant-numeric: lining-nums;"
               title={abm +
                 decimal / 10 +
-                " %mas → " +
+                " %mass → " +
                 calculatedTable.getDensityFromABM(abm + decimal / 10, 20) +
                 " g/L"}
             >

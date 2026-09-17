@@ -8,54 +8,65 @@ test("Table I", () => {
   let table = new Table();
   expect(table.getDensityFromABM(30, -20)).toBeCloseTo(974.91, 2);
   expect(table.getDensityFromABM(50, -20)).toBeCloseTo(943.76, 2);
+  expect(table.getDensityFromABM(80, -20)).toBeCloseTo(876.64, 2);
   expect(table.getDensityFromABM(100, -20)).toBeCloseTo(823.12, 2);
 
   expect(table.getDensityFromABM(25, -15)).toBeCloseTo(976.26, 2);
   expect(table.getDensityFromABM(50, -15)).toBeCloseTo(940.19, 2);
+  expect(table.getDensityFromABM(80, -15)).toBeCloseTo(872.59, 2);
   expect(table.getDensityFromABM(100, -15)).toBeCloseTo(818.89, 2);
 
   expect(table.getDensityFromABM(12, -5)).toBeCloseTo(982.66, 2);
   expect(table.getDensityFromABM(50, -5)).toBeCloseTo(932.89, 2);
+  expect(table.getDensityFromABM(80, -5)).toBeCloseTo(864.43, 2);
   expect(table.getDensityFromABM(100, -5)).toBeCloseTo(810.44, 2);
 
   expect(table.getDensityFromABM(0, 0)).toBeCloseTo(999.84, 2);
   expect(table.getDensityFromABM(50, 0)).toBeCloseTo(929.17, 2);
+  expect(table.getDensityFromABM(80, 0)).toBeCloseTo(860.3, 2);
   expect(table.getDensityFromABM(100, 0)).toBeCloseTo(806.22, 2);
 
   expect(table.getDensityFromABM(0, 20)).toBeCloseTo(998.2, 2);
   expect(table.getDensityFromABM(50, 20)).toBeCloseTo(913.77, 2);
+  expect(table.getDensityFromABM(80, 20)).toBeCloseTo(843.39, 2);
   expect(table.getDensityFromABM(100, 20)).toBeCloseTo(789.24, 2);
 
   expect(table.getDensityFromABM(0, 40)).toBeCloseTo(992.21, 2);
   expect(table.getDensityFromABM(50, 40)).toBeCloseTo(897.44, 2);
+  expect(table.getDensityFromABM(80, 40)).toBeCloseTo(825.68, 2);
   expect(table.getDensityFromABM(100, 40)).toBeCloseTo(771.93, 2);
 });
 
 test("Table II", () => {
-  // known wrong
   let table = new Table();
   expect(table.getDensityFromABV(36, -20)).toBeCloseTo(975.08, 2);
   expect(table.getDensityFromABV(50, -20)).toBeCloseTo(958.36, 2);
+  expect(table.getDensityFromABV(80, -20)).toBeCloseTo(891.99, 2);
   expect(table.getDensityFromABV(100, -20)).toBeCloseTo(823.12, 2);
 
   expect(table.getDensityFromABV(31, -15)).toBeCloseTo(976.01, 2);
   expect(table.getDensityFromABV(50, -15)).toBeCloseTo(955.05, 2);
+  expect(table.getDensityFromABV(80, -15)).toBeCloseTo(888.04, 2);
   expect(table.getDensityFromABV(100, -15)).toBeCloseTo(818.89, 2);
 
   expect(table.getDensityFromABV(14, -5)).toBeCloseTo(983.33, 2);
   expect(table.getDensityFromABV(50, -5)).toBeCloseTo(948.23, 2);
+  expect(table.getDensityFromABV(80, -5)).toBeCloseTo(880.03, 2);
   expect(table.getDensityFromABV(100, -5)).toBeCloseTo(810.44, 2);
 
   expect(table.getDensityFromABV(0, 0)).toBeCloseTo(999.84, 2);
   expect(table.getDensityFromABV(50, 0)).toBeCloseTo(944.73, 2);
+  expect(table.getDensityFromABV(80, 0)).toBeCloseTo(875.97, 2);
   expect(table.getDensityFromABV(100, 0)).toBeCloseTo(806.22, 2);
 
   expect(table.getDensityFromABV(0, 20)).toBeCloseTo(998.2, 2);
   expect(table.getDensityFromABV(50, 20)).toBeCloseTo(930.14, 2);
+  expect(table.getDensityFromABV(80, 20)).toBeCloseTo(859.27, 2);
   expect(table.getDensityFromABV(100, 20)).toBeCloseTo(789.24, 2);
 
   expect(table.getDensityFromABV(0, 40)).toBeCloseTo(992.21, 2);
   expect(table.getDensityFromABV(50, 40)).toBeCloseTo(914.57, 2);
+  expect(table.getDensityFromABV(80, 40)).toBeCloseTo(841.76, 2);
   expect(table.getDensityFromABV(100, 40)).toBeCloseTo(771.93, 2);
 });
 

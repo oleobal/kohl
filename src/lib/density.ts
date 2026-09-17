@@ -28,7 +28,9 @@ function abvDistance(a: Point, b: Point): number {
 
 interface TableSet {
   dens: {
+    // ABM by density
     abm: kdTree<Point>;
+    // ABV by density
     abv: kdTree<Point>;
   };
   abm: {
@@ -53,7 +55,7 @@ export class Table {
     if (temperature in this.tables) {
       return;
     }
-    const ABMs = Array.from({ length: 1000 }, (_, i) => i * 0.1);
+    const ABMs = Array.from({ length: 1001 }, (_, i) => i * 0.1);
     const pureEthanolDensityAt20C =
       temperature == 20 ? computeDensity(1, 20) : null;
     const samples = ABMs.map((abm) => {
@@ -75,7 +77,6 @@ export class Table {
               abm,
       };
     });
-
     this.tables[temperature] = {
       dens: {
         abm: new kdTree<Point>(samples, abmDistance, ["dens", "abm"]),
@@ -92,7 +93,6 @@ export class Table {
     };
   }
 
-  /** R22 table I */
   getDensityFromABM(abm: number, temp: number): number {
     this.sampleDensities(temp);
     let points = this.tables[temp].dens.abm.nearest({ abm: abm } as Point, 2);
@@ -106,7 +106,7 @@ export class Table {
 
   getABMFromDensity(density: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].dens.abm.nearest(
+    let points = this.tables[temp].abm.dens.nearest(
       { dens: density } as Point,
       2,
     );

@@ -60,7 +60,7 @@ export function interpolateFourPoints<T extends { [key: string]: number }>(
   const K2 = knownQuantity2Type;
   const S = searchedQuantityType;
   points = points.toSorted((a, b) => {
-    if (a[K1] != b[K2]) {
+    if (a[K1] != b[K1]) {
       return a[K1] - b[K1];
     }
     return a[K2] - b[K2];

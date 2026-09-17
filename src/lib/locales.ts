@@ -36,8 +36,8 @@ export const text: { [key: string]: { [key: string]: string } } = {
     fr: "calcul de compilation",
   },
   dens_long: {
-    en: "density (kg/L)",
-    fr: "densité (kg/L)",
+    en: "density (g/L)",
+    fr: "densité (g/L)",
   },
   dens_short: {
     en: "dens",

@@ -9,8 +9,8 @@
   import TableIVa from "./routes/tables/TableIVa.svelte";
   import TableIVb from "./routes/tables/TableIVb.svelte";
   import TableVa from "./routes/tables/TableVa.svelte";
-  
-  const path = window.location.pathname
+
+  const path = window.location.pathname;
 </script>
 
 {#if path == "/table" || path == "/table/"}
@@ -23,12 +23,12 @@
   <TableIIIa />
 {:else if path == "/table/IIIb"}
   <TableIIIb />
-  {:else if path == "/table/IVa"}
+{:else if path == "/table/IVa"}
   <TableIVa />
-  {:else if path == "/table/IVb"}
+{:else if path == "/table/IVb"}
   <TableIVb />
-  {:else if path == "/table/Va"}
-    <TableVa />
+{:else if path == "/table/Va"}
+  <TableVa />
 {:else if path == "/" || path == ""}
   <Calculator />
 {:else}

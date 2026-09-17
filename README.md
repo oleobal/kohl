@@ -2,7 +2,7 @@
 
 This is a calculator for compiling hydroalcoholic solutions. It is very common in small distilleries to add together liquids that are basically mixes of ethanol and water, at varying degrees. I aim to assist this process as much as possible.
 
-It is inspired by the limitations of other tools I've used at work (such as [Labox](https://alcoholometry.labox-apps.com) or [Calco](https://calco.bazg.admin.ch)). I'm trying to remove all artificial limitations (notably number of liquids and defining parameters) into a comfortable UI.
+It is inspired by the limitations of other tools I've used at work (such as [Labox](https://alcoholometry.labox-apps.com) or [Calco](https://calco.bazg.admin.ch)). I'm trying to remove all artificial limitations (notably number of liquids and defining parameters) into a comfortable UI to achieve a new "gold standard".
 
 See it running at https://oleobal.github.io/kohl/
 
@@ -20,11 +20,7 @@ See it running at https://oleobal.github.io/kohl/
 
 ## OIML table tracker
 
-Source document: https://www.oiml.org/en/files/pdf_r/r022-e75.pdf
-
-Source document for practical tables: https://op.europa.eu/en/publication-detail/-/publication/05b3e747-f169-424e-af99-9a6879fb44f3
-
-I consider the program compliant when it can reproduce the tables given by OIML.
+We check program correctness by comparing our results with those of the OIML, which are the legal standard. OIML gives us formulae as well as table of results.
 
 Variables:
 
@@ -51,27 +47,31 @@ Formulae:
 
 Fundamental tables:
 
-| table | description           | computation                             | status    | note                             |
-| ----- | --------------------- | --------------------------------------- | --------- | -------------------------------- |
-| I     | ϱ <- p, t             | apply F<sub>base</sub>                  | compliant |                                  |
-| II    | ϱ <- q, t             | read p from IVb, apply F<sub>base</sub> | **wrong** |                                  |
-| IIIa  | ϱ<sub>20°C</sub> <- p | apply F<sub>base</sub>                  | compliant |                                  |
-| IIIb  | q <- p                | apply F<sub>ABV</sub>                   | compliant |                                  |
-| IVa   | ϱ<sub>20°C</sub> <- q | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
-| IVb   | p <- q                | interpolate from IIIb                   | compliant |                                  |
-| Va    | p <- ϱ<sub>20°C</sub> | interpolate from IIIa                   | **wrong** |                                  |
-| Vb    | q <- ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb" |
+| table | description           | computation                             | status    | note                                        |
+| ----- | --------------------- | --------------------------------------- | --------- | ------------------------------------------- |
+| I     | ϱ <- p, t             | apply F<sub>base</sub>                  | compliant |                                             |
+| II    | ϱ <- q, t             | read p from IVb, apply F<sub>base</sub> | **wrong** | only 20°C values are correct (ie table IVa) |
+| IIIa  | ϱ<sub>20°C</sub> <- p | apply F<sub>base</sub>                  | compliant |                                             |
+| IIIb  | q <- p                | apply F<sub>ABV</sub>                   | compliant |                                             |
+| IVa   | ϱ<sub>20°C</sub> <- q | read p from IVb, apply F<sub>base</sub> | compliant |                                             |
+| IVb   | p <- q                | interpolate from IIIb                   | compliant |                                             |
+| Va    | p <- ϱ<sub>20°C</sub> | interpolate from IIIa                   | compliant |                                             |
+| Vb    | q <- ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb"            |
+
+Source document for fundamental tables: https://www.oiml.org/en/files/pdf_r/r022-e75.pdf
 
 Practical tables:
 
 | table | description               | computation                                                         | status | note |
 | ----- | ------------------------- | ------------------------------------------------------------------- | ------ | ---- |
-| VI    | p <- ϱ, t                 | interpolate from I                                                  |        |      |
-| VII   | q <- ϱ, t                 | read VI, apply F<sub>ABV</sub>                                      |        |      |
-| VIIIa | p <- p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI       |        |      |
-| VIIIb | q <- q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub> for α, read VII |        |      |
-| IXa   | p <- ϱ, t                 | apply F<sub>α</sub>, read VI                                        |        |      |
-| IXb   | q <- ϱ, t                 | apply F<sub>α</sub>, read VII                                       |        |      |
+| VI    | p <- ϱ, t                 | interpolate from I                                                  | TBD    |      |
+| VII   | q <- ϱ, t                 | read VI, apply F<sub>ABV</sub>                                      | TBD    |      |
+| VIIIa | p <- p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI       | TBD    |      |
+| VIIIb | q <- q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub> for α, read VII | TBD    |      |
+| IXa   | p <- ϱ, t                 | apply F<sub>α</sub>, read VI                                        | TBD    |      |
+| IXb   | q <- ϱ, t                 | apply F<sub>α</sub>, read VII                                       | TBD    |      |
+
+Source document for practical tables: https://op.europa.eu/en/publication-detail/-/publication/05b3e747-f169-424e-af99-9a6879fb44f3
 
 I'm not planning to implement tables X through XII.
 
@@ -88,3 +88,15 @@ To run it:
 `yarn proto`
 
 `yarn dev`
+
+To run tests:
+
+`yarn test`
+
+## implementation details
+
+Rather than compute tables one by one as specified by the OIML, we compute a multi-dimensional table all in one go from which value are linearly interpolated on demand.
+
+My original intent was to generate the table as one big k-dimensional tree, from which we could query the appropriate dimensions. However the kdTree library I am using assumes a spatial usage, and in the end I ended up splitting the table into temperature "slices", each with six trees depending on dimensions.
+
+In retrospect, kd-trees were the wrong choice — they might give us fast query times but we'd lose basically nothing computing all values on demand, and we'd save complexity and start-up latency.

@@ -9,6 +9,7 @@
     "build-github-pages": "vite build --base=/kohl/",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "test": "vitest",
     "proto": "cd src/protobuf && protoc --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_out=../../src/lib/proto *"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@sweet-monads/either": "^3.3.1",
     "@types/kd-tree-javascript": "^1.0.3",
     "kd-tree-javascript": "^1.0.3",
-    "ts-proto": "^2.11.8"
+    "ts-proto": "^2.11.8",
+    "vitest": "^5.0.1"
   }
 }

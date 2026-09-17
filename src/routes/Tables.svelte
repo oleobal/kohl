@@ -9,49 +9,46 @@
   import TableVb from "./tables/TableVb.svelte";
 
   const tableChoices = [
-    { no: "none", desc: "select a table to display"},
-    { no: "I", desc: "I: ϱ ← p, t"},
-    { no: "II", desc: "II: ϱ ← q, t"},
-    { no: "IIIa", desc: "IIIa: ϱ_20°C ← p"},
-    { no: "IIIb", desc: "IIIb: q ← p"},
-    { no: "IVa", desc: "IVa: ϱ_20°C ← q"},
-    { no: "IVb", desc: "IVb: p ← q"},
-    { no: "Va", desc: "Va: p ← ϱ_20°C"},
-    { no: "Vb", desc: "Vb: q ← ϱ_20°C"},
-];
-  
+    { no: "none", desc: "select a table to display" },
+    { no: "I", desc: "I: ϱ ← p, t" },
+    { no: "II", desc: "II: ϱ ← q, t" },
+    { no: "IIIa", desc: "IIIa: ϱ_20°C ← p" },
+    { no: "IIIb", desc: "IIIb: q ← p" },
+    { no: "IVa", desc: "IVa: ϱ_20°C ← q" },
+    { no: "IVb", desc: "IVb: p ← q" },
+    { no: "Va", desc: "Va: p ← ϱ_20°C" },
+    { no: "Vb", desc: "Vb: q ← ϱ_20°C" },
+  ];
+
   let selectedTable: string | undefined = undefined;
 </script>
 
 <svelte:head>
-   <title>OIML tables</title>
+  <title>OIML tables</title>
 </svelte:head>
 
-
-<select
-    bind:value={selectedTable}
->
-{#each tableChoices as t}
+<select bind:value={selectedTable}>
+  {#each tableChoices as t}
     <option value={t.no}>{t.desc}</option>
-{/each}
+  {/each}
 </select>
 
 {#if selectedTable == "I"}
-<TableI />
+  <TableI />
 {:else if selectedTable == "II"}
-<TableII />
+  <TableII />
 {:else if selectedTable == "IIIa"}
-<TableIIIa />
+  <TableIIIa />
 {:else if selectedTable == "IIIb"}
-<TableIIIb />
+  <TableIIIb />
 {:else if selectedTable == "IVa"}
-<TableIVa />
+  <TableIVa />
 {:else if selectedTable == "IVb"}
-<TableIVb />
+  <TableIVb />
 {:else if selectedTable == "Va"}
-<TableVa />
+  <TableVa />
 {:else if selectedTable == "Vb"}
-<TableVb />
+  <TableVb />
 {:else}
-<p>select a table to display</p>
+  <p>select a table to display</p>
 {/if}

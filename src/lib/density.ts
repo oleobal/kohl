@@ -1,6 +1,9 @@
-import { computeDensity, computeABV } from "./oiml/ideal";
-import { kdTree } from "kd-tree-javascript";
-import { interpolateTwoPoints } from "./util";
+import { computeDensity } from "./oiml/ideal";
+import {
+  interpolateTwoPoints,
+  findNearestPoints as fNPs,
+  CollectionDirection,
+} from "./util";
 import {
   adjustForGlassExpansion,
   adjustForSurfaceTension,
@@ -12,39 +15,34 @@ export const DENSITY_WATER_0C = 999.84;
 interface Point {
   dens: number;
   abm: number;
-  abv: number; // for 20C, the legal ABV. Otherwise, what an alcoholmeter calibrated at 20C would say in this situation (eg a proxy for density)
+  abv: number;
   [key: string]: number;
 }
 
-function abmDistance(a: Point, b: Point): number {
-  return Math.abs(b.abm - a.abm);
-}
-function densDistance(a: Point, b: Point): number {
-  return Math.abs(b.dens - a.dens);
-}
-function abvDistance(a: Point, b: Point): number {
-  return Math.abs(b.abv - a.abv);
+function findNearestPoint(
+  table: Point[],
+  qType: keyof Point,
+  q: number,
+): Point {
+  return findNearestPoints(table, qType, q, 1)[0].p;
 }
 
-interface TableSet {
-  dens: {
-    // ABM by density
-    abm: kdTree<Point>;
-    // ABV by density
-    abv: kdTree<Point>;
-  };
-  abm: {
-    dens: kdTree<Point>;
-    abv: kdTree<Point>;
-  };
-  abv: {
-    abm: kdTree<Point>;
-    dens: kdTree<Point>;
-  };
+function findNearestPoints(
+  table: Point[],
+  qType: keyof Point,
+  q: number,
+  nbPoints: number,
+): { d: number; p: Point }[] {
+  let direction =
+    qType == "dens" ? CollectionDirection.DESC : CollectionDirection.ASC;
+  return fNPs(table, qType, q, nbPoints, direction) as {
+    d: number;
+    p: Point;
+  }[];
 }
 
 export class Table {
-  tables: { [key: number]: TableSet } = {};
+  tables: { [key: number]: Point[] } = {};
 
   constructor() {
     this.sampleDensities(20);
@@ -55,46 +53,32 @@ export class Table {
     if (temperature in this.tables) {
       return;
     }
-    const ABMs = Array.from({ length: 1001 }, (_, i) => i * 0.1);
+    const ABMs = Array.from({ length: 1011 }, (_, i) => i * 0.1);
     const pureEthanolDensityAt20C =
       temperature == 20 ? computeDensity(1, 20) : null;
     const samples = ABMs.map((abm) => {
       const dens = computeDensity(abm / 100, temperature);
+      const abv =
+        temperature == 20
+          ? (dens / (pureEthanolDensityAt20C as number)) * abm
+          : // there is an issue here, the values don't match
+            (findNearestPoint(this.tables[20], "abm", abm).dens /
+              findNearestPoint(this.tables[20], "abm", 100).dens) *
+            abm;
       return {
         dens: dens,
         abm: abm,
-        abv:
-          temperature == 20
-            ? (dens / (pureEthanolDensityAt20C as number)) * abm
-            : // there is an issue here, the values don't match
-              (this.tables[20].dens.abm.nearest({ abm: abm } as Point, 1)[0][0]
-                .dens /
-                this.tables[20].dens.abm.nearest({ abm: 100 } as Point, 1)[0][0]
-                  .dens) *
-              abm,
+        abv: abv,
       };
     });
-    this.tables[temperature] = {
-      dens: {
-        abm: new kdTree<Point>(samples, abmDistance, ["dens", "abm"]),
-        abv: new kdTree<Point>(samples, abvDistance, ["dens", "abv"]),
-      },
-      abm: {
-        dens: new kdTree<Point>(samples, densDistance, ["abm", "dens"]),
-        abv: new kdTree<Point>(samples, abvDistance, ["abm", "abv"]),
-      },
-      abv: {
-        dens: new kdTree<Point>(samples, densDistance, ["abv", "dens"]),
-        abm: new kdTree<Point>(samples, abmDistance, ["abv", "abm"]),
-      },
-    };
+    this.tables[temperature] = samples;
   }
 
   getDensityFromABM(abm: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].dens.abm.nearest({ abm: abm } as Point, 2);
+    let points = findNearestPoints(this.tables[temp], "abm", abm, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "abm",
       abm,
       "dens",
@@ -103,12 +87,9 @@ export class Table {
 
   getABMFromDensity(density: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].abm.dens.nearest(
-      { dens: density } as Point,
-      2,
-    );
+    let points = findNearestPoints(this.tables[temp], "dens", density, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "dens",
       density,
       "abm",
@@ -118,9 +99,9 @@ export class Table {
   /** computes the actual density from measured ABV from a 20C calibrated alcoholmeter */
   getDensityFromABV(abv: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].dens.abv.nearest({ abv: abv } as Point, 2);
+    let points = findNearestPoints(this.tables[temp], "abv", abv, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "abv",
       abv,
       "dens",
@@ -130,12 +111,9 @@ export class Table {
   /** computes the apparent ABV at the given temperature (or the legal one for 20C) */
   getABVFromDensity(density: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].abv.dens.nearest(
-      { dens: density } as Point,
-      2,
-    );
+    let points = findNearestPoints(this.tables[temp], "dens", density, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "dens",
       density,
       "abv",
@@ -145,9 +123,9 @@ export class Table {
   /** computes the actual ABM from measured ABV from a 20C calibrated alcoholmeter */
   getABMFromABV(abv: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].abm.abv.nearest({ abv: abv } as Point, 2);
+    let points = findNearestPoints(this.tables[temp], "abv", abv, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "abv",
       abv,
       "abm",
@@ -157,18 +135,42 @@ export class Table {
   /** computes the apparent ABV at the given temperature (or the legal one for 20C) */
   getABVFromABM(abm: number, temp: number): number {
     this.sampleDensities(temp);
-    let points = this.tables[temp].abv.abm.nearest({ abm: abm } as Point, 2);
+    let points = findNearestPoints(this.tables[temp], "abm", abm, 2);
     return interpolateTwoPoints(
-      points.map((p) => p[0]),
+      points.map((p) => p.p),
       "abm",
       abm,
       "abv",
     );
   }
 
-  /** get legal ABV from the measure of a 20C-calibrated alcoholmeter */
+  /**
+   * get legal ABV from the measure of a 20C-calibrated alcoholmeter
+   *
+   * (table VIIIa)
+   **/
+  getCorrectedABM(measuredABM: number, temp: number): number {
+    const rhoPrime20C = this.getDensityFromABM(measuredABM, 20);
+    const dens = adjustForGlassExpansion(rhoPrime20C, temp);
+    return this.getABMFromDensity(dens, temp);
+  }
+
+  /**
+   *
+   * get legal ABV from the measure of a 20C-calibrated alcoholmeter
+   *
+   * (table VIIIb)
+   *
+   **/
   getCorrectedABV(measuredABV: number, temp: number): number {
-    const measuredABM = this.getABMFromABV(measuredABV, temp);
-    return this.getABVFromABM(measuredABM, 20);
+    const rhoPrime20C = this.getDensityFromABV(measuredABV, 20);
+    const dens = adjustForGlassExpansion(rhoPrime20C, temp);
+    return this.getABVFromDensity(dens, temp);
+  }
+
+  // fetch an arbitrary Point based on temp + other quantity
+  // all other quantities are interpolated
+  getPoint(qType: keyof Point, q: number, temp: number) {
+    this.sampleDensities(temp);
   }
 }

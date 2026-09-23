@@ -11,7 +11,9 @@
 <table>
   <thead>
     <tr>
-      <td style="font-size: small;"> p&nbsp(%<sub>mass</sub>) </td>
+      <td style="font-size: small; white-space: nowrap;">
+        p (%<sub>mass</sub>)
+      </td>
       {#each decimals as decimal}
         <td
           class={{ "even-column": decimal % 2 < 1 }}

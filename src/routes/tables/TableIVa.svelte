@@ -11,7 +11,9 @@
 <table>
   <thead>
     <tr>
-      <td style="font-size: small;"> q&nbsp(%<sub>vol</sub>) </td>
+      <td style="font-size: small; white-space: nowrap;">
+        q (%<sub>vol</sub>)
+      </td>
       {#each decimals as decimal}
         <td
           class={{ "even-column": decimal % 2 < 1 }}

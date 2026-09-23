@@ -16,8 +16,8 @@
 <table>
   <thead>
     <tr>
-      <td style="font-size: small;">
-        ϱ<sub>20°C</sub>&nbsp;(g/L)
+      <td style="font-size: small; white-space: nowrap;">
+        ϱ<sub>20°C</sub> (g/L)
       </td>
       {#each decimals as decimal}
         <td

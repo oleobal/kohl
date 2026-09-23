@@ -1,6 +1,8 @@
 import { expect, test } from "vitest";
 import {
   bilinearInterpolate,
+  CollectionDirection,
+  findNearestPoints,
   interpolateFourPoints,
   interpolateTwoPoints,
   linearInterpolate,
@@ -145,4 +147,32 @@ test("fourPoints", () => {
       "q",
     ),
   ).toEqual(2);
+});
+
+test("nearestPoints", () => {
+  const table = [
+    { x: 1, y: 10, q: 100 },
+    { x: 2, y: 20, q: 200 },
+    { x: 3, y: 30, q: 300 },
+    { x: 4, y: 40, q: 400 },
+    { x: 5, y: 50, q: 500 },
+    { x: 6, y: 60, q: 600 },
+    { x: 7, y: 70, q: 700 },
+    { x: 8, y: 80, q: 800 },
+    { x: 9, y: 90, q: 900 },
+  ];
+  let points = findNearestPoints(table, "x", 7.8, 3, CollectionDirection.ASC);
+  expect(points.length).toEqual(3);
+  expect(points[0].d).toBeCloseTo(0.2);
+  expect(points[1].d).toBeCloseTo(0.8);
+  expect(points[2].d).toBeCloseTo(1.2);
+  expect(points[0].p.x).toEqual(8);
+  expect(points[1].p.y).toEqual(70);
+  expect(points[2].p.q).toEqual(900);
+
+  // out-of-bounds behavior
+  points = findNearestPoints(table, "q", 901, 3, CollectionDirection.ASC);
+  expect(points[0].d).toBeCloseTo(1);
+  expect(points[1].d).toBeCloseTo(101);
+  expect(points[2].d).toBeCloseTo(201);
 });

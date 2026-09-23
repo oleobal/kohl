@@ -37,8 +37,8 @@
   <thead>
     <tr>
       <td style="font-size: small;">
-        <p>→&nbsp;t&nbsp;(°C)</p>
-        <p>↓&nbsp;q&nbsp;(%<sub>mass</sub>)</p>
+        <p style="white-space: nowrap">→ t (°C)</p>
+        <p style="white-space: nowrap">↓ p (%<sub>mass</sub>)</p>
       </td>
       {#each temperatures as temperature}
         <td
@@ -63,7 +63,7 @@
           {#if isFrozen(abm, temperature)}
             <td
               class={{ "even-column": (temperature + 20) % 10 < 5 }}
-              title={abm + "%, " + temperature + "°C: " + "frozen solid"}
+              title={abm + " %mass, " + temperature + "°C: " + "frozen solid"}
             >
             </td>
           {:else}

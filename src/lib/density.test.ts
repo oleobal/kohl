@@ -139,3 +139,100 @@ test("Table Vb", () => {
   expect(table.getABVFromDensity(998, 20)).toBeCloseTo(0.13, 2);
   expect(table.getABVFromDensity(998.2, 20)).toBeCloseTo(0, 2);
 });
+
+test("Table VIIIa", () => {
+  let table = new Table();
+  expect(table.getCorrectedABM(0, 20)).toBeCloseTo(0, 1);
+  expect(table.getCorrectedABM(25.4, 20)).toBeCloseTo(25.4, 1);
+  expect(table.getCorrectedABM(81.2, 20)).toBeCloseTo(81.2, 1);
+  expect(table.getCorrectedABM(100, 20)).toBeCloseTo(100, 1);
+
+  // all data from METAS
+
+  expect(table.getCorrectedABM(13.5, -10)).toBeCloseTo(19.6, 1);
+  expect(table.getCorrectedABM(40, -10)).toBeCloseTo(50.3, 1);
+  expect(table.getCorrectedABM(80.5, -10)).toBeCloseTo(90.2, 1);
+  expect(table.getCorrectedABM(91, -10)).toBeCloseTo(99.6, 1);
+
+  expect(table.getCorrectedABM(0, 0)).toBeCloseTo(0.6, 1);
+  expect(table.getCorrectedABM(40, 0)).toBeCloseTo(46.9, 1);
+  expect(table.getCorrectedABM(80.5, 0)).toBeCloseTo(87.1, 1);
+  expect(table.getCorrectedABM(94, 0)).toBeCloseTo(99.6, 1);
+
+  expect(table.getCorrectedABM(2.5, 35)).toBeCloseTo(0.4, 1);
+  expect(table.getCorrectedABM(40, 35)).toBeCloseTo(34.7, 1);
+  expect(table.getCorrectedABM(80.5, 35)).toBeCloseTo(75.3, 1);
+  expect(table.getCorrectedABM(100, 35)).toBeCloseTo(95.8, 1);
+});
+
+test("Table VIIIb", () => {
+  let table = new Table();
+
+  const values = [
+    // Oudin data (from his Guide pratique d'alcoométrie)
+    // [66, 6, 70.6],
+
+    // discarding the Oudin data as Evelyne Chanson showed it to be unreliable
+
+    // METAS data (from the Swiss government website)
+    [66, 6, 70.6],
+    [0, 0, 0.7],
+    [13, -6, 16.0],
+    [12, 25, 10.9],
+    [19, 16, 20.2],
+    [37.5, 17, 38.7],
+    [53.5, -9, 63.5],
+    [66, 35, 60.8],
+    [86.5, 6, 90.2],
+    [94.5, -9, 100],
+    [97.5, 16, 98.3],
+    [99, 33, 96.5],
+
+    // EC data (from the EU commission's Practical Alcoholic strength tables)
+    [19.5, -20, 36.0],
+    [22, -17.5, 38.1],
+    [39, -18, 53.7],
+    [63, -20, 75.7],
+    [80, -17.5, 90.2],
+    [92.0, -20, 100],
+    [92.6, -17.5, 100],
+    [18.1, -15, 30],
+    [93.1, -15, 99.9],
+    [17.4, -12.5, 26.8],
+    [35, -12.5, 48.2],
+    [93.7, -12.5, 100],
+    [16.4, -10, 23.3],
+    [70, -10, 79.2],
+    [94.3, -10, 100],
+    [14.6, -7.5, 18.9],
+    [29, -7.5, 40.7],
+    [94.8, -7.5, 100],
+    [11.6, -5, 13.9],
+    [73.8, -5, 81.3],
+    [95.3, -5, 99.9],
+    [6.3, -2.5, 7.3],
+    [30, -2.5, 39.5],
+    [95.8, -2.5, 99.9],
+    [0, 0, 0.7],
+    [50, 0, 57.2],
+    [96.3, 0, 99.9],
+    [0, 2.5, 0.9],
+    [75, 2.5, 80.3],
+    [96.8, 2.5, 99.9],
+    [0, 5, 0.9],
+    [33, 5, 39.2],
+
+    [3.8, 40, 0],
+    [30, 40, 22.2],
+    [62, 40, 54.9],
+    [86, 40, 80.1],
+    [100, 40, 96.3],
+    [102.9, 40, 99.8],
+    [103.0, 40, 99.9],
+    [103.1, 40, 100],
+  ];
+
+  values.forEach((v) => {
+    expect(table.getCorrectedABV(v[0], v[1])).toBeCloseTo(v[2], 1);
+  });
+});

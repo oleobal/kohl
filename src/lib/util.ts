@@ -101,3 +101,112 @@ export function interpolateTwoPoints<T extends { [key: string]: number }>(
     knownQuantity,
   );
 }
+
+interface Point {
+  [key: string]: number;
+}
+
+function distance(quantity: keyof Point, a: Point, b: Point): number {
+  return Math.abs(b[quantity] - a[quantity]);
+}
+
+export enum CollectionDirection {
+  ASC,
+  DESC,
+}
+
+/**
+ * find the points closest to the given quantity in the given samples
+ *
+ * this relies on the quantities being strictly ordered in the given dimension!
+ *
+ * eg f(x) < f(x+1) whatever x is
+ *
+ * this enables searching for coordinates from the quantities
+ */
+export function findNearestPoints(
+  table: Point[],
+  qType: keyof Point,
+  q: number,
+  nbPoints: number,
+  direction: CollectionDirection,
+): { d: number; p: Point }[] {
+  let reversed = direction == CollectionDirection.ASC ? false : true;
+  let target = { [qType]: q } as Point;
+  // the samples are ordered whatever the quantity so we can run binary search
+  // (however density is ordered reverse to ABV and ABM)
+  let center = table.length / 2;
+  let range = table.length / 4;
+
+  // find the center
+  let iterations = 0;
+  let iL = -1;
+  let iH = -1;
+  while (iterations < Math.max(Math.ceil(table.length / 10), 10)) {
+    iterations++;
+    iL = Math.floor(center);
+    iH = iL == center ? iL + 1 : Math.ceil(center);
+
+    if (iH >= table.length) {
+      center = table.length - 1;
+      iH = table.length - 1;
+      iL = center - 1;
+      break;
+    }
+    if (iL < 0) {
+      center = 0;
+      iH = 0;
+      iL = 1;
+      break;
+    }
+
+    if (reversed) {
+      if (table[iL][qType] < q) {
+        center -= range;
+        range /= 2;
+      } else if (table[iH][qType] > q) {
+        center += range;
+        range /= 2;
+      } else {
+        break;
+      }
+    } else {
+      if (table[iH][qType] < q) {
+        center += range;
+        range /= 2;
+      } else if (table[iL][qType] > q) {
+        center -= range;
+        range /= 2;
+      } else {
+        break;
+      }
+    }
+  }
+
+  // widen to nbPoints
+  let dL = distance(qType, table[iL], target);
+  let dH = distance(qType, table[iH], target);
+  let results =
+    dL <= dH
+      ? [
+          { d: dL, p: table[iL] },
+          { d: dH, p: table[iH] },
+        ]
+      : [
+          { d: dH, p: table[iH] },
+          { d: dL, p: table[iL] },
+        ];
+  while (results.length < nbPoints) {
+    dL = iL - 1 > 0 ? distance(qType, table[iL - 1], target) : Infinity;
+    dH =
+      iH + 1 < table.length ? distance(qType, table[iH + 1], target) : Infinity;
+    if (dL <= dH) {
+      iL--;
+      results.push({ d: dL, p: table[iL] });
+    } else {
+      iH++;
+      results.push({ d: dH, p: table[iH] });
+    }
+  }
+  return results;
+}

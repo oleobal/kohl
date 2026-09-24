@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Table from "../../components/Table.svelte";
   import { table as calculatedTable } from "../../lib/state.svelte";
 
   const STARTING_DENSITY = 780; // the original document starts at 750 for consistency between pages
@@ -7,67 +8,33 @@
     (_, i) => i + STARTING_DENSITY,
   );
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
+
+  function computeCell(decimal: number, integer: number) {
+    const density = integer + Number(decimal);
+    if (density < 789.3 || density > 998.2) {
+      return {
+        title: null,
+        result: null,
+      };
+    }
+    let r = calculatedTable.getABVFromDensity(density, 20);
+    return {
+      title: `${density} g/L → ${r}%vol`,
+      result: r.toFixed(2),
+    };
+  }
 </script>
 
 <svelte:head>
   <title>Table Vb: q ← ϱ_20°C</title>
 </svelte:head>
 
-<table>
-  <thead>
-    <tr>
-      <td style="font-size: small; white-space: nowrap;">
-        ϱ<sub>20°C</sub> (g/L)
-      </td>
-      {#each decimals as decimal}
-        <td
-          class={{ "even-column": decimal % 2 < 1 }}
-          style="text-align: center;"
-        >
-          <strong>0.{decimal}</strong>
-        </td>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each densities as density}
-      <tr
-        class={{ "even-row": density % 10 < 5 }}
-        style="text-align: right; font-variant-numeric: lining-nums;"
-      >
-        <td>
-          <strong>{density}</strong>
-        </td>
-        {#each decimals as decimal}
-          {@const preciseDensity = density + decimal / 10}
-          {#if preciseDensity < 789.3 || preciseDensity > 998.2}
-            <td class={{ "even-column": decimal % 2 < 1 }}></td>
-          {:else}
-            <td
-              class={{ "even-column": decimal % 2 < 1 }}
-              style="text-align: right; font-variant-numeric: lining-nums;"
-              title={preciseDensity +
-                " g/L → " +
-                calculatedTable.getABVFromDensity(preciseDensity, 20) +
-                " %vol"}
-            >
-              {calculatedTable.getABVFromDensity(preciseDensity, 20).toFixed(2)}
-            </td>
-          {/if}
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-
-<style>
-  td {
-    padding: 5px;
-  }
-  .even-row {
-    background-color: #feea;
-  }
-  .even-column {
-    background-color: #eefa;
-  }
-</style>
+<Table
+  label={"ϱ<sub>20°C</sub> (g/L)"}
+  inputs={{
+    x: decimals.map((i) => `0.${i}`),
+    y: densities,
+  }}
+  zebraStep={{ x: 1, y: 5 }}
+  f={computeCell}
+/>

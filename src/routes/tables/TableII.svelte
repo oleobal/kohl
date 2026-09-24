@@ -1,7 +1,9 @@
 <script lang="ts">
+  import Table from "../../components/Table.svelte";
   import { table as calculatedTable } from "../../lib/state.svelte";
 
   const temperatures: number[] = Array.from({ length: 61 }, (_, i) => i - 20);
+  const abvs: number[] = Array.from({ length: 101 }, (_, i) => i);
 
   function isFrozen(abv: number, temperature: number) {
     return (
@@ -27,73 +29,29 @@
       (temperature <= -1 && abv < 3)
     );
   }
+
+  function computeCell(t: number, q: number) {
+    if (isFrozen(q, t)) {
+      return {
+        title: `${q}%vol, ${t}°C → frozen solid`,
+        result: null,
+      };
+    }
+    let r = calculatedTable.getDensityFromABV(q, t);
+    return {
+      title: `${q}%vol, ${t}°C → ${r}`,
+      result: r.toFixed(2),
+    };
+  }
 </script>
 
 <svelte:head>
   <title>Table II: ϱ ← q, t</title>
 </svelte:head>
 
-<table>
-  <thead>
-    <tr>
-      <td style="font-size: small;">
-        <p style="white-space: nowrap">→ t (°C)</p>
-        <p style="white-space: nowrap">↓ q (%<sub>vol</sub>)</p>
-      </td>
-      {#each temperatures as temperature}
-        <td
-          class={{ "even-column": (temperature + 20) % 10 < 5 }}
-          style="text-align: center;"
-        >
-          <strong>{temperature}</strong>
-        </td>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each { length: 101 }, abv}
-      <tr
-        class={{ "even-row": abv % 10 < 5 }}
-        style="text-align: right; font-variant-numeric: lining-nums;"
-      >
-        <td>
-          <strong>{abv}</strong>
-        </td>
-        {#each temperatures as temperature}
-          {#if isFrozen(abv, temperature)}
-            <td
-              class={{ "even-column": (temperature + 20) % 10 < 5 }}
-              title={abv + " %vol, " + temperature + "°C: " + "frozen solid"}
-            >
-            </td>
-          {:else}
-            <td
-              class={{ "even-column": (temperature + 20) % 10 < 5 }}
-              style="text-align: right; font-variant-numeric: lining-nums;"
-              title={abv +
-                " %vol, " +
-                temperature +
-                "°C → " +
-                calculatedTable.getDensityFromABV(abv, temperature) +
-                " g/L"}
-            >
-              {calculatedTable.getDensityFromABV(abv, temperature).toFixed(2)}
-            </td>
-          {/if}
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-
-<style>
-  td {
-    padding: 5px;
-  }
-  .even-row {
-    background-color: #feea;
-  }
-  .even-column {
-    background-color: #eefa;
-  }
-</style>
+<Table
+  label={"→ t (°C)<br>↓ q (%<sub>vol</sub>)"}
+  inputs={{ x: temperatures, y: abvs }}
+  zebraStep={{ x: 5, y: 5 }}
+  f={computeCell}
+/>

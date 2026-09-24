@@ -1,17 +1,4 @@
 <script lang="ts">
-  import TableI from "./tables/TableI.svelte";
-  import TableII from "./tables/TableII.svelte";
-  import TableIIIa from "./tables/TableIIIa.svelte";
-  import TableIIIb from "./tables/TableIIIb.svelte";
-  import TableIVa from "./tables/TableIVa.svelte";
-  import TableIVb from "./tables/TableIVb.svelte";
-  import TableVa from "./tables/TableVa.svelte";
-  import TableVb from "./tables/TableVb.svelte";
-  import TableVI from "./tables/TableVI.svelte";
-  import TableVII from "./tables/TableVII.svelte";
-  import TableVIIIa from "./tables/TableVIIIa.svelte";
-  import TableVIIIb from "./tables/TableVIIIb.svelte";
-
   const tableChoices = [
     { no: "none", desc: "select a table to display" },
     { no: "I", desc: "I: ϱ ← p, t" },
@@ -28,43 +15,91 @@
     { no: "VIIIb", desc: "VIIIb: q ← q_meas, t" },
   ];
 
-  let selectedTable: string | undefined = undefined;
+  let sel: string | undefined = $state(undefined);
 </script>
 
 <svelte:head>
   <title>OIML tables</title>
 </svelte:head>
 
-<select bind:value={selectedTable}>
+<select bind:value={sel}>
   {#each tableChoices as t}
     <option value={t.no}>{t.desc}</option>
   {/each}
 </select>
 
-{#if selectedTable == "I"}
-  <TableI />
-{:else if selectedTable == "II"}
-  <TableII />
-{:else if selectedTable == "IIIa"}
-  <TableIIIa />
-{:else if selectedTable == "IIIb"}
-  <TableIIIb />
-{:else if selectedTable == "IVa"}
-  <TableIVa />
-{:else if selectedTable == "IVb"}
-  <TableIVb />
-{:else if selectedTable == "Va"}
-  <TableVa />
-{:else if selectedTable == "Vb"}
-  <TableVb />
-{:else if selectedTable == "VI"}
-  <TableVI />
-{:else if selectedTable == "VII"}
-  <TableVII />
-{:else if selectedTable == "VIIIa"}
-  <TableVIIIa />
-{:else if selectedTable == "VIIIb"}
-  <TableVIIIb />
+{#if sel == "I"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableI }}
+    <TableI />
+  {/await}
+{:else if sel == "II"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableII }}
+    <TableII />
+  {/await}
+{:else if sel == "IIIa"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableIIIa }}
+    <TableIIIa />
+  {/await}
+{:else if sel == "IIIb"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableIIIb }}
+    <TableIIIb />
+  {/await}
+{:else if sel == "IVa"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableIVb }}
+    <TableIVb />
+  {/await}
+{:else if sel == "IVb"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableIVa }}
+    <TableIVa />
+  {/await}
+{:else if sel == "Va"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVa }}
+    <TableVa />
+  {/await}
+{:else if sel == "Vb"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVb }}
+    <TableVb />
+  {/await}
+{:else if sel == "VI"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVI }}
+    <TableVI />
+  {/await}
+{:else if sel == "VII"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVII }}
+    <TableVII />
+  {/await}
+{:else if sel == "VIIIa"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVIIIa }}
+    <TableVIIIa />
+  {/await}
+{:else if sel == "VIIIb"}
+  {#await import(`./tables/Table${sel}.svelte`)}
+    <p>Loading..</p>
+  {:then { default: TableVIIIb }}
+    <TableVIIIb />
+  {/await}
 {:else}
   <p>select a table to display</p>
 {/if}

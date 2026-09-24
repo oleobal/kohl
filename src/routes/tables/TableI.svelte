@@ -1,7 +1,9 @@
 <script lang="ts">
+  import Table from "../../components/Table.svelte";
   import { table as calculatedTable } from "../../lib/state.svelte";
 
   const temperatures: number[] = Array.from({ length: 61 }, (_, i) => i - 20);
+  const abms: number[] = Array.from({ length: 101 }, (_, i) => i);
 
   function isFrozen(abm: number, temperature: number) {
     return (
@@ -27,73 +29,29 @@
       (temperature <= -1 && abm < 3)
     );
   }
+
+  function computeCell(t: number, p: number) {
+    if (isFrozen(p, t)) {
+      return {
+        title: `${p}%mass, ${t}°C → frozen solid`,
+        result: null,
+      };
+    }
+    let r = calculatedTable.getDensityFromABM(p, t);
+    return {
+      title: `${p}%mass, ${t}°C → ${r}`,
+      result: r.toFixed(2),
+    };
+  }
 </script>
 
 <svelte:head>
   <title>Table I: ϱ ← p, t</title>
 </svelte:head>
 
-<table>
-  <thead>
-    <tr>
-      <td style="font-size: small;">
-        <p style="white-space: nowrap">→ t (°C)</p>
-        <p style="white-space: nowrap">↓ p (%<sub>mass</sub>)</p>
-      </td>
-      {#each temperatures as temperature}
-        <td
-          class={{ "even-column": (temperature + 20) % 10 < 5 }}
-          style="text-align: center;"
-        >
-          <strong>{temperature}</strong>
-        </td>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each { length: 101 }, abm}
-      <tr
-        class={{ "even-row": abm % 10 < 5 }}
-        style="text-align: right; font-variant-numeric: lining-nums;"
-      >
-        <td>
-          <strong>{abm}</strong>
-        </td>
-        {#each temperatures as temperature}
-          {#if isFrozen(abm, temperature)}
-            <td
-              class={{ "even-column": (temperature + 20) % 10 < 5 }}
-              title={abm + " %mass, " + temperature + "°C: " + "frozen solid"}
-            >
-            </td>
-          {:else}
-            <td
-              class={{ "even-column": (temperature + 20) % 10 < 5 }}
-              style="text-align: right; font-variant-numeric: lining-nums;"
-              title={abm +
-                " %mass, " +
-                temperature +
-                "°C → " +
-                calculatedTable.getDensityFromABM(abm, temperature) +
-                " g/L"}
-            >
-              {calculatedTable.getDensityFromABM(abm, temperature).toFixed(2)}
-            </td>
-          {/if}
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-
-<style>
-  td {
-    padding: 5px;
-  }
-  .even-row {
-    background-color: #feea;
-  }
-  .even-column {
-    background-color: #eefa;
-  }
-</style>
+<Table
+  label={"→ t (°C)<br>↓ p (%<sub>mass</sub>)"}
+  inputs={{ x: temperatures, y: abms }}
+  zebraStep={{ x: 5, y: 5 }}
+  f={computeCell}
+/>

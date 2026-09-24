@@ -1,70 +1,36 @@
 <script lang="ts">
+  import Table from "../../components/Table.svelte";
   import { table as calculatedTable } from "../../lib/state.svelte";
 
+  const abvs: number[] = Array.from({ length: 101 }, (_, i) => i);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
+
+  function computeCell(decimal: number, p: number) {
+    const abv = p + Number(decimal);
+    if (abv > 100) {
+      return {
+        title: null,
+        result: null,
+      };
+    }
+    let r = calculatedTable.getDensityFromABV(abv, 20);
+    return {
+      title: `${abv}%vol → ${r} g/L`,
+      result: r.toFixed(2),
+    };
+  }
 </script>
 
 <svelte:head>
   <title>Table IVa: ϱ_20°C ← q</title>
 </svelte:head>
 
-<table>
-  <thead>
-    <tr>
-      <td style="font-size: small; white-space: nowrap;">
-        q (%<sub>vol</sub>)
-      </td>
-      {#each decimals as decimal}
-        <td
-          class={{ "even-column": decimal % 2 < 1 }}
-          style="text-align: center;"
-        >
-          <strong>0.{decimal}</strong>
-        </td>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each { length: 101 }, abv}
-      <tr
-        class={{ "even-row": abv % 10 < 5 }}
-        style="text-align: right; font-variant-numeric: lining-nums;"
-      >
-        <td>
-          <strong>{abv}</strong>
-        </td>
-        {#each decimals as decimal}
-          {#if abv == 100 && decimal > 0}
-            <td class={{ "even-column": decimal % 2 < 1 }}></td>
-          {:else}
-            <td
-              class={{ "even-column": decimal % 2 < 1 }}
-              style="text-align: right; font-variant-numeric: lining-nums;"
-              title={abv +
-                decimal / 10 +
-                " %vol → " +
-                calculatedTable.getDensityFromABV(abv + decimal / 10, 20) +
-                " g/L"}
-            >
-              {calculatedTable
-                .getDensityFromABV(abv + decimal / 10, 20)
-                .toFixed(2)}
-            </td>
-          {/if}
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-
-<style>
-  td {
-    padding: 5px;
-  }
-  .even-row {
-    background-color: #feea;
-  }
-  .even-column {
-    background-color: #eefa;
-  }
-</style>
+<Table
+  label={"q (%<sub>vol</sub>)"}
+  inputs={{
+    x: decimals.map((i) => `0.${i}`),
+    y: abvs,
+  }}
+  zebraStep={{ x: 1, y: 5 }}
+  f={computeCell}
+/>

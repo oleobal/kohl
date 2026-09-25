@@ -6,8 +6,9 @@ import {
   type Either,
 } from "@sweet-monads/either";
 
-import { Table, DENSITY_ETHANOL_40C, DENSITY_WATER_0C } from "./density.js";
+import { DENSITY_ETHANOL_40C, DENSITY_WATER_0C } from "./density.js";
 import { removeNullValues } from "./util.js";
+import { table } from "./state.svelte.js";
 
 export interface LiquidMakeup {
   ABV?: number; // alcohol by volume, percentage
@@ -79,25 +80,30 @@ export function normalizeLiquidMakeup(
         density: "conflict",
       });
   }
+  if (m.temp == null) {
+    m.temp = 20;
+  }
   if (m.ABM != null) {
     if (m.ABM < 0 || m.ABM > 100) {
       return left({ cause: "impossible ABM" });
     }
-    const d = getDensityFromABM(m.ABM);
+    const d = table.getDensityFromABM(m.ABM, m.temp);
     return right({
       ABM: m.ABM,
       density: d,
-      ABV: getABVFromDensity(d),
+      ABV: table.getABVFromDensity(d, m.temp),
+      temp: m.temp,
     });
   } else if (m.ABV != null) {
     if (m.ABV < 0 || m.ABV > 100) {
       return left({ cause: "impossible ABV" });
     }
-    const d = getDensityFromABV(m.ABV);
+    const d = table.getDensityFromABV(m.ABV, m.temp);
     return right({
       ABV: m.ABV,
       density: d,
-      ABM: getABMFromDensity(d),
+      ABM: table.getABMFromDensity(d, m.temp),
+      temp: m.temp,
     });
   } else if (m.density != null) {
     if (m.density < DENSITY_ETHANOL_40C) {
@@ -107,9 +113,10 @@ export function normalizeLiquidMakeup(
       return left({ cause: "density above that of pure water" });
     }
     return right({
-      ABV: getABVFromDensity(m.density),
+      ABV: table.getABVFromDensity(m.density, m.temp),
       density: m.density,
-      ABM: getABMFromDensity(m.density),
+      ABM: table.getABMFromDensity(m.density, m.temp),
+      temp: m.temp,
     });
   }
   return left({ cause: "unreachable" });
@@ -211,7 +218,7 @@ export function normalizeLiquid(
       } as ErrorLiquid;
     }
     if (result.mass) {
-      result.volume = (1 / result.density) * result.mass;
+      result.volume = (1000 / result.density) * result.mass;
     } else if (result.volume) {
       result.mass = result.density * result.volume;
     }
@@ -222,50 +229,50 @@ export function normalizeLiquid(
     if (error) {
       return left(error); // this is obviously the wrong way round but I'll fix it later
     }
-    result.ABV = getABVFromDensity(result.density);
+    result.ABV = table.getABVFromDensity(result.density, result.temp);
     result.LPA = (result.ABV / 100) * (result.volume as number);
-    result.ABM = getABMFromDensity(result.density);
+    result.ABM = table.getABMFromDensity(result.density, result.temp);
     result.KPA = (result.ABM / 100) * (result.mass as number);
   } else if (result.ABM != null) {
-    result.density = getDensityFromABM(result.ABM);
+    result.density = table.getDensityFromABM(result.ABM, result.temp);
     let error = setQuantityBasedOnDensity();
     if (error) {
       return left(error); // this is obviously the wrong way round but I'll fix it later
     }
-    result.ABV = getABVFromDensity(result.density);
+    result.ABV = table.getABVFromDensity(result.density, result.temp);
     result.KPA = (result.ABM / 100) * (result.mass as number);
-    result.LPA = result.KPA * (1 / DENSITY_ETHANOL);
+    result.LPA = result.KPA * (1000 / table.getDensityFromABM(100, 20));
   } else if (result.ABV != null) {
-    result.density = getDensityFromABV(result.ABV);
+    result.density = table.getDensityFromABV(result.ABV, result.temp);
     let error = setQuantityBasedOnDensity();
     if (error) {
       return left(error); // this is obviously the wrong way round but I'll fix it later
     }
     result.LPA = (result.ABV / 100) * (result.volume as number);
-    result.ABM = getABMFromDensity(result.density);
+    result.ABM = table.getABMFromDensity(result.density, result.temp);
     result.KPA = (result.ABM / 100) * (result.mass as number);
   } else if (result.KPA != null || result.LPA != null) {
     if (result.KPA != null) {
-      result.LPA = result.KPA * (1 / DENSITY_ETHANOL);
+      result.LPA = result.KPA * (1000 / table.getDensityFromABM(100, 20));
     } else if (result.LPA != null) {
-      result.KPA = result.LPA * DENSITY_ETHANOL;
+      result.KPA = result.LPA * table.getDensityFromABM(100, 20);
     }
     if (result.mass) {
       result.ABM = ((result.KPA as number) / result.mass) * 100;
-      result.density = getDensityFromABM(result.ABM);
+      result.density = table.getDensityFromABM(result.ABM, result.temp);
       let error = setQuantityBasedOnDensity();
       if (error) {
         return left(error); // this is obviously the wrong way round but I'll fix it later
       }
-      result.ABV = getABVFromDensity(result.density);
+      result.ABV = table.getABVFromDensity(result.density, result.temp);
     } else if (result.volume) {
       result.ABV = ((result.LPA as number) / result.volume) * 100;
-      result.density = getDensityFromABV(result.ABV);
+      result.density = table.getDensityFromABV(result.ABV, result.temp);
       let error = setQuantityBasedOnDensity();
       if (error) {
         return left(error); // this is obviously the wrong way round but I'll fix it later
       }
-      result.ABM = getABMFromDensity(result.density);
+      result.ABM = table.getABMFromDensity(result.density, result.temp);
     }
   }
 

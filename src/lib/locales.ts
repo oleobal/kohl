@@ -67,6 +67,14 @@ export const text: { [key: string]: { [key: string]: string } } = {
     en: "mass",
     fr: "mass",
   },
+  temp_long: {
+    en: "temperature (°C)",
+    fr: "température (°C)",
+  },
+  temp_short: {
+    en: "temp",
+    fr: "temp",
+  },
   vol_long: {
     en: "volume (L)",
     fr: "volume (L)",

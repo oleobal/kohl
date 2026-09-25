@@ -165,7 +165,7 @@
           onclick={() => {
             addLiquid();
           }}
-          style="width: 40px; height: 40px;">+</button
+          class="btn-add">+</button
         >
       </div>
       <div>
@@ -197,6 +197,25 @@
     margin: 10px 0;
     max-width: 500px;
     flex-grow: 1;
+  }
+
+  .btn-add {
+    padding: 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background-color: white;
+    border: 1px solid black;
+
+    height: 50px;
+  }
+  .btn-add:hover {
+    color: var(--l-green);
+    border-color: var(--l-green);
+  }
+  .btn-add:active {
+    background-color: #ffe;
   }
 
   .title {

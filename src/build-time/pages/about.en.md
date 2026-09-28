@@ -12,10 +12,13 @@ This software is shared in the hope it will be useful. But **absolutely no warra
 
 ### Citations
 
-| title                                                            | author                               | publication                        |
-| ---------------------------------------------------------------- | ------------------------------------ | ---------------------------------- |
-| _Traceability and computerization of alcoholometric tables_      | Evelyne Chanson                      | OIML bulletin of july 2015 p. 5    |
-| _A revised formula for the calculation of alcoholometric tables_ | Horst Bettin, Frank Spieweck         | PTB-Mitteilungen 6/90, 1990 p. 457 |
-| _International alcoholometric tables_                            | OIML                                 | OIML recommendation 22, 1975       |
-| _Practical alcoholic-strength tables_                            | Commission Européenne                | 1978                               |
-| _Alkoholtafel_                                                   | Institut fédéral de métrologie METAS | 2011                               |
+I thank the following authors without whom this project would not have been possible.
+
+| title                                                                                                | author                               | publication                                   |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------- |
+| _Traceability and computerization of alcoholometric tables_                                          | Evelyne Chanson                      | OIML bulletin of july 2015 p. 5               |
+| _Coefficients and reference implementation for the Wagenbreth–Blanke ethanol-water density equation_ | ququqem                              | https://doi.org/10.5281/zenodo.19426888, 2026 |
+| _A revised formula for the calculation of alcoholometric tables_                                     | Horst Bettin, Frank Spieweck         | PTB-Mitteilungen 6/90, 1990 p. 457            |
+| _International alcoholometric tables_                                                                | OIML                                 | OIML recommendation 22, 1975                  |
+| _Practical alcoholic-strength tables_                                                                | Commission Européenne                | 1978                                          |
+| _Détermination de la teneur en alcool_                                                               | Institut fédéral de métrologie METAS | 2011                                          |

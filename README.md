@@ -115,3 +115,11 @@ The general formula is sampled at .1%mass intervals for any requested temperatur
 Reference publications failed to publish implementation details or source code. This means some choices such as interpolation or rounding are left to ourselves and might or might not match those of the original publications, although the results do match the published tables.
 
 In particular, tables VIII a and b present values above 100%, which is the case in the source material. These rely on dubious extrapolation; specifically, in my code, these break if the general formula is sampled up to 100% or up to 103%, but work if it is sampled to 101%. I believe I am reproducing an interpolation artifact.
+
+# Thanks
+
+In the course of this project I have come to greatly appreciate and rely on the works of Evelyne Chanson.
+
+I have also relied on [ququem's implementation of the OIML R22 polynomial](https://github.com/ququqem/wagenbreth-blanke-oiml-r22).
+
+I am very thankful for their contributions.

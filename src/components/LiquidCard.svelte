@@ -278,6 +278,7 @@
   }
   .btn-close:active {
     background-color: #ffe;
+    box-shadow: 0 0 10px red;
   }
   .btn-pro {
     height: 24px;
@@ -288,13 +289,6 @@
   .btn-pro-result {
     color: var(--l-green);
     border-color: var(--l-green);
-  }
-  .btn-pro:hover {
-    color: var(--l-blue);
-    border-color: var(--l-blue);
-  }
-  .btn-pro:active {
-    background-color: #ffe;
   }
   .inside {
     display: flex;

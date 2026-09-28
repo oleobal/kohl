@@ -22,7 +22,9 @@
         {@html localizePage("help")}
       </div>
       <div class="actions">
-        <button onclick={() => close()}>OK</button>
+        <button class="round-btn" style="height: 35px;" onclick={() => close()}
+          >OK</button
+        >
       </div>
     </div>
   </div>
@@ -39,14 +41,15 @@
     justify-content: center;
     align-items: center;
 
+    z-index: 101;
     /* allow click-through to backdrop */
     pointer-events: none;
-    z-index: 101;
   }
 
   .contents {
-    width: min(calc(100vw - 50px), 800px);
-    max-height: calc(100vh - 50px);
+    pointer-events: auto;
+    width: min(calc(100vw - 30px), 800px);
+    max-height: calc(100vh - 30px);
     display: flex;
     flex-direction: column;
   }
@@ -67,7 +70,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    pointer-events: auto;
+
     font-size: 75%;
     overflow: scroll;
   }

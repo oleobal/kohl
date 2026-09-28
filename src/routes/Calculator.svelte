@@ -206,7 +206,7 @@
           onclick={() => {
             addLiquid();
           }}
-          class="btn-add">{@html plusIcon}</button
+          class="round-btn btn-add">{@html plusIcon}</button
         >
       </div>
       <div>
@@ -229,13 +229,6 @@
 
   .top-btn {
     height: 24px;
-  }
-  .top-btn:hover {
-    border-color: var(--l-blue);
-    color: var(--l-blue);
-  }
-  .top-btn:active {
-    background-color: #ffe;
   }
 
   .container {
@@ -268,6 +261,7 @@
   }
   .btn-add:active {
     background-color: #ffe;
+    box-shadow: 0 0 10px var(--l-green);
   }
 
   .title {
@@ -283,6 +277,7 @@
     right: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
     z-index: 100;
   }
 </style>

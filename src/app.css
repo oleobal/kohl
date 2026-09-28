@@ -29,3 +29,13 @@ a:hover {
   background-color: white;
   border: 1px solid black;
 }
+
+.round-btn:hover {
+  color: var(--l-blue);
+  border-color: var(--l-blue);
+}
+
+.round-btn:active {
+  background-color: #ffe;
+  box-shadow: 0 0 10px var(--l-blue);
+}

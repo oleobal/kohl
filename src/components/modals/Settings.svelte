@@ -90,7 +90,9 @@
         {@html localizePage("about")}
       </div>
       <div class="actions">
-        <button onclick={() => close()}>OK</button>
+        <button class="round-btn" style="height: 35px;" onclick={() => close()}
+          >OK</button
+        >
       </div>
     </div>
   </div>
@@ -113,8 +115,8 @@
   }
 
   .contents {
-    width: min(calc(100vw - 50px), 800px);
-    max-height: calc(100vh - 50px);
+    width: min(calc(100vw - 30px), 800px);
+    max-height: calc(100vh - 30px);
     display: flex;
     flex-direction: column;
   }

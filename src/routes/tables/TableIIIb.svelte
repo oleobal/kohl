@@ -1,11 +1,11 @@
 <script lang="ts">
   import Table from "../../components/Table.svelte";
-  import { table as calculatedTable } from "../../lib/state.svelte";
+  import { model } from "../../lib/state.svelte";
 
   const abms: number[] = Array.from({ length: 101 }, (_, i) => i);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
 
-  function displayFunc(decimal: number, p: number) {
+  function computeCell(decimal: number, p: number) {
     const abm = p + Number(decimal);
     if (abm > 100) {
       return {
@@ -13,7 +13,7 @@
         result: null,
       };
     }
-    let r = calculatedTable.getABVFromABM(abm, 20);
+    let r = model.table.getABVFromABM(abm, 20);
     return {
       title: `${abm}%mass → ${r}%vol`,
       result: r.toFixed(2),
@@ -32,5 +32,5 @@
     y: abms,
   }}
   zebraStep={{ x: 1, y: 5 }}
-  f={displayFunc}
+  f={computeCell}
 />

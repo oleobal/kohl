@@ -92,13 +92,21 @@ To run it:
 
 `yarn install`
 
-`yarn proto`
+`yarn pre-build`
 
 `yarn dev`
 
 To run tests:
 
 `yarn test`
+
+## structure
+
+At the heart of the project is the implementation of a physical model relating density to ABM and temperature. This is found under `src/lib/physics/`. It is used directly to generate OIML tables. It also performs adjustments for expansion of glass instruments.
+
+Atop it is a calculator in `src/lib/liquid.ts`, which uses the model for normalizing and compiling liquids.
+
+Then atop these is a Svelte web app.
 
 ## implementation details
 

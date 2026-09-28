@@ -1,6 +1,6 @@
 <script lang="ts">
   import Table from "../../components/Table.svelte";
-  import { table as calculatedTable } from "../../lib/state.svelte";
+  import { model } from "../../lib/state.svelte";
 
   const abvs: number[] = Array.from({ length: 101 }, (_, i) => i);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
@@ -13,7 +13,7 @@
         result: null,
       };
     }
-    let r = calculatedTable.getABMFromABV(abv, 20);
+    let r = model.table.getABMFromABV(abv, 20);
     return {
       title: `${abv}%vol → ${r}%mass`,
       result: r.toFixed(2),

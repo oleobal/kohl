@@ -11,14 +11,28 @@
     type NormalizedLiquid,
   } from "../lib/liquid";
   import LiquidCard from "../components/LiquidCard.svelte";
-  import { StateObject } from "../lib/proto/marshall";
+  import { StateObject } from "../lib/machine-made/protobuf/marshall";
   import { left, right, type Either } from "@sweet-monads/either";
 
   import { appSettings, liquids } from "../lib/state.svelte";
   import { countNonNullKeys, removeNullValues } from "../lib/util";
-  import { choices as localeChoices, localize } from "../lib/locales";
+  import {
+    choices as localeChoices,
+    localizeCap,
+  } from "../lib/content/locales";
+  import { plusIcon, wrenchIcon } from "../lib/content/icons";
+  import { modals, Modals } from "svelte-modals";
+  import Help from "../components/modals/Help.svelte";
+  import Settings from "../components/modals/Settings.svelte";
 
-  let title: string = $state(localize("compiling_calculator", true));
+  let title: string = $state(localizeCap("compiling_calculator"));
+  let originalTitle = [appSettings.locale, localizeCap("compiling_calculator")];
+  $effect(() => {
+    if (originalTitle[0] != appSettings.locale && originalTitle[1] == title) {
+      title = localizeCap("compiling_calculator");
+      originalTitle = [appSettings.locale, localizeCap("compiling_calculator")];
+    }
+  });
 
   let forcedResult: Liquid = $state({});
 
@@ -57,7 +71,7 @@
             r[rect[0]] = right<ErrorLiquid, Liquid>(solution.value.rectifier);
             return r;
           } else {
-            return { result: solution.value };
+            return { result: solution };
           }
         } else if (
           Object.entries(liquidMakeups).length == 2 &&
@@ -80,28 +94,34 @@
           };
         }
       } else {
-        return { result: sumLiquids(Object.values(liquids.data)) };
+        return {
+          result: sumLiquids(
+            Object.values(liquids.ids.map((id) => liquids.data[id])),
+          ),
+        };
       }
     });
 
-  function addLiquid(l?: any) {
-    let elementID = crypto.randomUUID();
-    liquids.data[elementID] = l ? l : {};
+  function addLiquid(id?: string, l?: any) {
+    let elementID = id || crypto.randomUUID();
+    liquids.data[elementID] = l || {};
     liquids.ids.push(elementID);
   }
 
   onMount(() => {
-    if (window.location.hash) {
-      const loadedState = StateObject.decode(
-        Uint8Array.fromBase64(window.location.hash.substring(1)),
-      );
-      console.debug("loaded app state", loadedState);
-      title = loadedState.title;
-      loadedState.liquids.forEach((l) => {
-        addLiquid(l);
-      });
-    } else {
-      addLiquid();
+    if (liquids.ids.length == 0) {
+      if (window.location.hash) {
+        const loadedState = StateObject.decode(
+          Uint8Array.fromBase64(window.location.hash.substring(1)),
+        );
+        console.debug("loaded app state", loadedState);
+        title = loadedState.title;
+        loadedState.liquids.forEach((l) => {
+          addLiquid(undefined, l);
+        });
+      } else {
+        addLiquid();
+      }
     }
 
     if (localeChoices.indexOf(navigator.language) != -1) {
@@ -127,13 +147,17 @@
     if (
       liquids.ids.length == 0 ||
       (liquids.ids.length == 1 &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].volume &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].vol &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].mvol &&
         "undefined" === typeof liquids.data[liquids.ids[0]].mass &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].ABM &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].ABV &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].density &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].LPA &&
-        "undefined" === typeof liquids.data[liquids.ids[0]].KPA)
+        "undefined" === typeof liquids.data[liquids.ids[0]].abm &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].abv &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].dens &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].mabm &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].mabv &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].mdens &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].lpa &&
+        "undefined" === typeof liquids.data[liquids.ids[0]].kpa)
     ) {
       return;
     } else {
@@ -147,11 +171,28 @@
   <title>{title}</title>
 </svelte:head>
 
+<Modals>
+  <!-- shown when any modal is opened -->
+  {#snippet backdrop({ close })}
+    <div class="modal-backdrop" onclick={() => close()} />
+  {/snippet}
+</Modals>
+
 <div class="container">
   <div>
     <div class="topbar">
-      <button>?</button>
-      <button>=</button>
+      <button
+        class="round-btn top-btn"
+        onclick={() => {
+          modals.open(Help, {});
+        }}>?</button
+      >
+      <button
+        class="round-btn top-btn"
+        onclick={() => {
+          modals.open(Settings, {});
+        }}>{@html wrenchIcon}</button
+      >
     </div>
     <div class="liquids">
       <h1 class="title" bind:textContent={title} contenteditable="true"></h1>
@@ -165,7 +206,7 @@
           onclick={() => {
             addLiquid();
           }}
-          class="btn-add">+</button
+          class="btn-add">{@html plusIcon}</button
         >
       </div>
       <div>
@@ -186,6 +227,17 @@
     justify-content: space-between;
   }
 
+  .top-btn {
+    height: 24px;
+  }
+  .top-btn:hover {
+    border-color: var(--l-blue);
+    color: var(--l-blue);
+  }
+  .top-btn:active {
+    background-color: #ffe;
+  }
+
   .container {
     display: flex;
     justify-content: center;
@@ -200,7 +252,7 @@
   }
 
   .btn-add {
-    padding: 0;
+    padding: 10px;
     aspect-ratio: 1;
     border-radius: 50%;
     display: grid;
@@ -222,5 +274,15 @@
     text-align: center;
     padding: 0;
     margin: 0;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
   }
 </style>

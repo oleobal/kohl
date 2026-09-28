@@ -8,7 +8,13 @@
     LiquidMakeup,
     NormalizedLiquidMakeup,
   } from "../lib/liquid";
-  import { localize } from "../lib/locales";
+  import { localize, localizeCap } from "../lib/content/locales";
+  import { liquids } from "../lib/state.svelte";
+  import {
+    doubleChevronDownIcon,
+    doubleChevronUpIcon,
+    trashIcon,
+  } from "../lib/content/icons";
 
   let {
     id,
@@ -23,6 +29,10 @@
   let normalizedLiquidMakeup = $derived(
     normalizeLiquidMakeup((computed || liquid) as LiquidMakeup),
   );
+  // $inspect("LC-L  ", liquid);
+  // $inspect("LC-C  ", computed);
+  // $inspect("LC-NL ", normalizedLiquid);
+  // $inspect("LC-NLM", normalizedLiquidMakeup);
 
   let isResult = $derived(id === "result");
   let hasComputed = $derived.by(() => {
@@ -44,14 +54,42 @@
         normalizedLiquidMakeup.value.cause),
   );
 
+  let proMode = $state(false);
+  let tempIs20C = $derived(
+    liquid.temp === undefined || liquid.temp === null || liquid.temp === 20,
+  );
+
+  function deleteSelf() {
+    if (confirm(localizeCap("deleteQuestion"))) {
+      liquids.ids.splice(liquids.ids.indexOf(id), 1);
+    }
+  }
+
   function getNbOfDisplayDigits(keyName: string): number {
     switch (keyName) {
-      case "density":
-        return 5;
       case "temp":
         return 0;
+      case "dens":
+      case "mdens":
+        return 2;
       default:
         return 3;
+    }
+  }
+
+  function getLocalizationKey(name: string): string {
+    if (
+      name == "dens" ||
+      name == "abm" ||
+      name == "mass" ||
+      name == "lpa" ||
+      name == "kpa"
+    )
+      return name;
+    if (name[0] == "m") {
+      return name.slice(1) + (tempIs20C ? "" : "_meas");
+    } else {
+      return name + (tempIs20C ? "" : "_20C");
     }
   }
 
@@ -84,10 +122,40 @@
   }
 </script>
 
+{#snippet leftInput(name: keyof Liquid)}
+  <label
+    class="value-label"
+    for="in-{name}-{id}"
+    title={localize(`${getLocalizationKey(name)}_long`)}
+    >{@html localize(`${getLocalizationKey(name)}_short`)}</label
+  >
+  <input
+    class="value"
+    id="in-{name}-{id}"
+    type="number"
+    bind:value={liquid[name]}
+    placeholder={valueOrError(name)}
+  />
+{/snippet}
+{#snippet rightInput(name: keyof Liquid)}
+  <input
+    class="value"
+    id="in-{name}-{id}"
+    type="number"
+    bind:value={liquid[name]}
+    placeholder={valueOrError(name)}
+  />
+  <label
+    class="value-label"
+    for="in-{name}-{id}"
+    title={localize(`${getLocalizationKey(name)}_long`)}
+    >{@html localize(`${getLocalizationKey(name)}_short`)}</label
+  >
+{/snippet}
+
 <div class="container">
-  {#if !isResult}
-    <div class="top-bar">
-      <div style="flex: 2"></div>
+  <div class="top-bar">
+    {#if !isResult}
       <div style="display: flex;">
         <label
           class="value-label"
@@ -106,9 +174,23 @@
         />
       </div>
       <div style="width: 40px;"></div>
-      <button id="btn-close-{id}" class="btn-close">✖</button>
-    </div>
-  {/if}
+      <button
+        id="btn-close-{id}"
+        class="btn-close round-btn"
+        title={localize("delete")}
+        onclick={deleteSelf}>{@html trashIcon}</button
+      >
+    {:else}
+      <span style="color: var(--l-green);">20°C</span>
+      <span style="flex: 2"></span>
+      <span style="font-weight: bold; color: var(--l-green);"
+        >{localizeCap("result")}</span
+      >
+      <span style="color: transparent; user-select: none;">20°C</span>
+      <!-- easy centering-->
+    {/if}
+    <div style="flex: 2"></div>
+  </div>
   <div
     class={{
       inside: true,
@@ -119,31 +201,11 @@
   >
     <div class="left">
       <div class="quantity">
-        <label
-          class="value-label"
-          for="in-volume-{id}"
-          title={localize("vol_long")}>{localize("vol_short")}</label
-        >
-        <input
-          class="value"
-          id="in-volume-{id}"
-          type="number"
-          bind:value={liquid.volume}
-          placeholder={valueOrError("volume")}
-        />
-
-        <label
-          class="value-label"
-          for="in-mass-{id}"
-          title={localize("mass_long")}>{localize("mass_short")}</label
-        >
-        <input
-          class="value"
-          id="in-mass-{id}"
-          type="number"
-          bind:value={liquid.mass}
-          placeholder={valueOrError("mass")}
-        />
+        {@render leftInput("mvol")}
+        {#if !tempIs20C}
+          {@render leftInput("vol")}
+        {/if}
+        {@render leftInput("mass")}
       </div>
       {#if errorMessage}
         <div class="error-message">{errorMessage}</div>
@@ -151,72 +213,33 @@
     </div>
     <div class="right">
       <div class="makeup">
-        <input
-          class="value"
-          id="in-abv-{id}"
-          type="number"
-          bind:value={liquid.ABV}
-          placeholder={valueOrError("ABV")}
-        />
-        <label
-          class="value-label"
-          for="in-abv-{id}"
-          title={localize("abv_long")}>{localize("abv_short")}</label
-        >
-
-        <input
-          class="value"
-          id="in-lpa-{id}"
-          type="number"
-          bind:value={liquid.LPA}
-          placeholder={valueOrError("LPA")}
-        />
-        <label
-          class="value-label"
-          for="in-lpa-{id}"
-          title={localize("lpa_long")}>{localize("lpa_short")}</label
-        >
-
-        <input
-          class="value"
-          id="in-density-{id}"
-          type="number"
-          bind:value={liquid.density}
-          placeholder={valueOrError("density")}
-        />
-        <label
-          class="value-label"
-          for="in-density-{id}"
-          title={localize("dens_long")}>{localize("dens_short")}</label
-        >
-
-        <input
-          class="value"
-          id="in-density-{id}"
-          type="number"
-          bind:value={liquid.ABM}
-          placeholder={valueOrError("ABM")}
-        />
-        <label
-          class="value-label"
-          for="in-density-{id}"
-          title={localize("abm_long")}>{localize("abm_short")}</label
-        >
-
-        <input
-          class="value"
-          id="in-kpa-{id}"
-          type="number"
-          bind:value={liquid.KPA}
-          placeholder={valueOrError("KPA")}
-        />
-        <label
-          class="value-label"
-          for="in-kpa-{id}"
-          title={localize("kpa_long")}>{localize("kpa_short")}</label
-        >
+        {@render rightInput("mabv")}
+        {#if !tempIs20C}
+          {@render rightInput("abv")}
+        {/if}
+        {@render rightInput("lpa")}
+        {#if proMode}
+          <!-- {@render rightInput("mdens")} -->
+          <!-- I don't think it's interesting to anyone using the site honestly, let's just display the true density at all times -->
+          {@render rightInput("dens")}
+          {@render rightInput("mabm")}
+          {#if !tempIs20C}
+            {@render rightInput("abm")}
+          {/if}
+          {@render rightInput("kpa")}
+        {/if}
       </div>
     </div>
+  </div>
+  <div class="bottom-bar">
+    <button
+      id="btn-pro-{id}"
+      class={["btn-pro", "round-btn", isResult && "btn-pro-result"]}
+      title={localize(proMode ? "fold" : "unfold")}
+      onclick={() => {
+        proMode = !proMode;
+      }}>{@html proMode ? doubleChevronUpIcon : doubleChevronDownIcon}</button
+    >
   </div>
 </div>
 
@@ -233,20 +256,21 @@
     padding-bottom: 3px;
     margin-top: 5px;
   }
-  .btn-close {
-    padding: 0;
-    flex: none;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background-color: white;
-    border: 1px solid black;
 
-    height: 50px; /* hack */
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding-top: 3px;
+    margin-bottom: 5px;
+  }
+
+  .btn-close {
+    height: 24px;
     position: absolute;
-    top: -10px;
-    right: -25px;
+    bottom: -12px;
+    right: 0;
   }
   .btn-close:hover {
     color: red;
@@ -255,12 +279,30 @@
   .btn-close:active {
     background-color: #ffe;
   }
+  .btn-pro {
+    height: 24px;
+    position: absolute;
+    top: -12px;
+    right: 0;
+  }
+  .btn-pro-result {
+    color: var(--l-green);
+    border-color: var(--l-green);
+  }
+  .btn-pro:hover {
+    color: var(--l-blue);
+    border-color: var(--l-blue);
+  }
+  .btn-pro:active {
+    background-color: #ffe;
+  }
   .inside {
     display: flex;
     gap: 20px;
     border: 1px solid black;
     padding: 5px 10px;
     justify-content: space-between;
+    margin: 0 12px;
   }
   ::placeholder {
     color: var(--l-blue);

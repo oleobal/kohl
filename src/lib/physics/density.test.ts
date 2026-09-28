@@ -1,11 +1,15 @@
 import { expect, test } from "vitest";
 
 import { Table } from "./density";
+import { knownModels } from "./models";
+import { GlassExpansionCoefficient } from "./oiml/practical";
 
-// all reference values from OIML R22
+// all reference values from OIML R22 except otherwise noted
 
-test("Table I", () => {
-  let table = new Table();
+test.for(Object.entries(knownModels))("Table I", ([modelID, model]) => {
+  // all exceptions for the Bettin & Spieweck model are directly from their paper
+  // the contradiction between R22 and B&S is not from my implementation
+  let table = new Table(model, GlassExpansionCoefficient.SODA_LIME);
   expect(table.getDensityFromABM(30, -20)).toBeCloseTo(974.91, 2);
   expect(table.getDensityFromABM(50, -20)).toBeCloseTo(943.76, 2);
   expect(table.getDensityFromABM(80, -20)).toBeCloseTo(876.64, 2);
@@ -13,7 +17,13 @@ test("Table I", () => {
 
   expect(table.getDensityFromABM(25, -15)).toBeCloseTo(976.26, 2);
   expect(table.getDensityFromABM(50, -15)).toBeCloseTo(940.19, 2);
-  expect(table.getDensityFromABM(80, -15)).toBeCloseTo(872.59, 2);
+
+  if (modelID == "BETTIN_SPIEWECK") {
+    expect(table.getDensityFromABM(80, -15)).toBeCloseTo(872.6, 2);
+  } else {
+    expect(table.getDensityFromABM(80, -15)).toBeCloseTo(872.59, 2);
+  }
+
   expect(table.getDensityFromABM(100, -15)).toBeCloseTo(818.89, 2);
 
   expect(table.getDensityFromABM(12, -5)).toBeCloseTo(982.66, 2);
@@ -28,17 +38,31 @@ test("Table I", () => {
 
   expect(table.getDensityFromABM(0, 20)).toBeCloseTo(998.2, 2);
   expect(table.getDensityFromABM(50, 20)).toBeCloseTo(913.77, 2);
-  expect(table.getDensityFromABM(80, 20)).toBeCloseTo(843.39, 2);
-  expect(table.getDensityFromABM(100, 20)).toBeCloseTo(789.24, 2);
+  if (modelID == "BETTIN_SPIEWECK") {
+    expect(table.getDensityFromABM(80, 20)).toBeCloseTo(843.38, 2);
+    expect(table.getDensityFromABM(100, 20)).toBeCloseTo(789.23, 2);
+  } else {
+    expect(table.getDensityFromABM(80, 20)).toBeCloseTo(843.39, 2);
+    expect(table.getDensityFromABM(100, 20)).toBeCloseTo(789.24, 2);
+  }
 
   expect(table.getDensityFromABM(0, 40)).toBeCloseTo(992.21, 2);
-  expect(table.getDensityFromABM(50, 40)).toBeCloseTo(897.44, 2);
-  expect(table.getDensityFromABM(80, 40)).toBeCloseTo(825.68, 2);
-  expect(table.getDensityFromABM(100, 40)).toBeCloseTo(771.93, 2);
+  if (modelID == "BETTIN_SPIEWECK") {
+    expect(table.getDensityFromABM(50, 40)).toBeCloseTo(897.43, 2);
+    expect(table.getDensityFromABM(80, 40)).toBeCloseTo(825.67, 2);
+    expect(table.getDensityFromABM(100, 40)).toBeCloseTo(771.92, 2);
+  } else {
+    expect(table.getDensityFromABM(50, 40)).toBeCloseTo(897.44, 2);
+    expect(table.getDensityFromABM(80, 40)).toBeCloseTo(825.68, 2);
+    expect(table.getDensityFromABM(100, 40)).toBeCloseTo(771.93, 2);
+  }
 });
 
 test("Table II", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getDensityFromABV(36, -20)).toBeCloseTo(975.08, 2);
   expect(table.getDensityFromABV(50, -20)).toBeCloseTo(958.36, 2);
   expect(table.getDensityFromABV(80, -20)).toBeCloseTo(891.99, 2);
@@ -71,7 +95,10 @@ test("Table II", () => {
 });
 
 test("Table IIIa", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getDensityFromABM(0, 20)).toBeCloseTo(998.2, 2);
   expect(table.getDensityFromABM(4.2, 20)).toBeCloseTo(990.69, 2);
   expect(table.getDensityFromABM(24.9, 20)).toBeCloseTo(961.78, 2);
@@ -82,7 +109,10 @@ test("Table IIIa", () => {
 });
 
 test("Table IIIb", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getABVFromABM(0, 20)).toBeCloseTo(0, 2);
   expect(table.getABVFromABM(0.9, 20)).toBeCloseTo(1.14, 2);
   expect(table.getABVFromABM(29.5, 20)).toBeCloseTo(35.68, 2);
@@ -93,7 +123,10 @@ test("Table IIIb", () => {
 });
 
 test("Table IVa", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getDensityFromABV(0, 20)).toBeCloseTo(998.2, 2);
   expect(table.getDensityFromABV(0.9, 20)).toBeCloseTo(996.85, 2);
   expect(table.getDensityFromABV(28.3, 20)).toBeCloseTo(964.28, 2);
@@ -104,7 +137,10 @@ test("Table IVa", () => {
 });
 
 test("Table IVb", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getABMFromABV(0, 20)).toBeCloseTo(0, 2);
   expect(table.getABMFromABV(0.1, 20)).toBeCloseTo(0.08, 2);
   expect(table.getABMFromABV(0.9, 20)).toBeCloseTo(0.71, 2);
@@ -117,7 +153,10 @@ test("Table IVb", () => {
 });
 
 test("Table Va", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getABMFromDensity(789.3, 20)).toBeCloseTo(99.98, 2);
   expect(table.getABMFromDensity(790, 20)).toBeCloseTo(99.76, 2);
   expect(table.getABMFromDensity(800.9, 20)).toBeCloseTo(96.13, 2);
@@ -129,7 +168,10 @@ test("Table Va", () => {
 });
 
 test("Table Vb", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getABVFromDensity(789.3, 20)).toBeCloseTo(99.99, 2);
   expect(table.getABVFromDensity(790, 20)).toBeCloseTo(99.85, 2);
   expect(table.getABVFromDensity(800.9, 20)).toBeCloseTo(97.55, 2);
@@ -141,7 +183,10 @@ test("Table Vb", () => {
 });
 
 test("Table VIIIa", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getCorrectedABM(0, 20)).toBeCloseTo(0, 1);
   expect(table.getCorrectedABM(25.4, 20)).toBeCloseTo(25.4, 1);
   expect(table.getCorrectedABM(81.2, 20)).toBeCloseTo(81.2, 1);
@@ -166,7 +211,10 @@ test("Table VIIIa", () => {
 });
 
 test("Table VIIIb", () => {
-  let table = new Table();
+  let table = new Table(
+    knownModels.OIML_R22,
+    GlassExpansionCoefficient.SODA_LIME,
+  );
 
   const values = [
     // Oudin data (from his Guide pratique d'alcoométrie)

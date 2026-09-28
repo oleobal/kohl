@@ -1,6 +1,6 @@
 <script lang="ts">
   import Table from "../../components/Table.svelte";
-  import { table as calculatedTable } from "../../lib/state.svelte";
+  import { model } from "../../lib/state.svelte";
 
   const temperatures: number[] = Array.from({ length: 61 }, (_, i) => i - 20);
 
@@ -11,7 +11,7 @@
   );
 
   function computeCell(temperature: number, density: number) {
-    const ABV = calculatedTable.getABMFromDensity(density, temperature);
+    const ABV = model.table.getABMFromDensity(density, temperature);
     if (ABV < 0 || ABV > 100) {
       return {
         title: null,

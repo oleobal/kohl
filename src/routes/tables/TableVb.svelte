@@ -1,6 +1,6 @@
 <script lang="ts">
   import Table from "../../components/Table.svelte";
-  import { table as calculatedTable } from "../../lib/state.svelte";
+  import { model } from "../../lib/state.svelte";
 
   const STARTING_DENSITY = 780; // the original document starts at 750 for consistency between pages
   const densities: number[] = Array.from(
@@ -17,7 +17,7 @@
         result: null,
       };
     }
-    let r = calculatedTable.getABVFromDensity(density, 20);
+    let r = model.table.getABVFromDensity(density, 20);
     return {
       title: `${density} g/L → ${r}%vol`,
       result: r.toFixed(2),

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { table as calculatedTable } from "../../lib/state.svelte";
-  import { isFrozenABV } from "../../lib/oiml/practical";
+  import { model } from "../../lib/state.svelte";
+  import { isFrozenABV } from "../../lib/physics/ec/practical";
   import Table from "../../components/Table.svelte";
 
   const abvs = Array.from({ length: 1031 }, (_, i) => i / 10);
@@ -10,7 +10,7 @@
   );
 
   function computeCell(temperature: number, mabm: number) {
-    const trueABV = calculatedTable.getCorrectedABV(
+    const trueABV = model.table.getCorrectedABV(
       Number(mabm),
       Number(temperature),
     );

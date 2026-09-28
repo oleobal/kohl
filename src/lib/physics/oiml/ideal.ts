@@ -176,9 +176,3 @@ export function computeDensity(p: number, t: number): number {
   });
   return rho;
 }
-
-export function computeABV(p: number): number {
-  // this is from OIML R22, introduction section 4
-
-  return (computeDensity(p, 20) / computeDensity(1, 20)) * p;
-}

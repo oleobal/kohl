@@ -1,6 +1,6 @@
 <script lang="ts">
   import Table from "../../components/Table.svelte";
-  import { table as calculatedTable } from "../../lib/state.svelte";
+  import { model } from "../../lib/state.svelte";
 
   const abms: number[] = Array.from({ length: 101 }, (_, i) => i);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
@@ -13,7 +13,7 @@
         result: null,
       };
     }
-    let r = calculatedTable.getDensityFromABM(abm, 20);
+    let r = model.table.getDensityFromABM(abm, 20);
     return {
       title: `${abm}%mass → ${r} g/L`,
       result: r.toFixed(2),

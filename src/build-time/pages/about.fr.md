@@ -1,0 +1,21 @@
+## À propos de ce logiciel
+
+Tous droits réservés
+
+Dépôt Git: [github.com/oleobal/kohl](https://github.com/oleobal/kohl)
+
+### Licence d'utilisation
+
+L'utilisation de ce logiciel est gratuite.
+
+Ce logiciel est partagé dans l'espoir qu'il se montrera utile. Mais **absolument aucune garantie** n'est fournie quant à l'exactitude des valeurs fournies par le logiciel. Je recommande vivement la consultation des lois et réglementations en vigueur dans votre juridiction et l'utilisation des méthodes de calcul recommandéss par les autorités.
+
+### Références
+
+| titre                                                            | auteur·e·s                           | publication                        |
+| ---------------------------------------------------------------- | ------------------------------------ | ---------------------------------- |
+| _Traceability and computerization of alcoholometric tables_      | Evelyne Chanson                      | OIML bulletin of july 2015 p. 5    |
+| _A revised formula for the calculation of alcoholometric tables_ | Horst Bettin, Frank Spieweck         | PTB-Mitteilungen 6/90, 1990 p. 457 |
+| _International alcoholometric tables_                            | OIML                                 | OIML recommendation 22, 1975       |
+| _Practical alcoholic-strength tables_                            | Commission Européenne                | 1978                               |
+| _Alkoholtafel_                                                   | Institut fédéral de métrologie METAS | 2011                               |

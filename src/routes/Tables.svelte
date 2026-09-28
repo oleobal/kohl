@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { localize, localizeCap } from "../lib/content/locales";
+
   const tableChoices = [
-    { no: "none", desc: "select a table to display" },
+    { no: "none", desc: localize("select_a_table") },
     { no: "I", desc: "I: ϱ ← p, t" },
     { no: "II", desc: "II: ϱ ← q, t" },
     { no: "IIIa", desc: "IIIa: ϱ_20°C ← p" },
@@ -16,10 +18,12 @@
   ];
 
   let sel: string | undefined = $state(undefined);
+
+  let computingMsg = localizeCap("computing") + "..";
 </script>
 
 <svelte:head>
-  <title>OIML tables</title>
+  <title>{localizeCap("oiml_tables")}</title>
 </svelte:head>
 
 <select bind:value={sel}>
@@ -30,76 +34,76 @@
 
 {#if sel == "I"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableI }}
     <TableI />
   {/await}
 {:else if sel == "II"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableII }}
     <TableII />
   {/await}
 {:else if sel == "IIIa"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableIIIa }}
     <TableIIIa />
   {/await}
 {:else if sel == "IIIb"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableIIIb }}
     <TableIIIb />
   {/await}
 {:else if sel == "IVa"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableIVb }}
     <TableIVb />
   {/await}
 {:else if sel == "IVb"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableIVa }}
     <TableIVa />
   {/await}
 {:else if sel == "Va"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVa }}
     <TableVa />
   {/await}
 {:else if sel == "Vb"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVb }}
     <TableVb />
   {/await}
 {:else if sel == "VI"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVI }}
     <TableVI />
   {/await}
 {:else if sel == "VII"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVII }}
     <TableVII />
   {/await}
 {:else if sel == "VIIIa"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVIIIa }}
     <TableVIIIa />
   {/await}
 {:else if sel == "VIIIb"}
   {#await import(`./tables/Table${sel}.svelte`)}
-    <p>Loading..</p>
+    <p>{computingMsg}</p>
   {:then { default: TableVIIIb }}
     <TableVIIIb />
   {/await}
 {:else}
-  <p>select a table to display</p>
+  <p>{localize("select_a_table")}</p>
 {/if}

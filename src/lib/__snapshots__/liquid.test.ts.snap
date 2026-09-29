@@ -1,0 +1,1801 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`makeupSnapshots 1`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 981.20516857924,
+    "mabm": 11.169429408077496,
+    "mabv": 13.87228544430176,
+    "mdens": 980.2249436356045,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 2`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 985.1581168652312,
+    "mabm": 8.045136781387479,
+    "mabv": 10.037220684162945,
+    "mdens": 984.6657839732446,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 3`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 982.3548782542352,
+    "mabm": 9.640989340514245,
+    "mabv": 12,
+    "mdens": 982.3548782542352,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 4`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 975.3590285053762,
+    "mabm": 14.45212171874419,
+    "mabv": 17.86917963433323,
+    "mdens": 975.8469519813668,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`makeupSnapshots 5`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 971.0274632957179,
+    "mabm": 18.902499657023633,
+    "mabv": 23.23314813034686,
+    "mdens": 970.0574058898281,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 6`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 959.5646235126055,
+    "mabm": 26.694756803886808,
+    "mabv": 32.43952494530051,
+    "mdens": 959.0850809721195,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 7`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 946.7709581797374,
+    "mabm": 34,
+    "mabv": 40.78638732899724,
+    "mdens": 946.7709581797374,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 8`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 932.5474961819189,
+    "mabm": 41.04194171518546,
+    "mabv": 48.518503700600604,
+    "mdens": 933.0140031835106,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`makeupSnapshots 9`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 61.72370216441876,
+    "abv": 69.37728857651973,
+    "dens": 918.7618690049306,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mdens": 917.8440249799507,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 10`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 55.001682947077406,
+    "abv": 62.897905724765366,
+    "dens": 918.3029469924406,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mdens": 917.8440249799507,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 11`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 48.1534935782127,
+    "abv": 56,
+    "dens": 917.8440249799507,
+    "mabm": 48.1534935782127,
+    "mabv": 56,
+    "mdens": 917.8440249799507,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 12`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 41.14871596524675,
+    "abv": 48.633260486379285,
+    "dens": 917.3851029674609,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mdens": 917.8440249799507,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`makeupSnapshots 13`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.90361275346667,
+    "abv": 93.92422742531309,
+    "dens": 849.1478458562578,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mdens": 848.299546309948,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 14`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.67267490910146,
+    "abv": 89.22880082606859,
+    "dens": 848.7236960831029,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mdens": 848.299546309948,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 15`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 78,
+    "abv": 83.83690399877302,
+    "dens": 848.299546309948,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mdens": 848.299546309948,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 16`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.96799513254909,
+    "abv": 77.80726607915898,
+    "dens": 847.8753965367931,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mdens": 848.299546309948,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`makeupSnapshots 17`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 108.20727642665612,
+    "abv": 104.7928440636044,
+    "dens": 800,
+    "mabm": 96.71251343920217,
+    "mabv": 97.93320242540723,
+    "mdens": 799.2007992007993,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 18`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 101.90967028855779,
+    "abv": 101.12200853273256,
+    "dens": 800,
+    "mabm": 96.5759937228375,
+    "mabv": 97.8438299346466,
+    "mdens": 799.60019990005,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 19`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 96.43900171986752,
+    "abv": 97.75388999619707,
+    "dens": 800,
+    "mabm": 96.43900171986752,
+    "mabv": 97.75388999619707,
+    "mdens": 800,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 20`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.0787058757188,
+    "abv": 93.32402595454647,
+    "dens": 800,
+    "mabm": 96.30156175045747,
+    "mabv": 97.66341603201435,
+    "mdens": 800.40020010005,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`makeupSnapshots 21`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 107.92294159300538,
+    "abv": 104.62710705383566,
+    "dens": 800.8,
+    "mabm": 96.43900171986752,
+    "mabv": 97.75388999619707,
+    "mdens": 800,
+    "temp": -20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 22`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 101.78770264526297,
+    "abv": 101.05091435046626,
+    "dens": 800.4,
+    "mabm": 96.43900171986752,
+    "mabv": 97.75388999619707,
+    "mdens": 800,
+    "temp": 0,
+  },
+}
+`;
+
+exports[`makeupSnapshots 23`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 96.43900171986752,
+    "abv": 97.75388999619707,
+    "dens": 800,
+    "mabm": 96.43900171986752,
+    "mabv": 97.75388999619707,
+    "mdens": 800,
+    "temp": 20,
+  },
+}
+`;
+
+exports[`makeupSnapshots 24`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.23090542963304,
+    "abv": 93.4352886031852,
+    "dens": 799.6,
+    "mabm": 96.43900171986752,
+    "mabv": 97.75388999619707,
+    "mdens": 800,
+    "temp": 40,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 1`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 981.20516857924,
+    "kpa": 1.1569187208617095,
+    "lpa": 1.4658659038903012,
+    "mabm": 11.169429408077496,
+    "mabv": 13.87228544430176,
+    "mass": 12,
+    "mdens": 980.2249436356045,
+    "mvol": 12.229858121697111,
+    "temp": -20,
+    "vol": 12.215544774741149,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 2`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 985.1581168652312,
+    "kpa": 1.1569187208617095,
+    "lpa": 1.4658659038903012,
+    "mabm": 8.045136781387479,
+    "mabv": 10.037220684162945,
+    "mass": 12,
+    "mdens": 984.6657839732446,
+    "mvol": 12.180785799323207,
+    "temp": 0,
+    "vol": 12.215544774741149,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 3`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 982.3548782542352,
+    "kpa": 1.1569187208617095,
+    "lpa": 1.4658659038903012,
+    "mabm": 9.640989340514245,
+    "mabv": 12,
+    "mass": 12,
+    "mdens": 982.3548782542352,
+    "mvol": 12.215544774741149,
+    "temp": 20,
+    "vol": 12.215544774741149,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 4`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 975.3590285053762,
+    "kpa": 1.1569187208617095,
+    "lpa": 1.4658659038903012,
+    "mabm": 14.45212171874419,
+    "mabv": 17.86917963433323,
+    "mass": 12,
+    "mdens": 975.8469519813668,
+    "mvol": 12.303161860703334,
+    "temp": 40,
+    "vol": 12.215544774741149,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 5`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 971.0274632957179,
+    "kpa": 4.08,
+    "lpa": 5.169535923334174,
+    "mabm": 18.902499657023633,
+    "mabv": 23.23314813034686,
+    "mass": 12,
+    "mdens": 970.0574058898281,
+    "mvol": 12.358043879903637,
+    "temp": -20,
+    "vol": 12.674660007602274,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 6`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 959.5646235126055,
+    "kpa": 4.08,
+    "lpa": 5.169535923334174,
+    "mabm": 26.694756803886808,
+    "mabv": 32.43952494530051,
+    "mass": 12,
+    "mdens": 959.0850809721195,
+    "mvol": 12.505671536818967,
+    "temp": 0,
+    "vol": 12.674660007602274,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 7`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 946.7709581797374,
+    "kpa": 4.08,
+    "lpa": 5.169535923334174,
+    "mabm": 34,
+    "mabv": 40.78638732899724,
+    "mass": 12,
+    "mdens": 946.7709581797374,
+    "mvol": 12.674660007602274,
+    "temp": 20,
+    "vol": 12.674660007602274,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 8`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 932.5474961819189,
+    "kpa": 4.08,
+    "lpa": 5.169535923334174,
+    "mabm": 41.04194171518546,
+    "mabv": 48.518503700600604,
+    "mass": 12,
+    "mdens": 933.0140031835106,
+    "mvol": 12.867977287088305,
+    "temp": 40,
+    "vol": 12.674660007602274,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 9`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 61.72370216441876,
+    "abv": 69.37728857651973,
+    "dens": 918.7618690049306,
+    "kpa": 7.406844259730251,
+    "lpa": 9.384791048827708,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 12,
+    "mdens": 917.8440249799507,
+    "mvol": 13.061055758655566,
+    "temp": -20,
+    "vol": 13.527179457249837,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 10`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 55.001682947077406,
+    "abv": 62.897905724765366,
+    "dens": 918.3029469924406,
+    "kpa": 6.600201953649289,
+    "lpa": 8.362740465845684,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 12,
+    "mdens": 917.8440249799507,
+    "mvol": 13.06758302290277,
+    "temp": 0,
+    "vol": 13.295737443449248,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 11`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 48.1534935782127,
+    "abv": 56,
+    "dens": 917.8440249799507,
+    "kpa": 5.778419229385523,
+    "lpa": 7.3215063201944695,
+    "mabm": 48.1534935782127,
+    "mabv": 56,
+    "mass": 12,
+    "mdens": 917.8440249799507,
+    "mvol": 13.074116814414221,
+    "temp": 20,
+    "vol": 13.074116814414221,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 12`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 41.14871596524675,
+    "abv": 48.633260486379285,
+    "dens": 917.3851029674609,
+    "kpa": 4.93784591582961,
+    "lpa": 6.2564636876887505,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 12,
+    "mdens": 917.8440249799507,
+    "mvol": 13.080657142985714,
+    "temp": 40,
+    "vol": 12.864576188470007,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 13`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.90361275346667,
+    "abv": 93.92422742531309,
+    "dens": 849.1478458562578,
+    "kpa": 10.908433530416,
+    "lpa": 13.821455637938367,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 12,
+    "mdens": 848.299546309948,
+    "mvol": 14.131814687581905,
+    "temp": -20,
+    "vol": 14.715538090673148,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 14`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.67267490910146,
+    "abv": 89.22880082606859,
+    "dens": 848.7236960831029,
+    "kpa": 10.160720989092175,
+    "lpa": 12.874071607864591,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 12,
+    "mdens": 848.299546309948,
+    "mvol": 14.138877063737617,
+    "temp": 0,
+    "vol": 14.42815611994899,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 15`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 78,
+    "abv": 83.83690399877302,
+    "dens": 848.299546309948,
+    "kpa": 9.36,
+    "lpa": 11.859523588825457,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 12,
+    "mdens": 848.299546309948,
+    "mvol": 14.145946502269485,
+    "temp": 20,
+    "vol": 14.145946502269485,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 16`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.96799513254909,
+    "abv": 77.80726607915898,
+    "dens": 847.8753965367931,
+    "kpa": 8.516159415905891,
+    "lpa": 10.790341183668156,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 12,
+    "mdens": 848.299546309948,
+    "mvol": 14.153023013776371,
+    "temp": 40,
+    "vol": 13.868036769564128,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 17`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.58928587725687,
+    "abv": 93.69635129131186,
+    "dens": 850,
+    "kpa": 10.870714305270823,
+    "lpa": 13.773663753284367,
+    "mabm": 77.65178988356408,
+    "mabv": 83.54638698334385,
+    "mass": 12,
+    "mdens": 849.1508491508492,
+    "mvol": 14.117647058823529,
+    "temp": -20,
+    "vol": 14.70031979474221,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 18`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.16510614589731,
+    "abv": 88.83096963603799,
+    "dens": 850,
+    "kpa": 10.099812737507678,
+    "lpa": 12.796898226836765,
+    "mabm": 77.47804137565146,
+    "mabv": 83.40111042483215,
+    "mass": 12,
+    "mdens": 849.5752123938031,
+    "mvol": 14.117647058823529,
+    "temp": 0,
+    "vol": 14.405896087049943,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 19`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 9.276480702681999,
+    "lpa": 11.753701037899715,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 12,
+    "mdens": 850,
+    "mvol": 14.117647058823529,
+    "temp": 20,
+    "vol": 14.117647058823529,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 20`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.0907403981744,
+    "abv": 77.03155017907193,
+    "dens": 850,
+    "kpa": 8.410888847780928,
+    "lpa": 10.656958834748599,
+    "mabm": 77.12967749284289,
+    "mabv": 83.1091811775925,
+    "mass": 12,
+    "mdens": 850.4252126063031,
+    "mvol": 14.117647058823529,
+    "temp": 40,
+    "vol": 13.834537223632832,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 21`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.27412960386377,
+    "abv": 93.4668455727368,
+    "dens": 850.8499999999999,
+    "kpa": 10.83289555246365,
+    "lpa": 13.725745762791139,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 12,
+    "mdens": 850,
+    "mvol": 14.103543515308223,
+    "temp": -20,
+    "vol": 14.685148221027063,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 22`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 83.99563790167801,
+    "abv": 88.6976723346627,
+    "dens": 850.425,
+    "kpa": 10.079476548201361,
+    "lpa": 12.77113139812041,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 12,
+    "mdens": 850,
+    "mvol": 14.110591762942057,
+    "temp": 0,
+    "vol": 14.398496454176712,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 23`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 9.276480702681999,
+    "lpa": 11.753701037899715,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 12,
+    "mdens": 850,
+    "mvol": 14.117647058823529,
+    "temp": 20,
+    "vol": 14.117647058823529,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 24`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.26638959725685,
+    "abv": 77.1872759276894,
+    "dens": 849.575,
+    "kpa": 8.43196675167082,
+    "lpa": 10.68366544782394,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 12,
+    "mdens": 850,
+    "mvol": 14.124709413530294,
+    "temp": 40,
+    "vol": 13.84122497590327,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 25`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 981.20516857924,
+    "kpa": 3.2200967893494252,
+    "lpa": 4.080001477734042,
+    "mabm": 11.169429408077496,
+    "mabv": 13.87228544430176,
+    "mass": 33.400065860644,
+    "mdens": 980.2249436356045,
+    "mvol": 34.039838894251275,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 26`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 985.1581168652312,
+    "kpa": 3.2200967893494252,
+    "lpa": 4.080001477734042,
+    "mabm": 8.045136781387479,
+    "mabv": 10.037220684162945,
+    "mass": 33.400065860644,
+    "mdens": 984.6657839732446,
+    "mvol": 33.90325399431602,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 27`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 982.3548782542352,
+    "kpa": 3.2200967893494252,
+    "lpa": 4.080001477734042,
+    "mabm": 9.640989340514245,
+    "mabv": 12,
+    "mass": 33.400065860644,
+    "mdens": 982.3548782542352,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 28`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 975.3590285053762,
+    "kpa": 3.2200967893494252,
+    "lpa": 4.080001477734042,
+    "mabm": 14.45212171874419,
+    "mabv": 17.86917963433323,
+    "mass": 33.400065860644,
+    "mdens": 975.8469519813668,
+    "mvol": 34.243868036804564,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 29`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 971.0274632957179,
+    "kpa": 10.944672276557764,
+    "lpa": 13.867371691859063,
+    "mabm": 18.902499657023633,
+    "mabv": 23.23314813034686,
+    "mass": 32.19021257811107,
+    "mdens": 970.0574058898281,
+    "mvol": 33.15067162864355,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 30`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 959.5646235126055,
+    "kpa": 10.944672276557764,
+    "lpa": 13.867371691859063,
+    "mabm": 26.694756803886808,
+    "mabv": 32.43952494530051,
+    "mass": 32.19021257811107,
+    "mdens": 959.0850809721195,
+    "mvol": 33.54668543351963,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 31`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 946.7709581797374,
+    "kpa": 10.944672276557764,
+    "lpa": 13.867371691859063,
+    "mabm": 34,
+    "mabv": 40.78638732899724,
+    "mass": 32.19021257811107,
+    "mdens": 946.7709581797374,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 32`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 932.5474961819189,
+    "kpa": 10.944672276557764,
+    "lpa": 13.867371691859063,
+    "mabm": 41.04194171518546,
+    "mabv": 48.518503700600604,
+    "mass": 32.19021257811107,
+    "mdens": 933.0140031835106,
+    "mvol": 34.51857702680646,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 33`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 61.72370216441876,
+    "abv": 69.37728857651973,
+    "dens": 918.7618690049306,
+    "kpa": 18.616793369726448,
+    "lpa": 23.588279926982924,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 30.16149828494617,
+    "mdens": 917.8440249799507,
+    "mvol": 32.828417572023014,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 34`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 55.001682947077406,
+    "abv": 62.897905724765366,
+    "dens": 918.3029469924406,
+    "kpa": 16.878106038009957,
+    "lpa": 21.385288108170563,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 30.68652654546964,
+    "mdens": 917.8440249799507,
+    "mvol": 33.41656110978619,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 35`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 48.1534935782127,
+    "abv": 56,
+    "dens": 917.8440249799507,
+    "kpa": 15.027114763308806,
+    "lpa": 19.040002351223084,
+    "mabm": 48.1534935782127,
+    "mabv": 56,
+    "mass": 31.206696849318327,
+    "mdens": 917.8440249799507,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 36`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 41.14871596524675,
+    "abv": 48.633260486379285,
+    "dens": 917.3851029674609,
+    "kpa": 13.05031418669484,
+    "lpa": 16.53531078404818,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 31.7149973712833,
+    "mdens": 917.8440249799507,
+    "mvol": 34.57108390870416,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 37`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.90361275346667,
+    "abv": 93.92422742531309,
+    "dens": 849.1478458562578,
+    "kpa": 25.203749788070322,
+    "lpa": 31.93423772846951,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 27.72579551532638,
+    "mdens": 848.299546309948,
+    "mvol": 32.65131702403182,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 38`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.67267490910146,
+    "abv": 89.22880082606859,
+    "dens": 848.7236960831029,
+    "kpa": 23.94377429500363,
+    "lpa": 30.337794450545747,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 28.27804167130418,
+    "mdens": 848.299546309948,
+    "mvol": 33.31831289948494,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 39`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 78,
+    "abv": 83.83690399877302,
+    "dens": 848.299546309948,
+    "kpa": 22.496903968139822,
+    "lpa": 28.504547359582826,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 28.842184574538233,
+    "mdens": 848.299546309948,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 40`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.96799513254909,
+    "abv": 77.80726607915898,
+    "dens": 847.8753965367931,
+    "kpa": 20.87890484803645,
+    "lpa": 26.454472708774624,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 29.420170048541294,
+    "mdens": 848.299546309948,
+    "mvol": 34.69869531385161,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 41`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.58928587725687,
+    "abv": 93.69635129131186,
+    "dens": 850,
+    "kpa": 25.142601762405366,
+    "lpa": 31.85676054334305,
+    "mabm": 77.65178988356408,
+    "mabv": 83.54638698334385,
+    "mass": 27.75449824880186,
+    "mdens": 849.1508491508492,
+    "mvol": 32.65235088094336,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 42`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.16510614589731,
+    "abv": 88.83096963603799,
+    "dens": 850,
+    "kpa": 23.83701999516377,
+    "lpa": 30.202532149567183,
+    "mabm": 77.47804137565146,
+    "mabv": 83.40111042483215,
+    "mass": 28.321736984259392,
+    "mdens": 849.5752123938031,
+    "mvol": 33.31969056971693,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 43`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 22.34085769229248,
+    "lpa": 28.30682999960848,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 28.9,
+    "mdens": 850,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 44`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.0907403981744,
+    "abv": 77.03155017907193,
+    "dens": 850,
+    "kpa": 20.670747145487688,
+    "lpa": 26.190727924204886,
+    "mabm": 77.12967749284289,
+    "mabv": 83.1091811775925,
+    "mass": 29.491409318920656,
+    "mdens": 850.4252126063031,
+    "mvol": 34.695775669318415,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 45`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.27412960386377,
+    "abv": 93.4668455727368,
+    "dens": 850.8499999999999,
+    "kpa": 25.08101676879121,
+    "lpa": 31.77872970098357,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 27.783172076928818,
+    "mdens": 850,
+    "mvol": 32.653431365021824,
+    "temp": -20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 46`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 83.99563790167801,
+    "abv": 88.6976723346627,
+    "dens": 850.425,
+    "kpa": 23.801249229702403,
+    "lpa": 30.15720904734716,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 28.33629200788166,
+    "mdens": 850,
+    "mvol": 33.320154049894654,
+    "temp": 0,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 47`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 22.34085769229248,
+    "lpa": 28.30682999960848,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 28.9,
+    "mdens": 850,
+    "mvol": 34,
+    "temp": 20,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 48`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.26638959725685,
+    "abv": 77.1872759276894,
+    "dens": 849.575,
+    "kpa": 20.712535924812457,
+    "lpa": 26.243676109477356,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 29.47715976803376,
+    "mdens": 850,
+    "mvol": 34.696359671640245,
+    "temp": 40,
+    "vol": 34,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 49`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 981.20516857924,
+    "kpa": 5.297481599832764,
+    "lpa": 6.712137606259134,
+    "mabm": 11.169429408077496,
+    "mabv": 13.87228544430176,
+    "mass": 54.947489440437444,
+    "mdens": 980.2249436356045,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 55.934459793273334,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 50`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 985.1581168652312,
+    "kpa": 5.318823385914518,
+    "lpa": 6.739178569449757,
+    "mabm": 8.045136781387479,
+    "mabv": 10.037220684162945,
+    "mass": 55.16885454445295,
+    "mdens": 984.6657839732446,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 56.15980107157888,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 51`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 982.3548782542352,
+    "kpa": 5.303688829516701,
+    "lpa": 6.7200024339148925,
+    "mabm": 9.640989340514245,
+    "mabv": 12,
+    "mass": 55.011873182237174,
+    "mdens": 982.3548782542352,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 52`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 9.640989340514245,
+    "abv": 12,
+    "dens": 975.3590285053762,
+    "kpa": 5.2659185583170105,
+    "lpa": 6.672145871708796,
+    "mabm": 14.45212171874419,
+    "mabv": 17.86917963433323,
+    "mass": 54.620105596301066,
+    "mdens": 975.8469519813668,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 55.6011954593921,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 53`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 971.0274632957179,
+    "kpa": 18.48836290115047,
+    "lpa": 23.425552985572594,
+    "mabm": 18.902499657023633,
+    "mabv": 23.23314813034686,
+    "mass": 54.3775379445602,
+    "mdens": 970.0574058898281,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 57.434733791482685,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 54`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 959.5646235126055,
+    "kpa": 18.27011043168001,
+    "lpa": 23.149017696042215,
+    "mabm": 26.694756803886808,
+    "mabv": 32.43952494530051,
+    "mass": 53.73561891670591,
+    "mdens": 959.0850809721195,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 56.75672500561071,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 55`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 946.7709581797374,
+    "kpa": 18.026519043742198,
+    "lpa": 22.840376904238454,
+    "mabm": 34,
+    "mabv": 40.78638732899724,
+    "mass": 53.01917365806529,
+    "mdens": 946.7709581797374,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 56`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 34,
+    "abv": 40.78638732899724,
+    "dens": 932.5474961819189,
+    "kpa": 17.755704327303736,
+    "lpa": 22.49724298139625,
+    "mabm": 41.04194171518546,
+    "mabv": 48.518503700600604,
+    "mass": 52.22265978618746,
+    "mdens": 933.0140031835106,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 55.15870479021746,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 57`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 61.72370216441876,
+    "abv": 69.37728857651973,
+    "dens": 918.7618690049306,
+    "kpa": 31.757255018991636,
+    "lpa": 40.23781143312788,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 51.45066466427612,
+    "mdens": 917.8440249799507,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 57.99853117570383,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 58`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 55.001682947077406,
+    "abv": 62.897905724765366,
+    "dens": 918.3029469924406,
+    "kpa": 28.284596222313226,
+    "lpa": 35.83780300202213,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 51.424965031576676,
+    "mdens": 917.8440249799507,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 56.97773609153352,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 59`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 48.1534935782127,
+    "abv": 56,
+    "dens": 917.8440249799507,
+    "kpa": 24.750541963096854,
+    "lpa": 31.36000387260272,
+    "mabm": 48.1534935782127,
+    "mabv": 56,
+    "mass": 51.39926539887724,
+    "mdens": 917.8440249799507,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 60`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 41.14871596524675,
+    "abv": 48.633260486379285,
+    "dens": 917.3851029674609,
+    "kpa": 21.13956265834375,
+    "lpa": 26.784737393598448,
+    "mabm": 48.153493578212704,
+    "mabv": 56,
+    "mass": 51.37356576617781,
+    "mdens": 917.8440249799507,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 55.07492923936408,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 61`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.90361275346667,
+    "abv": 93.92422742531309,
+    "dens": 849.1478458562578,
+    "kpa": 43.2267398920883,
+    "lpa": 54.77014331391491,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 47.55227936795044,
+    "mdens": 848.299546309948,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 58.31311486145046,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 62`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.67267490910146,
+    "abv": 89.22880082606859,
+    "dens": 848.7236960831029,
+    "kpa": 40.24367513941354,
+    "lpa": 50.990471647105075,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 47.528526980653766,
+    "mdens": 848.299546309948,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 57.1457506190067,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 63`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 78,
+    "abv": 83.83690399877302,
+    "dens": 848.299546309948,
+    "kpa": 37.053724182818534,
+    "lpa": 46.9486662393129,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 47.50477459335709,
+    "mdens": 848.299546309948,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 64`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.96799513254909,
+    "abv": 77.80726607915898,
+    "dens": 847.8753965367931,
+    "kpa": 33.69632952808151,
+    "lpa": 42.69470244605967,
+    "mabm": 78,
+    "mabv": 83.83690399877302,
+    "mass": 47.481022206060416,
+    "mdens": 848.299546309948,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 54.872380150844734,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 65`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.58928587725687,
+    "abv": 93.69635129131186,
+    "dens": 850,
+    "kpa": 43.12050007757426,
+    "lpa": 54.63553288802799,
+    "mabm": 77.65178988356408,
+    "mabv": 83.54638698334385,
+    "mass": 47.599999999999994,
+    "mdens": 849.1508491508492,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 58.3112685191441,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 66`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 84.16510614589731,
+    "abv": 88.83096963603799,
+    "dens": 850,
+    "kpa": 40.06259052544712,
+    "lpa": 50.761029633119165,
+    "mabm": 77.47804137565146,
+    "mabv": 83.40111042483215,
+    "mass": 47.6,
+    "mdens": 849.5752123938031,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 57.14338781196477,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 67`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 36.79670678730527,
+    "lpa": 46.62301411700221,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 47.6,
+    "mdens": 850,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 68`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.0907403981744,
+    "abv": 77.03155017907193,
+    "dens": 850,
+    "kpa": 33.36319242953102,
+    "lpa": 42.27260337783611,
+    "mabm": 77.12967749284289,
+    "mabv": 83.1091811775925,
+    "mass": 47.6,
+    "mdens": 850.4252126063031,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 54.876997653743565,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 69`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 90.27412960386377,
+    "abv": 93.4668455727368,
+    "dens": 850.8499999999999,
+    "kpa": 43.01345617713059,
+    "lpa": 54.49990365059726,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 47.6476,
+    "mdens": 850,
+    "mvol": 56,
+    "temp": -20,
+    "vol": 58.30933903135076,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 70`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 83.99563790167801,
+    "abv": 88.6976723346627,
+    "dens": 850.425,
+    "kpa": 40.00191460301934,
+    "lpa": 50.68415062315057,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 47.6238,
+    "mdens": 850,
+    "mvol": 56,
+    "temp": 0,
+    "vol": 57.14259295286841,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 71`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 77.30400585568333,
+    "abv": 83.2553811627611,
+    "dens": 850,
+    "kpa": 36.79670678730527,
+    "lpa": 46.62301411700221,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 47.6,
+    "mdens": 850,
+    "mvol": 56,
+    "temp": 20,
+    "vol": 56,
+  },
+}
+`;
+
+exports[`normalizeLiquidSnapshots 72`] = `
+EitherConstructor {
+  "type": "Right",
+  "value": {
+    "abm": 70.26638959725685,
+    "abv": 77.1872759276894,
+    "dens": 849.575,
+    "kpa": 33.43007804757011,
+    "lpa": 42.357350339896776,
+    "mabm": 77.30400585568333,
+    "mabv": 83.2553811627611,
+    "mass": 47.5762,
+    "mdens": 850,
+    "mvol": 56,
+    "temp": 40,
+    "vol": 54.87607397488077,
+  },
+}
+`;

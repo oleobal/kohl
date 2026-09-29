@@ -35,6 +35,9 @@ export interface NormalizedLiquidMakeup {
   abv: number; // alcohol by volume, percentage
   dens: number; // in g/L
   abm: number; // alcohol by mass, percentage
+  mabv: number; // measured ABV, including glass correction
+  mdens: number; // measured density, including glass correction
+  mabm: number; // measured ABM, including glass correction
   temp: number; // degrees C
 }
 

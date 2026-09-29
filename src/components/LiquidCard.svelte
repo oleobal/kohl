@@ -9,7 +9,7 @@
     NormalizedLiquidMakeup,
   } from "../lib/liquid";
   import { localize, localizeCap } from "../lib/content/locales";
-  import { liquids } from "../lib/state.svelte";
+  import { liquids, model } from "../lib/state.svelte";
   import {
     doubleChevronDownIcon,
     doubleChevronUpIcon,
@@ -115,7 +115,7 @@
       }
     }
     if (keyName == "temp") {
-      return "20";
+      return String(model.table.referenceTemp);
     } else {
       return "—";
     }

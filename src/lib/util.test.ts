@@ -6,7 +6,30 @@ import {
   interpolateFourPoints,
   interpolateTwoPoints,
   linearInterpolate,
+  removeNullValues,
 } from "./util";
+
+test("removeNullValues", () => {
+  expect(removeNullValues({ a: 1, b: null })).toEqual({ a: 1 });
+  expect(removeNullValues({ a: 1, b: 2 })).toEqual({ a: 1, b: 2 });
+  expect(removeNullValues({ a: null, b: null })).toEqual({});
+  expect(removeNullValues({ a: 1, b: {} })).toEqual({ a: 1, b: {} });
+  expect(removeNullValues({ a: 1, b: { a: null } })).toEqual({ a: 1, b: {} });
+  expect(removeNullValues({ a: 1, b: { a: 1, b: null } })).toEqual({
+    a: 1,
+    b: { a: 1 },
+  });
+  expect(
+    removeNullValues({
+      a: 1,
+      b: { c: 1, d: { e: 1, f: null }, g: null },
+      h: null,
+    }),
+  ).toEqual({
+    a: 1,
+    b: { c: 1, d: { e: 1 } },
+  });
+});
 
 test("linearInterpolation", () => {
   expect(linearInterpolate(0, 0, 1, 1, 0)).toEqual(0);

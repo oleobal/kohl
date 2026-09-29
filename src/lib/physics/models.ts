@@ -7,6 +7,7 @@ export interface AlcoholmetryModelCard {
   tempRange: {
     min: number;
     max: number;
+    reference: number;
   };
 }
 
@@ -22,6 +23,7 @@ export const knownModels: KnownModels = {
     tempRange: {
       min: -20,
       max: 40,
+      reference: 20,
     },
   },
   BETTIN_SPIEWECK: {
@@ -30,6 +32,7 @@ export const knownModels: KnownModels = {
     tempRange: {
       min: -20,
       max: 40,
+      reference: 20,
     },
   },
 };

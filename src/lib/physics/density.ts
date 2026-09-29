@@ -3,7 +3,6 @@ import {
   findNearestPoints as fNPs,
   CollectionDirection,
 } from "../util";
-import { GlassExpansionCoefficient } from "./oiml/practical";
 import type { AlcoholmetryModelCard } from "./models";
 
 interface Point {
@@ -54,6 +53,7 @@ export class Table {
   tables: { [key: number]: Point[] } = {};
   computeDensity: (p: number, t: number) => number;
   glassAlpha: number;
+  referenceTemp: number;
   densRange: {
     max: number;
     min: number;
@@ -61,31 +61,36 @@ export class Table {
 
   constructor(model: AlcoholmetryModelCard, glass: number) {
     this.computeDensity = model.computeDensity;
-    ((this.glassAlpha = glass),
-      (this.densRange = {
-        max: this.computeDensity(0, 3.984), // densest water
-        min: this.computeDensity(1, 40),
-      }));
+    this.referenceTemp = model.tempRange.reference;
+    this.glassAlpha = glass;
+    this.densRange = {
+      max: this.computeDensity(0, 3.984), // densest water
+      min: this.computeDensity(1, 40),
+    };
 
-    this.sampleDensities(20);
+    this.sampleDensities(this.referenceTemp);
   }
 
   private sampleDensities(temperature: number) {
-    // this relies on the table for 20C already existing if temperature != 20
+    // this relies on the table for reftemp already existing if temperature != ref
     if (temperature in this.tables) {
       return;
     }
     const ABMs = Array.from({ length: 1011 }, (_, i) => i * 0.1);
-    const pureEthanolDensityAt20C =
-      temperature == 20 ? this.computeDensity(1, 20) : null;
+    const pureEthanolDensityAtRefTemp =
+      temperature == this.referenceTemp
+        ? this.computeDensity(1, this.referenceTemp)
+        : null;
     const samples = ABMs.map((abm) => {
       const dens = this.computeDensity(abm / 100, temperature);
       const abv =
-        temperature == 20
-          ? (dens / (pureEthanolDensityAt20C as number)) * abm
+        temperature == this.referenceTemp
+          ? (dens / (pureEthanolDensityAtRefTemp as number)) * abm
           : // there is an issue here, the values don't match
-            (findNearestPoint(this.tables[20], "abm", abm).dens /
-              findNearestPoint(this.tables[20], "abm", 100).dens) *
+            (findNearestPoint(this.tables[this.referenceTemp], "abm", abm)
+              .dens /
+              findNearestPoint(this.tables[this.referenceTemp], "abm", 100)
+                .dens) *
             abm;
       return {
         dens: dens,
@@ -189,18 +194,23 @@ export class Table {
     } else {
       if (from == "m" + that) {
         // correct
-        if (temp == 20) {
+        if (temp == this.referenceTemp) {
           return value;
         }
         if (that == "dens") {
           return this.getCorrectedDensity(value, temp);
         }
-        const rhoPrime20C = this.get("dens", that, value, 20);
-        const dens = this.getCorrectedDensity(rhoPrime20C, temp);
+        const rhoPrimeRefTemp = this.get(
+          "dens",
+          that,
+          value,
+          this.referenceTemp,
+        );
+        const dens = this.getCorrectedDensity(rhoPrimeRefTemp, temp);
         return this.get(that, "dens", dens, temp);
       } else if (that == "m" + from) {
         // distort
-        if (temp == 20) {
+        if (temp == this.referenceTemp) {
           return value;
         }
         if (from == "dens") {
@@ -208,7 +218,7 @@ export class Table {
         }
         const d = this.get("dens", from, value, temp);
         const dPrime = this.getDistortedDensity(d, temp);
-        return this.get(from, "dens", dPrime, 20);
+        return this.get(from, "dens", dPrime, this.referenceTemp);
       } else {
         console.error(`trying to convert ${from}:${value} to ${that}`);
         return -1;
@@ -231,7 +241,7 @@ export class Table {
   }
 
   /**
-   * computes the actual density from measured ABV from a 20C calibrated alcoholmeter
+   * computes the actual density from measured ABV from a RefTemp calibrated alcoholmeter
    *
    * (table II)
    */
@@ -240,7 +250,7 @@ export class Table {
   }
 
   /**
-   * computes the apparent ABV at the given temperature (or the legal one for 20C)
+   * computes the apparent ABV at the given temperature (or the legal one for RefTemp)
    *
    * (table VII)
    */
@@ -249,7 +259,7 @@ export class Table {
   }
 
   /**
-   * computes the actual ABM from measured ABV from a 20C calibrated alcoholmeter
+   * computes the actual ABM from measured ABV from a RefTemp calibrated alcoholmeter
    *
    * (table IVb)
    */
@@ -258,7 +268,7 @@ export class Table {
   }
 
   /**
-   * computes the apparent ABV at the given temperature (or the legal one for 20C)
+   * computes the apparent ABV at the given temperature (or the legal one for RefTemp)
    *
    * (table IIIb)
    */
@@ -267,7 +277,7 @@ export class Table {
   }
 
   /**
-   * get legal ABV from the measure of a 20C-calibrated alcoholmeter
+   * get legal ABV from the measure of a RefTemp-calibrated alcoholmeter
    *
    * (table VIIIa)
    **/
@@ -284,7 +294,7 @@ export class Table {
 
   /**
    *
-   * get legal ABV from the measure of a 20C-calibrated alcoholmeter
+   * get legal ABV from the measure of a RefTemp-calibrated alcoholmeter
    *
    * (table VIIIb)
    *
@@ -301,16 +311,18 @@ export class Table {
   }
 
   /**
-   * get 20C density from observed density by correcting for glass expansion
+   * get RefTemp density from observed density by correcting for glass expansion
    */
   getCorrectedDensity(measuredQuantity: number, temp: number): number {
-    return measuredQuantity * (1 - this.glassAlpha * (temp - 20));
+    return (
+      measuredQuantity * (1 - this.glassAlpha * (temp - this.referenceTemp))
+    );
   }
 
   /**
    * opposite of getCorrectedDensity
    */
   getDistortedDensity(trueQuantity: number, temp: number): number {
-    return trueQuantity / (1 - this.glassAlpha * (temp - 20));
+    return trueQuantity / (1 - this.glassAlpha * (temp - this.referenceTemp));
   }
 }

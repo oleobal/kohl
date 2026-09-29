@@ -24,7 +24,7 @@ export interface LiquidMakeup {
 
 export interface Liquid extends LiquidMakeup {
   mass?: number; // in kg
-  vol?: number; // volume at 20C, in litres
+  vol?: number; // volume at refTemp, in litres
   mvol?: number; // volume at the current temperature, in litres (does NOT include any correction for container expansion or such)
 
   lpa?: number; // litres of pure alcohol
@@ -140,7 +140,7 @@ export function normalizeLiquidMakeup(
       );
   }
   if (typeof m.temp !== "number") {
-    m.temp = 20;
+    m.temp = knownModels[model.id].tempRange.reference;
   } else if (
     m.temp < knownModels[model.id].tempRange.min ||
     m.temp > knownModels[model.id].tempRange.max
@@ -182,9 +182,10 @@ export function normalizeLiquid(
     return liquid as Either<ErrorLiquid, NormalizedLiquid>;
   }
   let result = removeNullValues(liquid) as Liquid;
+  const refTemp = knownModels[model.id].tempRange.reference;
 
   if (typeof result.temp !== "number") {
-    result.temp = 20;
+    result.temp = refTemp;
   }
 
   switch (countNumberArgs(result.mass, result.vol, result.mvol)) {
@@ -242,7 +243,7 @@ export function normalizeLiquid(
     typeof result.lpa === "number" &&
     (typeof result.vol === "number" || typeof result.mvol === "number")
   ) {
-    if (result.temp == 20 && typeof result.mvol === "number") {
+    if (result.temp == refTemp && typeof result.mvol === "number") {
       result.vol = result.mvol;
     }
     if (typeof result.vol === "number") {
@@ -263,20 +264,21 @@ export function normalizeLiquid(
     if (result.mass) {
       result.mvol = (1000 / m.dens) * result.mass;
       result.vol =
-        (1000 / model.table.getDensityFromABM(m.abm, 20)) * result.mass;
+        (1000 / model.table.getDensityFromABM(m.abm, refTemp)) * result.mass;
     } else if (result.vol) {
       result.mass =
-        (model.table.getDensityFromABM(m.abm, 20) / 1000) * result.vol;
+        (model.table.getDensityFromABM(m.abm, refTemp) / 1000) * result.vol;
       result.mvol =
-        result.vol * (model.table.getDensityFromABM(m.abm, 20) / m.dens);
+        result.vol * (model.table.getDensityFromABM(m.abm, refTemp) / m.dens);
     } else if (result.mvol) {
       result.vol =
-        result.mvol * (m.dens / model.table.getDensityFromABM(m.abm, 20));
+        result.mvol * (m.dens / model.table.getDensityFromABM(m.abm, refTemp));
       result.mass =
-        (model.table.getDensityFromABM(m.abm, 20) / 1000) * result.vol;
+        (model.table.getDensityFromABM(m.abm, refTemp) / 1000) * result.vol;
     }
     result.kpa = ((result.mass as number) * (result.abm as number)) / 100;
-    result.lpa = result.kpa / (model.table.getDensityFromABM(100, 20) / 1000);
+    result.lpa =
+      result.kpa / (model.table.getDensityFromABM(100, refTemp) / 1000);
 
     return right(result as NormalizedLiquid);
   });

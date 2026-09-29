@@ -9,10 +9,16 @@ export function capitalize(str: string): string {
 }
 
 export function removeNullValues(obj: Object): Object {
-  return Object.entries(obj).reduce(
-    (a, [k, v]) => (v == null ? a : ((a[k as keyof typeof obj] = v), a)),
-    {},
-  );
+  return Object.entries(obj).reduce((a, [k, v]) => {
+    if (v != null) {
+      if (typeof v === "object") {
+        a[k as keyof typeof obj] = removeNullValues(v) as any;
+      } else {
+        a[k as keyof typeof obj] = v;
+      }
+    }
+    return a;
+  }, {});
 }
 
 export function linearInterpolate(

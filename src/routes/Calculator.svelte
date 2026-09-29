@@ -174,7 +174,8 @@
 <Modals>
   <!-- shown when any modal is opened -->
   {#snippet backdrop({ close })}
-    <div class="modal-backdrop" onclick={() => close()} />
+    <!-- not made accessible as there already is an "OK" button which does the same thing -->
+    <div role="none" class="modal-backdrop" onclick={() => close()}></div>
   {/snippet}
 </Modals>
 

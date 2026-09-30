@@ -29,10 +29,6 @@
   let normalizedLiquidMakeup = $derived(
     normalizeLiquidMakeup((computed || liquid) as LiquidMakeup),
   );
-  // $inspect("LC-L  ", liquid);
-  // $inspect("LC-C  ", computed);
-  // $inspect("LC-NL ", normalizedLiquid);
-  // $inspect("LC-NLM", normalizedLiquidMakeup);
 
   let isResult = $derived(id === "result");
   let hasComputed = $derived.by(() => {

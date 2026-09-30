@@ -25,28 +25,29 @@ export interface LiquidMakeup {
 export interface Liquid extends LiquidMakeup {
   mass?: number; // in kg
   vol?: number; // volume at refTemp, in litres
-  mvol?: number; // volume at the current temperature, in litres (does NOT include any correction for container expansion or such)
+  mvol?: number; // volume at the current temperature, in litres
+  // (does NOT include any correction for container expansion or such, the mvol name is a bit misleading)
 
   lpa?: number; // litres of pure alcohol
   kpa?: number; // kilograms of pure alcohol
 }
 
 export interface NormalizedLiquidMakeup {
-  abv: number; // alcohol by volume, percentage
-  dens: number; // in g/L
-  abm: number; // alcohol by mass, percentage
-  mabv: number; // measured ABV, including glass correction
-  mdens: number; // measured density, including glass correction
-  mabm: number; // measured ABM, including glass correction
-  temp: number; // degrees C
+  abv: number;
+  dens: number;
+  abm: number;
+  mabv: number;
+  mdens: number;
+  mabm: number;
+  temp: number;
 }
 
 export interface NormalizedLiquid extends NormalizedLiquidMakeup {
-  mass: number; // in kg
-  vol: number; // in litres
-  mvol: number; // in litres
-  lpa: number; // litres of pure alcohol
-  kpa: number; // kilograms of pure alcohol
+  mass: number;
+  vol: number;
+  mvol: number;
+  lpa: number;
+  kpa: number;
 }
 
 export interface ErrorLiquid {

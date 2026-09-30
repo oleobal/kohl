@@ -6,8 +6,7 @@
     localizePage,
   } from "../../lib/content/locales";
   import { Table } from "../../lib/physics/density";
-  import type { KnownModels } from "../../lib/physics/models";
-  import { knownModels } from "../../lib/physics/models";
+  import { KnownModels } from "../../lib/physics/models";
   import { GlassExpansionCoefficient } from "../../lib/physics/oiml/practical";
   import { appSettings, model } from "../../lib/state.svelte";
   import BaseModal from "./BaseModal.svelte";
@@ -18,8 +17,8 @@
     close,
   } = $props();
 
-  let chosenModel: keyof KnownModels = $state(model.id);
-  const modelChoices = Object.keys(knownModels) as (keyof KnownModels)[];
+  let chosenModel: keyof typeof KnownModels = $state(model.id);
+  const modelChoices = Object.keys(KnownModels) as (keyof typeof KnownModels)[];
   let chosenGlassAlpha: keyof typeof GlassExpansionCoefficient | number =
     $state(model.glassAlpha);
   const glassAlphaChoices = Object.keys(GlassExpansionCoefficient).filter(
@@ -29,7 +28,7 @@
     model.id = chosenModel;
     model.glassAlpha = chosenGlassAlpha;
     model.table = new Table(
-      knownModels[chosenModel],
+      KnownModels[chosenModel],
       Number(GlassExpansionCoefficient[chosenGlassAlpha]),
     );
   });
@@ -53,7 +52,7 @@
     <label for="settings-select-model">{localizeCap("model")}</label>
     <select bind:value={chosenModel} id="settings-select-model">
       {#each modelChoices as m}
-        <option value={m}>{knownModels[m].name}</option>
+        <option value={m}>{KnownModels[m].name}</option>
       {/each}
     </select>
     <div></div>

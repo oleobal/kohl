@@ -9,7 +9,7 @@ import {
 import { MeasuredQuantities, PointQuantities } from "./physics/density.js";
 import { removeNullValues } from "./util.js";
 import { model } from "./state.svelte.js";
-import { knownModels } from "./physics/models.js";
+import { KnownModels } from "./physics/models.js";
 
 export interface LiquidMakeup {
   abv?: number; // alcohol by volume, percentage
@@ -140,13 +140,13 @@ export function normalizeLiquidMakeup(
       );
   }
   if (typeof m.temp !== "number") {
-    m.temp = knownModels[model.id].tempRange.reference;
+    m.temp = KnownModels[model.id].tempRange.reference;
   } else if (
-    m.temp < knownModels[model.id].tempRange.min ||
-    m.temp > knownModels[model.id].tempRange.max
+    m.temp < KnownModels[model.id].tempRange.min ||
+    m.temp > KnownModels[model.id].tempRange.max
   ) {
     return left({
-      cause: `temperature outside allowed range of ${knownModels[model.id].tempRange.min}–${knownModels[model.id].tempRange.max}`,
+      cause: `temperature outside allowed range of ${KnownModels[model.id].tempRange.min}–${KnownModels[model.id].tempRange.max}`,
       temp: "invalid",
     });
   }
@@ -182,7 +182,7 @@ export function normalizeLiquid(
     return liquid as Either<ErrorLiquid, NormalizedLiquid>;
   }
   let result = removeNullValues(liquid) as Liquid;
-  const refTemp = knownModels[model.id].tempRange.reference;
+  const refTemp = KnownModels[model.id].tempRange.reference;
 
   if (typeof result.temp !== "number") {
     result.temp = refTemp;

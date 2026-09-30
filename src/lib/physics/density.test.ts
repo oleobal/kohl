@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 
 import { Table } from "./density";
-import { knownModels } from "./models";
+import { KnownModels } from "./models";
 import { GlassExpansionCoefficient } from "./oiml/practical";
 
 // all reference values from OIML R22 except otherwise noted
 
-test.for(Object.entries(knownModels))("Table I", ([modelID, model]) => {
+test.for(Object.entries(KnownModels))("Table I", ([modelID, model]) => {
   // all exceptions for the Bettin & Spieweck model are directly from their paper
   // the contradiction between R22 and B&S is not from my implementation
   let table = new Table(model, GlassExpansionCoefficient.SODA_LIME);
@@ -60,7 +60,7 @@ test.for(Object.entries(knownModels))("Table I", ([modelID, model]) => {
 
 test("Table II", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getDensityFromABV(36, -20)).toBeCloseTo(975.08, 2);
@@ -96,7 +96,7 @@ test("Table II", () => {
 
 test("Table IIIa", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getDensityFromABM(0, 20)).toBeCloseTo(998.2, 2);
@@ -110,7 +110,7 @@ test("Table IIIa", () => {
 
 test("Table IIIb", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getABVFromABM(0, 20)).toBeCloseTo(0, 2);
@@ -124,7 +124,7 @@ test("Table IIIb", () => {
 
 test("Table IVa", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getDensityFromABV(0, 20)).toBeCloseTo(998.2, 2);
@@ -138,7 +138,7 @@ test("Table IVa", () => {
 
 test("Table IVb", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getABMFromABV(0, 20)).toBeCloseTo(0, 2);
@@ -154,7 +154,7 @@ test("Table IVb", () => {
 
 test("Table Va", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getABMFromDensity(789.3, 20)).toBeCloseTo(99.98, 2);
@@ -169,7 +169,7 @@ test("Table Va", () => {
 
 test("Table Vb", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getABVFromDensity(789.3, 20)).toBeCloseTo(99.99, 2);
@@ -184,7 +184,7 @@ test("Table Vb", () => {
 
 test("Table VIIIa", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
   expect(table.getCorrectedABM(0, 20)).toBeCloseTo(0, 1);
@@ -212,7 +212,7 @@ test("Table VIIIa", () => {
 
 test("Table VIIIb", () => {
   let table = new Table(
-    knownModels.OIML_R22,
+    KnownModels.OIML_R22,
     GlassExpansionCoefficient.SODA_LIME,
   );
 

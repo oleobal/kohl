@@ -3,9 +3,15 @@ import {
   findNearestPoints as fNPs,
   CollectionDirection,
 } from "../util";
-import type { AlcoholmetryModelCard } from "./models";
+import {
+  isContinuous,
+  isTabular,
+  type AlcoholmetryModel,
+  type ContinuousModel,
+  type TabularModel,
+} from "./models";
 
-interface Point {
+export interface Point {
   dens: number;
   abm: number;
   abv: number;
@@ -13,7 +19,7 @@ interface Point {
 }
 export const PointQuantities = ["dens", "abm", "abv"] as (keyof Point)[];
 
-interface MeasuredPoint extends Point {
+export interface MeasuredPoint extends Point {
   mdens: number;
   mabm: number;
   mabv: number;
@@ -59,16 +65,21 @@ export class Table {
     min: number;
   };
 
-  constructor(model: AlcoholmetryModelCard, glass: number) {
-    this.computeDensity = model.computeDensity;
+  constructor(model: AlcoholmetryModel, glass: number) {
     this.referenceTemp = model.tempRange.reference;
     this.glassAlpha = glass;
-    this.densRange = {
-      max: this.computeDensity(0, 3.984), // densest water
-      min: this.computeDensity(1, 40),
-    };
-
-    this.sampleDensities(this.referenceTemp);
+    if (isContinuous(model)) {
+      this.computeDensity = (model as ContinuousModel).computeDensity;
+      this.densRange = {
+        min: this.computeDensity(1, 40),
+        max: this.computeDensity(0, 3.984), // densest water
+      };
+      this.sampleDensities(this.referenceTemp);
+    } else if (isTabular(model)) {
+      throw Error("not implemented");
+    } else {
+      throw Error("unknown model type");
+    }
   }
 
   private sampleDensities(temperature: number) {

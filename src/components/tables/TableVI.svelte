@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "../../components/Table.svelte";
+  import Table from "../Table.svelte";
   import { model } from "../../lib/state.svelte";
 
   const temperatures: number[] = Array.from({ length: 61 }, (_, i) => i - 20);
@@ -11,22 +11,22 @@
   );
 
   function computeCell(temperature: number, density: number) {
-    const ABV = model.table.getABMFromDensity(density, temperature);
-    if (ABV < 0 || ABV > 100) {
+    const ABM = model.table.getABMFromDensity(density, temperature);
+    if (ABM < 0 || ABM > 100) {
       return {
         title: null,
         result: null,
       };
     }
     return {
-      title: `${density}g/L, ${temperature}°C → ${ABV}%vol`,
-      result: ABV.toFixed(2),
+      title: `${density}g/L, ${temperature}°C → ${ABM}%mass`,
+      result: ABM.toFixed(2),
     };
   }
 </script>
 
 <svelte:head>
-  <title>Table VII: q ← ϱ, t</title>
+  <title>Table VI: p ← ϱ, t</title>
 </svelte:head>
 
 <Table

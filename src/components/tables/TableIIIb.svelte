@@ -1,35 +1,35 @@
 <script lang="ts">
-  import Table from "../../components/Table.svelte";
+  import Table from "../Table.svelte";
   import { model } from "../../lib/state.svelte";
 
-  const abvs: number[] = Array.from({ length: 101 }, (_, i) => i);
+  const abms: number[] = Array.from({ length: 101 }, (_, i) => i);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
 
   function computeCell(decimal: number, p: number) {
-    const abv = p + Number(decimal);
-    if (abv > 100) {
+    const abm = p + Number(decimal);
+    if (abm > 100) {
       return {
         title: null,
         result: null,
       };
     }
-    let r = model.table.getDensityFromABV(abv, 20);
+    let r = model.table.getABVFromABM(abm, 20);
     return {
-      title: `${abv}%vol → ${r} g/L`,
+      title: `${abm}%mass → ${r}%vol`,
       result: r.toFixed(2),
     };
   }
 </script>
 
 <svelte:head>
-  <title>Table IVa: ϱ_20°C ← q</title>
+  <title>Table IIIb: q ← p</title>
 </svelte:head>
 
 <Table
-  label={"q (%<sub>vol</sub>)"}
+  label={"p (%<sub>mass</sub>)"}
   inputs={{
     x: decimals.map((i) => `0.${i}`),
-    y: abvs,
+    y: abms,
   }}
   zebraStep={{ x: 1, y: 5 }}
   f={computeCell}

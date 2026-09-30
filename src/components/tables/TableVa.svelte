@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "../../components/Table.svelte";
+  import Table from "../Table.svelte";
   import { model } from "../../lib/state.svelte";
 
   const STARTING_DENSITY = 780; // the original document starts at 750 for consistency between pages

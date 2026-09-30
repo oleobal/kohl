@@ -1,7 +1,7 @@
 <script lang="ts">
   import { model } from "../../lib/state.svelte";
   import { isFrozenABM } from "../../lib/physics/ec/practical";
-  import Table from "../../components/Table.svelte";
+  import Table from "../Table.svelte";
 
   const temperatures: number[] = Array.from(
     { length: 60 * 2 + 1 },

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Table from "../../components/Table.svelte";
+  import Table from "../Table.svelte";
   import { isFrozenABV } from "../../lib/physics/oiml/practical";
   import { model } from "../../lib/state.svelte";
 

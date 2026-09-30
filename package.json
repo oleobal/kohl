@@ -1,6 +1,7 @@
 {
   "name": "kohl",
   "private": true,
+  "license": "UNLICENSED",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -9,19 +10,28 @@
     "build-github-pages": "vite build --base=/kohl/",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
-    "proto": "cd src/protobuf && protoc --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_out=../../src/lib/proto *"
+    "test": "vitest",
+    "proto": "cd src/protobuf && protoc --plugin=\"protoc-gen-ts=./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_out=../../src/lib/machine-made/protobuf *",
+    "loc": "node src/build-time/parse-loc.ts --in-dir=src/build-time/ --out-dir=src/lib/machine-made/locales/",
+    "pre-build": "yarn proto && yarn loc"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tsconfig/svelte": "^5.0.8",
-    "@types/node": "^24.12.3",
+    "@types/node": "^26.6.3",
+    "marked": "^18.0.14",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
+    "toml": "^5.0.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
   },
   "dependencies": {
     "@sweet-monads/either": "^3.3.1",
-    "ts-proto": "^2.11.8"
+    "@types/kd-tree-javascript": "^1.0.3",
+    "kd-tree-javascript": "^1.0.3",
+    "svelte-modals": "^2.0.1",
+    "ts-proto": "^2.11.8",
+    "vitest": "^5.0.1"
   }
 }

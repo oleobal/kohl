@@ -10,3 +10,32 @@
   --l-purple: hsl(300, 100%, 40%);
   --l-orange: hsl(34, 100%, 40%);
 }
+
+a {
+  color: var(--l-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-shadow: #8884 0px 0px 2px;
+}
+
+.round-btn {
+  padding: 2px;
+  flex: none;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.round-btn:hover {
+  color: var(--l-blue);
+  border-color: var(--l-blue);
+}
+
+.round-btn:active {
+  background-color: #ffe;
+  box-shadow: 0 0 10px var(--l-blue);
+}

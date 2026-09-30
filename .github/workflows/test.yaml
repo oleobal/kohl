@@ -1,0 +1,19 @@
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+      - uses: arduino/setup-protoc@v3
+
+      - uses: actions/checkout@v4
+
+      - run: yarn install
+      - run: yarn pre-build
+      - run: yarn test

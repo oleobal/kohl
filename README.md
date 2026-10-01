@@ -1,8 +1,10 @@
 # Alcoholic liquid calculator
 
-This is a calculator for compiling hydroalcoholic solutions. It is very common in small distilleries to add together liquids that are basically mixes of ethanol and water, at varying degrees. I aim to assist this process as much as possible.
+This is a calculator for compiling hydroalcoholic solutions.
 
-It is inspired by the limitations of other tools I've used at work (such as [Labox](https://alcoholometry.labox-apps.com) or [Calco](https://calco.bazg.admin.ch)). I'm trying to remove all artificial limitations (notably number of liquids and defining parameters) into a comfortable UI to achieve a new "gold standard".
+When working in small distilleries, it is common to add together alcohols at various strengths. I found myself frustrated by the limitations of tools such as [Labox](https://alcoholometry.labox-apps.com) or [Calco](https://calco.bazg.admin.ch).
+
+With this tool, I'm trying to remove all artificial limitations (notably number of liquids and defining parameters) into a comfortable UI to achieve a new "gold standard".
 
 See it running at https://oleobal.github.io/kohl/
 
@@ -18,9 +20,14 @@ See it running at https://oleobal.github.io/kohl/
 - no reloads, no submit buttons, as little clicking as possible
 - usable on a phone under the midday sun
 
-## OIML tables
+## Correctness
 
-We check program correctness by comparing our results with tables published by reputable institutions.[^legality] OIML R22 gives us a list of tables and the way to construct them.
+It's easy to find shared online wrong calculations that do not match physical reality. Ethanol–water mixtures have interesting properties that are described by physical models.
+
+The current legal standard was published in OIML recommendation 22. We check program correctness against it.[^legality]
+
+<details>
+<summary>OIML tables</summary>
 
 Variables:
 
@@ -47,29 +54,29 @@ Formulae:
 
 Fundamental tables:
 
-| table | description          | computation                             | status    | note                             |
-| ----- | -------------------- | --------------------------------------- | --------- | -------------------------------- |
-| I     | ϱ ← p, t             | apply F<sub>base</sub>                  | compliant |                                  |
-| II    | ϱ ← q, t             | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
-| IIIa  | ϱ<sub>20°C</sub> ← p | apply F<sub>base</sub>                  | compliant |                                  |
-| IIIb  | q ← p                | apply F<sub>ABV</sub>                   | compliant |                                  |
-| IVa   | ϱ<sub>20°C</sub> ← q | read p from IVb, apply F<sub>base</sub> | compliant |                                  |
-| IVb   | p ← q                | interpolate from IIIb                   | compliant |                                  |
-| Va    | p ← ϱ<sub>20°C</sub> | interpolate from IIIa                   | compliant |                                  |
-| Vb    | q ← ϱ<sub>20°C</sub> | interpolate from IVa                    | compliant | R22 says "interpolate from IIIb" |
+| table | description          | computation                             | status       | note                             |
+| ----- | -------------------- | --------------------------------------- | ------------ | -------------------------------- |
+| I     | ϱ ← p, t             | apply F<sub>base</sub>                  | ️✅ compliant |                                  |
+| II    | ϱ ← q, t             | read p from IVb, apply F<sub>base</sub> | ️✅ compliant |                                  |
+| IIIa  | ϱ<sub>20°C</sub> ← p | apply F<sub>base</sub>                  | ️✅ compliant |                                  |
+| IIIb  | q ← p                | apply F<sub>ABV</sub>                   | ️✅ compliant |                                  |
+| IVa   | ϱ<sub>20°C</sub> ← q | read p from IVb, apply F<sub>base</sub> | ️✅ compliant |                                  |
+| IVb   | p ← q                | interpolate from IIIb                   | ️✅ compliant |                                  |
+| Va    | p ← ϱ<sub>20°C</sub> | interpolate from IIIa                   | ️✅ compliant |                                  |
+| Vb    | q ← ϱ<sub>20°C</sub> | interpolate from IVa                    | ️✅ compliant | R22 says "interpolate from IIIb" |
 
 Source document for fundamental tables: [OIML – _Recommendation 22_](https://www.oiml.org/en/files/pdf_r/r022-e75.pdf)
 
 Practical tables:
 
-| table | description              | computation                                                   | status    | note                                                        |
-| ----- | ------------------------ | ------------------------------------------------------------- | --------- | ----------------------------------------------------------- |
-| VI    | p ← ϱ, t                 | interpolate from I                                            | unchecked | I wasn't able to find published examples to compare mine to |
-| VII   | q ← ϱ, t                 | read VI, apply F<sub>ABV</sub>                                | unchecked | same as VI                                                  |
-| VIIIa | p ← p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI | compliant |                                                             |
-| VIIIb | q ← q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub>, read VII | compliant |                                                             |
-| IXa   | p ← ϱ<sub>meas.</sub>, t | apply F<sub>α</sub>, read VI                                  | TBD       |                                                             |
-| IXb   | q ← ϱ<sub>meas.</sub>, t | apply F<sub>α</sub>, read VII                                 | TBD       |                                                             |
+| table | description              | computation                                                   | status       | note                                                        |
+| ----- | ------------------------ | ------------------------------------------------------------- | ------------ | ----------------------------------------------------------- |
+| VI    | p ← ϱ, t                 | interpolate from I                                            | ✔️ unchecked | I wasn't able to find published examples to compare mine to |
+| VII   | q ← ϱ, t                 | read VI, apply F<sub>ABV</sub>                                | ✔️ unchecked | ''                                                          |
+| VIIIa | p ← p<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IIIa, apply F<sub>α</sub>, read VI | ️✅ compliant |                                                             |
+| VIIIb | q ← q<sub>meas.</sub>, t | read ϱ<sub>20°C</sub> from IVa, apply F<sub>α</sub>, read VII | ️✅ compliant |                                                             |
+| IXa   | p ← ϱ<sub>meas.</sub>, t | apply F<sub>α</sub>, read VI                                  | ✔️ unchecked | ''                                                          |
+| IXb   | q ← ϱ<sub>meas.</sub>, t | apply F<sub>α</sub>, read VII                                 | ️✅ compliant |                                                             |
 
 Source documents for practical tables:
 
@@ -80,9 +87,11 @@ Source documents for practical tables:
 
 I'm not planning to implement tables X through XII.
 
-[^legality]: In the EU, it is the formula that has legal weight, not the tables. In some other jurisdictions the table themselves have legal weight. However the model adopted by R22 is slightly wrong in the first place and the formula published by the EU is itself incomplete and erroneous when compared to R22. See Evelyne Chanson's report in the [July 2015 OIML bulletin](https://www.oiml.org/en/publications/oiml-bulletin/pdf/oiml_bulletin_july_2015.pdf). In truth authorities care little if their laws match reality as long as taxes are collected.
+[^legality]: In the EU, it is the formula that has legal weight, not the tables. In some other jurisdictions the table themselves have legal weight. However the model adopted by R22 is slightly wrong in the first place and the formula published by the EU is itself incomplete and erroneous when compared to R22. See Evelyne Chanson's report in the [July 2015 OIML bulletin](https://www.oiml.org/en/publications/oiml-bulletin/pdf/oiml_bulletin_july_2015.pdf).
 
 [^ABV]: "the ratio between the volume of alcohol at 20°C in the mix and the total volume of that mix at that same temperature"; the total volume is not linear wrt. ABV or temperature
+
+</details>
 
 # Development
 

@@ -4,18 +4,20 @@
 
   const tableChoices = {
     none: localize("select_a_table"),
-    I: "I: ϱ ← p, t",
-    II: "II: ϱ ← q, t",
-    IIIa: "IIIa: ϱ_20°C ← p",
-    IIIb: "IIIb: q ← p",
-    IVa: "IVa: ϱ_20°C ← q",
-    IVb: "IVb: p ← q",
-    Va: "Va: p ← ϱ_20°C",
-    Vb: "Vb: q ← ϱ_20°C",
-    VI: "VI: p ← ϱ, t",
-    VII: "VII: q ← ϱ, t",
-    VIIIa: "VIIIa: p ← p_meas, t",
-    VIIIb: "VIIIb: q ← q_meas, t",
+    I: "ϱ ← p, t",
+    II: "ϱ ← q, t",
+    IIIa: "ϱ_20°C ← p",
+    IIIb: "q ← p",
+    IVa: "ϱ_20°C ← q",
+    IVb: "p ← q",
+    Va: "p ← ϱ_20°C",
+    Vb: "q ← ϱ_20°C",
+    VI: "p ← ϱ, t",
+    VII: "q ← ϱ, t",
+    VIIIa: "p ← p_meas, t",
+    VIIIb: "q ← q_meas, t",
+    IXa: "p ← ϱ_meas, t",
+    IXb: "q ← ϱ_meas, t",
   };
 
   let sel: string = "none";
@@ -31,12 +33,12 @@
     {#each Object.keys(tableChoices) as t}
     {const v = tableChoices[t as keyof typeof tableChoices]}
       <option value={t}
-        >{v}</option
+        >{t=="none"?"":t+":"} {v}</option
       >
     {/each}
   </select>
   {#if sel != "none"}
-    <a href={`/table/${sel}`} style="font-size: 70%">direct link</a>
+    <a href={`./${sel}`} style="font-size: 70%">direct link</a>
   {/if}
 </div>
 

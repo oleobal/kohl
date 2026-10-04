@@ -2,16 +2,14 @@
   import { model } from "../../lib/state.svelte";
   import { isFrozenABV } from "../../lib/physics/ec/practical";
   import Table from "../Table.svelte";
+  import { getArray } from "../../lib/util";
 
-  const temperatures: number[] = Array.from(
-    { length: 60 * 2 + 1 },
-    (_, i) => i / 2 - 20,
+  const temperatures: number[] = getArray(
+    model.table.tempRange.min,
+    model.table.tempRange.max,
+    0.5,
   );
-  const STARTING_DENSITY = 770;
-  const densities: number[] = Array.from(
-    { length: (1000 - STARTING_DENSITY) * 5 },
-    (_, i) => i / 5 + STARTING_DENSITY,
-  );
+  const densities = getArray(780, 999.81, 0.2);
 
   function computeCell(temperature: number, mdens: number) {
     const abv = model.table.getABVFromDensity(

@@ -6,10 +6,13 @@ import { GlassExpansionCoefficient } from "./oiml/practical";
 
 // all reference values from OIML R22 except otherwise noted
 
-test.for(Object.entries(KnownModels))("Table I", ([modelID, model]) => {
+test.for(["OIML_R22", "BETTIN_SPIEWECK"])("Table I", (modelID) => {
   // all exceptions for the Bettin & Spieweck model are directly from their paper
   // the contradiction between R22 and B&S is not from my implementation
-  let table = new Table(model, GlassExpansionCoefficient.SODA_LIME);
+  let table = new Table(
+    KnownModels[modelID as keyof typeof KnownModels],
+    GlassExpansionCoefficient.SODA_LIME,
+  );
   expect(table.getDensityFromABM(30, -20)).toBeCloseTo(974.91, 2);
   expect(table.getDensityFromABM(50, -20)).toBeCloseTo(943.76, 2);
   expect(table.getDensityFromABM(80, -20)).toBeCloseTo(876.64, 2);
@@ -344,8 +347,9 @@ test("Table IXb", () => {
   ];
 
   values.forEach(([t, md, abv]) => {
-    expect(
-      table.getABVFromDensity(table.getCorrectedDensity(md, t), t),
-    ).toBeCloseTo(abv, 1);
+    expect(table.getABVFromDensity(table.correctDensity(md, t), t)).toBeCloseTo(
+      abv,
+      1,
+    );
   });
 });

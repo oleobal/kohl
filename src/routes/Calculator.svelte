@@ -171,14 +171,6 @@
   <title>{title}</title>
 </svelte:head>
 
-<Modals>
-  <!-- shown when any modal is opened -->
-  {#snippet backdrop({ close })}
-    <!-- not made accessible as there already is an "OK" button which does the same thing -->
-    <div role="none" class="modal-backdrop" onclick={() => close()}></div>
-  {/snippet}
-</Modals>
-
 <div class="container">
   <div>
     <div class="topbar">
@@ -269,16 +261,5 @@
     text-align: center;
     padding: 0;
     margin: 0;
-  }
-
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
-    z-index: 100;
   }
 </style>

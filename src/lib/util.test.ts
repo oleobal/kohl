@@ -2,7 +2,8 @@ import { expect, test } from "vitest";
 import {
   bilinearInterpolate,
   CollectionDirection,
-  findNearestPoints,
+  findNearestElements,
+  findNearestElements2D,
   interpolateFourPoints,
   interpolateTwoPoints,
   linearInterpolate,
@@ -184,7 +185,7 @@ test("nearestPoints", () => {
     { x: 8, y: 80, q: 800 },
     { x: 9, y: 90, q: 900 },
   ];
-  let points = findNearestPoints(table, "x", 7.8, 3, CollectionDirection.ASC);
+  let points = findNearestElements(table, "x", 7.8, 3, CollectionDirection.ASC);
   expect(points.length).toEqual(3);
   expect(points[0].d).toBeCloseTo(0.2);
   expect(points[1].d).toBeCloseTo(0.8);
@@ -194,8 +195,37 @@ test("nearestPoints", () => {
   expect(points[2].p.q).toEqual(900);
 
   // out-of-bounds behavior
-  points = findNearestPoints(table, "q", 901, 3, CollectionDirection.ASC);
+  points = findNearestElements(table, "q", 901, 3, CollectionDirection.ASC);
   expect(points[0].d).toBeCloseTo(1);
   expect(points[1].d).toBeCloseTo(101);
   expect(points[2].d).toBeCloseTo(201);
+});
+test("nearestPoints2D", () => {
+  const table: { [key: number]: any[] } = {};
+  table[-1] = [
+    { x: 1, y: 10, q: 100 },
+    { x: 2, y: 20, q: 200 },
+    { x: 3, y: 30, q: 300 },
+  ];
+  table[0] = [
+    { x: 1, y: 10, q: 100 },
+    { x: 2, y: 20, q: 200 },
+    { x: 3, y: 30, q: 300 },
+  ];
+  table[1] = [
+    { x: 1, y: 10, q: 100 },
+    { x: 2, y: 20, q: 200 },
+    { x: 3, y: 30, q: 300 },
+  ];
+  let points = findNearestElements2D(
+    table,
+    "z",
+    -1,
+    "x",
+    1,
+    CollectionDirection.ASC,
+    CollectionDirection.ASC,
+  );
+  expect(points.length).toEqual(4);
+  expect(points[0].z).toBeDefined();
 });

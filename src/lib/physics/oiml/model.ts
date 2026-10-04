@@ -1,13 +1,18 @@
 import type { ContinuousModel } from "../models";
 import { computeDensity } from "./ideal";
+import {
+  distortDensity,
+  correctDensity,
+  REFERENCE_TEMPERATURE,
+} from "./practical";
 
 const Model: ContinuousModel = {
-  name: "OIML R22",
+  name: "Wagenbreth–Blanke 1973",
   computeDensity: computeDensity,
   tempRange: {
     min: -20,
     max: 40,
-    reference: 20,
+    reference: REFERENCE_TEMPERATURE,
   },
 };
 

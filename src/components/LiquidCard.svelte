@@ -111,7 +111,7 @@
       }
     }
     if (keyName == "temp") {
-      return String(model.table.referenceTemp);
+      return String(model.table.tempRange.reference);
     } else {
       return "—";
     }

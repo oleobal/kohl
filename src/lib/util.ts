@@ -21,6 +21,13 @@ export function removeNullValues(obj: Object): Object {
   }, {});
 }
 
+export function getArray(from: number, to: number, step: number): number[] {
+  return Array.from(
+    { length: (to - from) / step + 1 },
+    (_, i) => i * step + from,
+  );
+}
+
 export function linearInterpolate(
   x1: number,
   y1: number,
@@ -108,11 +115,11 @@ export function interpolateTwoPoints<T extends { [key: string]: number }>(
   );
 }
 
-interface Point {
-  [key: string]: number;
+interface Element {
+  [key: string]: number | any;
 }
 
-function distance(quantity: keyof Point, a: Point, b: Point): number {
+function distance(quantity: keyof Element, a: Element, b: Element): number {
   return Math.abs(b[quantity] - a[quantity]);
 }
 
@@ -130,15 +137,15 @@ export enum CollectionDirection {
  *
  * this enables searching for coordinates from the quantities
  */
-export function findNearestPoints(
-  table: Point[],
-  qType: keyof Point,
+export function findNearestElements(
+  table: Element[],
+  qType: keyof Element,
   q: number,
   nbPoints: number,
   direction: CollectionDirection,
-): { d: number; p: Point }[] {
+): { d: number; p: Element }[] {
   let reversed = direction == CollectionDirection.ASC ? false : true;
-  let target = { [qType]: q } as Point;
+  let target = { [qType]: q } as Element;
   // the samples are ordered whatever the quantity so we can run binary search
   // (however density is ordered reverse to ABV and ABM)
   let center = table.length / 2;
@@ -215,4 +222,44 @@ export function findNearestPoints(
     }
   }
   return results;
+}
+
+export function findNearestElements2D(
+  tables: { [key: number]: Element[] },
+  metaQuantityType: string,
+  metaQuantity: number,
+  quantityType: keyof Element,
+  quantity: number,
+  metaDirection: CollectionDirection,
+  direction: CollectionDirection,
+): [Element, Element, Element, Element] {
+  const temps = findNearestElements(
+    Object.entries(tables).map(([k, v]) => {
+      return { t: Number(k), v: v };
+    }),
+    0,
+    metaQuantity,
+    2,
+    metaDirection,
+  ) as { d: number; p: { t: number; v: Element[] } }[];
+  const p0 = findNearestElements(
+    temps[0].p.v,
+    quantityType,
+    quantity,
+    2,
+    direction,
+  );
+  const p1 = findNearestElements(
+    temps[1].p.v,
+    quantityType,
+    quantity,
+    2,
+    direction,
+  );
+  return [
+    { [metaQuantityType]: temps[0].p.t, ...p0[0].p },
+    { [metaQuantityType]: temps[0].p.t, ...p0[1].p },
+    { [metaQuantityType]: temps[1].p.t, ...p1[0].p },
+    { [metaQuantityType]: temps[1].p.t, ...p1[1].p },
+  ];
 }

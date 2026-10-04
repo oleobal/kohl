@@ -1,14 +1,14 @@
 <script lang="ts">
   import Table from "../Table.svelte";
   import { model } from "../../lib/state.svelte";
+  import { getArray } from "../../lib/util";
 
-  const temperatures: number[] = Array.from({ length: 61 }, (_, i) => i - 20);
-
-  const STARTING_DENSITY = 780;
-  const densities: number[] = Array.from(
-    { length: 1000 - STARTING_DENSITY },
-    (_, i) => i + STARTING_DENSITY,
+  const temperatures: number[] = getArray(
+    model.table.tempRange.min,
+    model.table.tempRange.max,
+    1,
   );
+  const densities = getArray(780, 999, 1);
 
   function computeCell(temperature: number, density: number) {
     const ABV = model.table.getABMFromDensity(density, temperature);

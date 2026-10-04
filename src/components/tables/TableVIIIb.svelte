@@ -2,21 +2,23 @@
   import { model } from "../../lib/state.svelte";
   import { isFrozenABV } from "../../lib/physics/ec/practical";
   import Table from "../Table.svelte";
+  import { getArray } from "../../lib/util";
 
-  const abvs = Array.from({ length: 1031 }, (_, i) => i / 10);
-  const temperatures: number[] = Array.from(
-    { length: 60 * 2 + 1 },
-    (_, i) => i / 2 - 20,
+  const abvs = getArray(0, 103, 0.1);
+  const temperatures: number[] = getArray(
+    model.table.tempRange.min,
+    model.table.tempRange.max,
+    0.5,
   );
 
-  function computeCell(temperature: number, mabm: number) {
+  function computeCell(temperature: number, mabv: number) {
     const trueABV = model.table.getCorrectedABV(
-      Number(mabm),
+      Number(mabv),
       Number(temperature),
     );
     if (isFrozenABV(trueABV, temperature)) {
       return {
-        title: `${mabm}%vol, ${temperature}°C → frozen solid`,
+        title: `${mabv}%vol, ${temperature}°C → frozen solid`,
         result: null,
       };
     } else if (trueABV < 0 || trueABV > 100) {
@@ -26,7 +28,7 @@
       };
     }
     return {
-      title: `${mabm}%vol, ${temperature}°C → ${trueABV}%vol`,
+      title: `${mabv}%vol, ${temperature}°C → ${trueABV}%vol`,
       result: trueABV.toFixed(2),
     };
   }

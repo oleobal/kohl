@@ -1,6 +1,9 @@
 <script lang="ts">
+  import {  modals } from "svelte-modals";
   import TableLoader from "../components/TableLoader.svelte";
   import { localize, localizeCap } from "../lib/content/locales";
+  import { wrenchIcon } from "../lib/content/icons";
+  import Settings from "../components/modals/Settings.svelte";
 
   const tableChoices = {
     none: localize("select_a_table"),
@@ -20,26 +23,34 @@
     IXb: "q ← ϱ_meas, t",
   };
 
-  let sel: string = "none";
-
+  let sel: string = $state("none");
 </script>
 
 <svelte:head>
   <title>{localizeCap("oiml_tables")}</title>
 </svelte:head>
 
-<div>
-  <select bind:value={sel}>
-    {#each Object.keys(tableChoices) as t}
-    {const v = tableChoices[t as keyof typeof tableChoices]}
+<div style="display: flex; width: 100%; justify-content: space-between;">
+  <div>
+    <select bind:value={sel}>
+      {#each Object.keys(tableChoices) as t}
+      {const v = tableChoices[t as keyof typeof tableChoices]}
       <option value={t}
-        >{t=="none"?"":t+":"} {v}</option
-      >
-    {/each}
-  </select>
-  {#if sel != "none"}
+          >{t=="none"?"":t+":"} {v}</option
+        >
+        {/each}
+    </select>
+    {#if sel != "none"}
     <a href={`./${sel}`} style="font-size: 70%">direct link</a>
-  {/if}
+    {/if}
+  </div>
+  <button
+    class="round-btn"
+    style="height: 24px"
+    onclick={() => {
+      modals.open(Settings, {});
+    }}>{@html wrenchIcon}</button
+  >
 </div>
 
 {#if sel != "none"}

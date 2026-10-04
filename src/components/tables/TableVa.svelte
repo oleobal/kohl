@@ -1,12 +1,10 @@
 <script lang="ts">
   import Table from "../Table.svelte";
   import { model } from "../../lib/state.svelte";
+  import { getArray } from "../../lib/util";
 
-  const STARTING_DENSITY = 780; // the original document starts at 750 for consistency between pages
-  const densities: number[] = Array.from(
-    { length: 999 - STARTING_DENSITY },
-    (_, i) => i + STARTING_DENSITY,
-  );
+  // the original document starts at 750 for consistency between pages
+  const densities = getArray(780, 999, 1);
   const decimals: number[] = Array.from({ length: 10 }, (_, i) => i);
 
   function computeCell(decimal: number, integer: number) {

@@ -46,7 +46,7 @@
           <strong>{y}</strong>
         </td>
         {#each inputs.x as x, xi}
-          {const { title, result } = f(x, y)}
+          {const { title, result } = $derived(f(x, y))}
           <td
             class={{
               "even-column": xi % (zebraStep.x * 2) < zebraStep.x,

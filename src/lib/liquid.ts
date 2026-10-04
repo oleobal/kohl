@@ -141,13 +141,13 @@ export function normalizeLiquidMakeup(
       );
   }
   if (typeof m.temp !== "number") {
-    m.temp = KnownModels[model.id].tempRange.reference;
+    m.temp = model.table.tempRange.reference;
   } else if (
-    m.temp < KnownModels[model.id].tempRange.min ||
-    m.temp > KnownModels[model.id].tempRange.max
+    m.temp < model.table.tempRange.min ||
+    m.temp > model.table.tempRange.max
   ) {
     return left({
-      cause: `temperature outside allowed range of ${KnownModels[model.id].tempRange.min}–${KnownModels[model.id].tempRange.max}`,
+      cause: `temperature outside allowed range of ${model.table.tempRange.min}–${model.table.tempRange.max}`,
       temp: "invalid",
     });
   }
@@ -183,7 +183,7 @@ export function normalizeLiquid(
     return liquid as Either<ErrorLiquid, NormalizedLiquid>;
   }
   let result = removeNullValues(liquid) as Liquid;
-  const refTemp = KnownModels[model.id].tempRange.reference;
+  const refTemp = model.table.tempRange.reference;
 
   if (typeof result.temp !== "number") {
     result.temp = refTemp;

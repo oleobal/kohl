@@ -2,13 +2,14 @@
   import { model } from "../../lib/state.svelte";
   import { isFrozenABM } from "../../lib/physics/ec/practical";
   import Table from "../Table.svelte";
+  import { getArray } from "../../lib/util";
 
-  const temperatures: number[] = Array.from(
-    { length: 60 * 2 + 1 },
-    (_, i) => i / 2 - 20,
+  const abms = getArray(0, 103, 0.1);
+  const temperatures: number[] = getArray(
+    model.table.tempRange.min,
+    model.table.tempRange.max,
+    0.5,
   );
-
-  const abms = Array.from({ length: 1031 }, (_, i) => i / 10);
 
   function computeCell(temperature: number, mabm: number) {
     const trueABM = model.table.getCorrectedABM(

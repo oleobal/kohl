@@ -1,15 +1,12 @@
 import {
   interpolateTwoPoints,
-  findNearestPoints as fNPs,
+  findNearestElements,
   CollectionDirection,
+  interpolateFourPoints,
+  findNearestElements2D,
 } from "../util";
-import {
-  isContinuous,
-  isTabular,
-  type AlcoholmetryModel,
-  type ContinuousModel,
-  type TabularModel,
-} from "./models";
+import { isContinuous, isTabular, type AlcoholmetryModel } from "./models";
+import { correctDensity, distortDensity } from "./oiml/practical";
 
 export interface Point {
   dens: number;
@@ -25,23 +22,23 @@ export interface MeasuredPoint extends Point {
   mabv: number;
 }
 
+interface PointWithTemp extends Point {
+  temp: number;
+}
+
 export const MeasuredQuantities = PointQuantities.map(
   (k) => "m" + k,
 ) as (keyof MeasuredPoint)[];
 
-export const MeasuredPointQuantities = PointQuantities.concat(
-  MeasuredQuantities,
-) as (keyof MeasuredPoint)[];
-
-function findNearestPoint(
+function findNearestPointAtTemp(
   table: Point[],
   qType: keyof Point,
   q: number,
 ): Point {
-  return findNearestPoints(table, qType, q, 1)[0].p;
+  return findNearestPointsAtTemp(table, qType, q, 1)[0].p;
 }
 
-function findNearestPoints(
+function findNearestPointsAtTemp(
   table: Point[],
   qType: keyof Point,
   q: number,
@@ -49,34 +46,60 @@ function findNearestPoints(
 ): { d: number; p: Point }[] {
   let direction =
     qType == "dens" ? CollectionDirection.DESC : CollectionDirection.ASC;
-  return fNPs(table, qType, q, nbPoints, direction) as {
+  return findNearestElements(table, qType, q, nbPoints, direction) as {
     d: number;
     p: Point;
   }[];
 }
 
+function findNearestPoints2D(
+  tables: { [key: number]: Point[] },
+  temp: number,
+  qType: keyof Point,
+  q: number,
+): [PointWithTemp, PointWithTemp, PointWithTemp, PointWithTemp] {
+  return findNearestElements2D(
+    tables,
+    "temp",
+    temp,
+    qType,
+    q,
+    CollectionDirection.ASC,
+    qType == "dens" ? CollectionDirection.DESC : CollectionDirection.ASC,
+  ) as [PointWithTemp, PointWithTemp, PointWithTemp, PointWithTemp];
+}
+
 export class Table {
   tables: { [key: number]: Point[] } = {};
-  computeDensity: (p: number, t: number) => number;
+  computeDensity: ((p: number, t: number) => number) | undefined;
+
   glassAlpha: number;
-  referenceTemp: number;
+  tempRange: {
+    min: number;
+    max: number;
+    reference: number;
+  };
   densRange: {
     max: number;
     min: number;
   };
 
-  constructor(model: AlcoholmetryModel, glass: number) {
-    this.referenceTemp = model.tempRange.reference;
-    this.glassAlpha = glass;
+  constructor(model: AlcoholmetryModel, glassAlpha: number) {
+    this.tempRange = model.tempRange;
+    this.glassAlpha = glassAlpha;
     if (isContinuous(model)) {
-      this.computeDensity = (model as ContinuousModel).computeDensity;
+      this.computeDensity = model.computeDensity;
       this.densRange = {
-        min: this.computeDensity(1, 40),
-        max: this.computeDensity(0, 3.984), // densest water
+        min: this.computeDensity(1, 40) - 1,
+        max: this.computeDensity(0, 3.984) + 1, // densest water
       };
-      this.sampleDensities(this.referenceTemp);
+      this.sampleDensities(this.tempRange.reference);
     } else if (isTabular(model)) {
-      throw Error("not implemented");
+      this.tables = model.tables;
+      this.densRange = {
+        min: this.getDensityFromABM(100, 40) - 1,
+        max: this.getDensityFromABM(0, 3.984) + 1,
+      };
     } else {
       throw Error("unknown model type");
     }
@@ -84,24 +107,32 @@ export class Table {
 
   private sampleDensities(temperature: number) {
     // this relies on the table for reftemp already existing if temperature != ref
-    if (temperature in this.tables) {
+    if (temperature in this.tables || !this.computeDensity) {
       return;
     }
     const ABMs = Array.from({ length: 1011 }, (_, i) => i * 0.1);
     const pureEthanolDensityAtRefTemp =
-      temperature == this.referenceTemp
-        ? this.computeDensity(1, this.referenceTemp)
+      temperature == this.tempRange.reference
+        ? this.computeDensity(1, this.tempRange.reference)
         : null;
     const samples = ABMs.map((abm) => {
-      const dens = this.computeDensity(abm / 100, temperature);
+      const dens = (this.computeDensity as (p: number, t: number) => number)(
+        abm / 100,
+        temperature,
+      );
       const abv =
-        temperature == this.referenceTemp
+        temperature == this.tempRange.reference
           ? (dens / (pureEthanolDensityAtRefTemp as number)) * abm
-          : // there is an issue here, the values don't match
-            (findNearestPoint(this.tables[this.referenceTemp], "abm", abm)
-              .dens /
-              findNearestPoint(this.tables[this.referenceTemp], "abm", 100)
-                .dens) *
+          : (findNearestPointAtTemp(
+              this.tables[this.tempRange.reference],
+              "abm",
+              abm,
+            ).dens /
+              findNearestPointAtTemp(
+                this.tables[this.tempRange.reference],
+                "abm",
+                100,
+              ).dens) *
             abm;
       return {
         dens: dens,
@@ -120,8 +151,6 @@ export class Table {
     value: number,
     temp: number,
   ): MeasuredPoint {
-    this.sampleDensities(temp);
-
     const [knownPQ, knownPQvalue, knownMQ, knownMQvalue] =
       PointQuantities.includes(quantity)
         ? [
@@ -150,22 +179,56 @@ export class Table {
       1,
     );
 
-    let points = findNearestPoints(this.tables[temp], knownPQ, knownPQvalue, 2);
-    const point = {
-      [knownPQ]: knownPQvalue,
-      [unknownPQs[0]]: interpolateTwoPoints(
-        points.map((p) => p.p),
+    let point: Point;
+    if (this.tables[temp]) {
+      let points = findNearestPointsAtTemp(
+        this.tables[temp],
         knownPQ,
         knownPQvalue,
-        unknownPQs[0],
-      ),
-      [unknownPQs[1]]: interpolateTwoPoints(
-        points.map((p) => p.p),
+        2,
+      );
+      point = {
+        [knownPQ]: knownPQvalue,
+        [unknownPQs[0]]: interpolateTwoPoints(
+          points.map((p) => p.p),
+          knownPQ,
+          knownPQvalue,
+          unknownPQs[0],
+        ),
+        [unknownPQs[1]]: interpolateTwoPoints(
+          points.map((p) => p.p),
+          knownPQ,
+          knownPQvalue,
+          unknownPQs[1],
+        ),
+      } as Point;
+    } else {
+      let points = findNearestPoints2D(
+        this.tables,
+        temp,
         knownPQ,
         knownPQvalue,
-        unknownPQs[1],
-      ),
-    } as Point;
+      );
+      point = {
+        [knownPQ]: knownPQvalue,
+        [unknownPQs[0]]: interpolateFourPoints(
+          points,
+          "temp",
+          temp,
+          knownPQ,
+          knownPQvalue,
+          unknownPQs[0],
+        ),
+        [unknownPQs[1]]: interpolateFourPoints(
+          points,
+          "temp",
+          temp,
+          knownPQ,
+          knownPQvalue,
+          unknownPQs[1],
+        ),
+      } as Point;
+    }
     return {
       ...point,
       [knownMQ]: knownMQvalue,
@@ -184,6 +247,54 @@ export class Table {
     } as MeasuredPoint;
   }
 
+  private getContinuous(
+    that: keyof Point,
+    from: keyof Point,
+    value: number,
+    temp: number,
+  ): number {
+    this.sampleDensities(temp);
+    let points = findNearestPointsAtTemp(this.tables[temp], from, value, 2);
+    return interpolateTwoPoints(
+      points.map((p) => p.p),
+      from,
+      value,
+      that,
+    );
+  }
+
+  private getTabular(
+    that: keyof MeasuredPoint,
+    from: keyof MeasuredPoint,
+    value: number,
+    temp: number,
+  ): number {
+    const temps = findNearestElements(
+      Object.entries(this.tables).map(([k, v]) => {
+        return { t: Number(k), v: v };
+      }),
+      0,
+      temp,
+      2,
+      CollectionDirection.ASC,
+    ) as { d: number; p: { t: number; v: MeasuredPoint[] } }[];
+    const p0 = findNearestPointsAtTemp(temps[0].p.v, from, value, 2);
+    const p1 = findNearestPointsAtTemp(temps[1].p.v, from, value, 2);
+    return interpolateFourPoints(
+      [
+        { temp: temps[0].p.t, [from]: p0[0].p[from], [that]: p0[0].p[that] },
+        { temp: temps[0].p.t, [from]: p0[1].p[from], [that]: p0[1].p[that] },
+        { temp: temps[1].p.t, [from]: p1[0].p[from], [that]: p1[0].p[that] },
+        { temp: temps[1].p.t, [from]: p1[1].p[from], [that]: p1[1].p[that] },
+      ],
+      "temp",
+      temp,
+      from,
+      value,
+      that,
+    );
+  }
+
   get(
     that: keyof MeasuredPoint,
     from: keyof MeasuredPoint,
@@ -193,43 +304,37 @@ export class Table {
     if (that == from) {
       return value;
     }
-    this.sampleDensities(temp);
+    const fGet = this.computeDensity ? this.getContinuous : this.getTabular;
     if (PointQuantities.includes(from) && PointQuantities.includes(that)) {
-      let points = findNearestPoints(this.tables[temp], from, value, 2);
-      return interpolateTwoPoints(
-        points.map((p) => p.p),
-        from,
-        value,
-        that,
-      );
+      return fGet.apply(this, [that, from, value, temp]);
     } else {
       if (from == "m" + that) {
         // correct
-        if (temp == this.referenceTemp) {
+        if (temp == this.tempRange.reference) {
           return value;
         }
         if (that == "dens") {
-          return this.getCorrectedDensity(value, temp);
+          return this.correctDensity(value, temp);
         }
         const rhoPrimeRefTemp = this.get(
           "dens",
           that,
           value,
-          this.referenceTemp,
+          this.tempRange.reference,
         );
-        const dens = this.getCorrectedDensity(rhoPrimeRefTemp, temp);
+        const dens = this.correctDensity(rhoPrimeRefTemp, temp);
         return this.get(that, "dens", dens, temp);
       } else if (that == "m" + from) {
         // distort
-        if (temp == this.referenceTemp) {
+        if (temp == this.tempRange.reference) {
           return value;
         }
         if (from == "dens") {
-          return this.getDistortedDensity(value, temp);
+          return this.distortDensity(value, temp);
         }
         const d = this.get("dens", from, value, temp);
-        const dPrime = this.getDistortedDensity(d, temp);
-        return this.get(from, "dens", dPrime, this.referenceTemp);
+        const dPrime = this.distortDensity(d, temp);
+        return this.get(from, "dens", dPrime, this.tempRange.reference);
       } else {
         console.error(`trying to convert ${from}:${value} to ${that}`);
         return -1;
@@ -321,19 +426,11 @@ export class Table {
     return this.get("mabv", "abv", trueABV, temp);
   }
 
-  /**
-   * get RefTemp density from observed density by correcting for glass expansion
-   */
-  getCorrectedDensity(measuredQuantity: number, temp: number): number {
-    return (
-      measuredQuantity * (1 - this.glassAlpha * (temp - this.referenceTemp))
-    );
+  correctDensity(d: number, t: number): number {
+    return correctDensity(d, t, this.glassAlpha);
   }
 
-  /**
-   * opposite of getCorrectedDensity
-   */
-  getDistortedDensity(trueQuantity: number, temp: number): number {
-    return trueQuantity / (1 - this.glassAlpha * (temp - this.referenceTemp));
+  distortDensity(d: number, t: number): number {
+    return distortDensity(d, t, this.glassAlpha);
   }
 }

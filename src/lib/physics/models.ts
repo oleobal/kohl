@@ -1,5 +1,6 @@
 import oimlr22 from "./oiml/model";
 import bettinSpieweck from "./bettin-spieweck/model";
+import naiveLinear from "./naive-linear/model";
 import type { Point } from "./density";
 
 export interface AlcoholmetryModel {
@@ -28,4 +29,5 @@ export function isContinuous(m: AlcoholmetryModel): m is ContinuousModel {
 export const KnownModels = {
   OIML_R22: oimlr22,
   BETTIN_SPIEWECK: bettinSpieweck,
+  NAIVE_LINEAR: naiveLinear,
 } as const;

@@ -1,7 +1,11 @@
 // implementation of "practical" tables from OIML R22
 
-import { kdTree } from "kd-tree-javascript";
-import { interpolateFourPoints, interpolateTwoPoints } from "../../util";
+import {
+  CollectionDirection,
+  findNearestElements2D,
+  interpolateFourPoints,
+  interpolateTwoPoints,
+} from "../../util";
 
 export enum GlassExpansionCoefficient {
   // cubic expansion coefficient per degree celsius
@@ -9,6 +13,30 @@ export enum GlassExpansionCoefficient {
   SODA_LIME = 25e-6,
   BOROSILICATE = 10e-6,
   NO_CORRECTION = 0,
+}
+
+export const REFERENCE_TEMPERATURE = 20;
+
+/**
+ * get RefTemp density from observed density by correcting for glass expansion
+ */
+export function correctDensity(
+  measuredDensity: number,
+  temp: number,
+  glassAlpha: number,
+): number {
+  return measuredDensity * (1 - glassAlpha * (temp - REFERENCE_TEMPERATURE));
+}
+
+/**
+ * distort by simulating glass expansion
+ */
+export function distortDensity(
+  trueDensity: number,
+  temp: number,
+  glassAlpha: number,
+): number {
+  return trueDensity / (1 - glassAlpha * (temp - REFERENCE_TEMPERATURE));
 }
 
 /**
@@ -37,17 +65,6 @@ export function adjustForSurfaceTension(
 
 /** superficial tension in mN/m */
 export function getSurfaceTension(abm: number, t: number) {
-  interface GammaPoint {
-    p: number;
-    t: number;
-    g: number;
-    [key: string]: number;
-  }
-
-  function gammaDistance(a: GammaPoint, b: GammaPoint): number {
-    return Math.sqrt(Math.pow(b.p - a.p, 2) + Math.pow(b.t - a.t, 2));
-  }
-
   /*
   		75.6	74.1	72.6	71.1	69.6
   		51.4	49.7	47.9	46.1	44.4
@@ -61,116 +78,105 @@ export function getSurfaceTension(abm: number, t: number) {
   26.8	26.1	25.3	24.5	23.7	22.9	22.2
   25.8	25	24.1	23.3	22.4	21.6	20.7
   */
-  const points: GammaPoint[] = [
-    { p: 0, t: 0, g: 75.6 },
-    { p: 0, t: 10, g: 74.1 },
-    { p: 0, t: 20, g: 72.6 },
-    { p: 0, t: 30, g: 71.1 },
-    { p: 0, t: 40, g: 69.6 },
-    { p: 10, t: 0, g: 51.4 },
-    { p: 10, t: 10, g: 49.7 },
-    { p: 10, t: 20, g: 47.9 },
-    { p: 10, t: 30, g: 46.1 },
-    { p: 10, t: 40, g: 44.4 },
-    { p: 20, t: -10, g: 42.7 },
-    { p: 20, t: 0, g: 41.3 },
-    { p: 20, t: 10, g: 39.8 },
-    { p: 20, t: 20, g: 38.4 },
-    { p: 20, t: 30, g: 37 },
-    { p: 20, t: 40, g: 35.6 },
-    { p: 30, t: -20, g: 36.5 },
-    { p: 30, t: -10, g: 35.6 },
-    { p: 30, t: 0, g: 34.7 },
-    { p: 30, t: 10, g: 33.7 },
-    { p: 30, t: 20, g: 32.8 },
-    { p: 30, t: 30, g: 31.9 },
-    { p: 30, t: 40, g: 31 },
-    { p: 40, t: -20, g: 32.7 },
-    { p: 40, t: -10, g: 32 },
-    { p: 40, t: 0, g: 31.3 },
-    { p: 40, t: 10, g: 30.6 },
-    { p: 40, t: 20, g: 29.9 },
-    { p: 40, t: 30, g: 29.2 },
-    { p: 40, t: 40, g: 28.5 },
-    { p: 50, t: -20, g: 31 },
-    { p: 50, t: -10, g: 30.3 },
-    { p: 50, t: 0, g: 29.6 },
-    { p: 50, t: 10, g: 28.9 },
-    { p: 50, t: 20, g: 28.2 },
-    { p: 50, t: 30, g: 27.5 },
-    { p: 50, t: 40, g: 26.8 },
-    { p: 60, t: -20, g: 29.8 },
-    { p: 60, t: -10, g: 29.1 },
-    { p: 60, t: 0, g: 28.4 },
-    { p: 60, t: 10, g: 27.7 },
-    { p: 60, t: 20, g: 27 },
-    { p: 60, t: 30, g: 26.3 },
-    { p: 60, t: 40, g: 25.6 },
-    { p: 70, t: -20, g: 28.8 },
-    { p: 70, t: -10, g: 28.1 },
-    { p: 70, t: 0, g: 27.4 },
-    { p: 70, t: 10, g: 26.7 },
-    { p: 70, t: 20, g: 26 },
-    { p: 70, t: 30, g: 25.3 },
-    { p: 70, t: 40, g: 24.6 },
-    { p: 80, t: -20, g: 27.8 },
-    { p: 80, t: -10, g: 27 },
-    { p: 80, t: 0, g: 26.3 },
-    { p: 80, t: 10, g: 25.6 },
-    { p: 80, t: 20, g: 24.8 },
-    { p: 80, t: 30, g: 24.1 },
-    { p: 80, t: 40, g: 23.4 },
-    { p: 90, t: -20, g: 26.8 },
-    { p: 90, t: -10, g: 26.1 },
-    { p: 90, t: 0, g: 25.3 },
-    { p: 90, t: 10, g: 24.5 },
-    { p: 90, t: 20, g: 23.7 },
-    { p: 90, t: 30, g: 22.9 },
-    { p: 90, t: 40, g: 22.2 },
-    { p: 100, t: -20, g: 25.8 },
-    { p: 100, t: -10, g: 25 },
-    { p: 100, t: 0, g: 24.1 },
-    { p: 100, t: 10, g: 23.3 },
-    { p: 100, t: 20, g: 22.4 },
-    { p: 100, t: 30, g: 21.6 },
-    { p: 100, t: 40, g: 20.7 },
+  const points: { [key: number]: { p: number; g: number }[] } = {};
+
+  points[-20] = [
+    { p: 30, g: 36.5 },
+    { p: 40, g: 32.7 },
+    { p: 50, g: 31 },
+    { p: 60, g: 29.8 },
+    { p: 70, g: 28.8 },
+    { p: 80, g: 27.8 },
+    { p: 90, g: 26.8 },
+    { p: 100, g: 25.8 },
+  ];
+  points[-10] = [
+    { p: 20, g: 42.7 },
+    { p: 30, g: 35.6 },
+    { p: 40, g: 32 },
+    { p: 50, g: 30.3 },
+    { p: 60, g: 29.1 },
+    { p: 70, g: 28.1 },
+    { p: 80, g: 27 },
+    { p: 90, g: 26.1 },
+    { p: 100, g: 25 },
+  ];
+  points[0] = [
+    { p: 0, g: 75.6 },
+    { p: 10, g: 51.4 },
+    { p: 20, g: 41.3 },
+    { p: 30, g: 34.7 },
+    { p: 40, g: 31.3 },
+    { p: 50, g: 29.6 },
+    { p: 60, g: 28.4 },
+    { p: 70, g: 27.4 },
+    { p: 80, g: 26.3 },
+    { p: 90, g: 25.3 },
+    { p: 100, g: 24.1 },
+  ];
+  points[10] = [
+    { p: 0, g: 74.1 },
+    { p: 10, g: 49.7 },
+    { p: 20, g: 39.8 },
+    { p: 30, g: 33.7 },
+    { p: 40, g: 30.6 },
+    { p: 50, g: 28.9 },
+    { p: 60, g: 27.7 },
+    { p: 70, g: 26.7 },
+    { p: 80, g: 25.6 },
+    { p: 90, g: 24.5 },
+    { p: 100, g: 23.3 },
+  ];
+  points[20] = [
+    { p: 0, g: 72.6 },
+    { p: 10, g: 47.9 },
+    { p: 20, g: 38.4 },
+    { p: 30, g: 32.8 },
+    { p: 40, g: 29.9 },
+    { p: 50, g: 28.2 },
+    { p: 60, g: 27 },
+    { p: 70, g: 26 },
+    { p: 80, g: 24.8 },
+    { p: 90, g: 23.7 },
+    { p: 100, g: 22.4 },
+  ];
+  points[30] = [
+    { p: 0, g: 71.1 },
+    { p: 10, g: 46.1 },
+    { p: 20, g: 37 },
+    { p: 30, g: 31.9 },
+    { p: 40, g: 29.2 },
+    { p: 50, g: 27.5 },
+    { p: 60, g: 26.3 },
+    { p: 70, g: 25.3 },
+    { p: 80, g: 24.1 },
+    { p: 90, g: 22.9 },
+    { p: 100, g: 21.6 },
+  ];
+  points[40] = [
+    { p: 0, g: 69.6 },
+    { p: 10, g: 44.4 },
+    { p: 20, g: 35.6 },
+    { p: 30, g: 31 },
+    { p: 40, g: 28.5 },
+    { p: 50, g: 26.8 },
+    { p: 60, g: 25.6 },
+    { p: 70, g: 24.6 },
+    { p: 80, g: 23.4 },
+    { p: 90, g: 22.2 },
+    { p: 100, g: 20.7 },
   ];
 
-  const tree = new kdTree<GammaPoint>(points, gammaDistance, ["p", "t"]);
-
-  let nearestPoints = tree.nearest({ p: abm, t: t } as GammaPoint, 4);
-  nearestPoints.sort((a, b) => {
-    return a[1] - b[1];
-  });
-  if (nearestPoints[0][1] == 0) {
-    return nearestPoints[0][0].g; // exact match
-  }
-  if (nearestPoints[0][0].p == abm) {
-    // linear match (p is known)
-    return interpolateTwoPoints(
-      [nearestPoints[0][0], nearestPoints[1][0]],
-      "t",
-      t,
-      "g",
-    );
-  }
-  if (nearestPoints[0][0].t == t) {
-    // linear match (t is known)
-    return interpolateTwoPoints(
-      [nearestPoints[0][0], nearestPoints[1][0]],
-      "p",
-      abm,
-      "g",
-    );
-  }
-  return interpolateFourPoints(
-    nearestPoints.map((p) => p[0]),
+  let nearestPoints = findNearestElements2D(
+    points,
+    "temp",
+    t,
     "p",
     abm,
-    "t",
-    t,
-    "g",
+    CollectionDirection.ASC,
+    CollectionDirection.ASC,
   );
+  return interpolateFourPoints(nearestPoints, "t", t, "p", abm, "g");
 }
 
 // "frozen" values are implicit in the provided tables

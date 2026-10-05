@@ -17,6 +17,8 @@ Cet outil vise la compatibilité totale avec la recommendation 22 de l'OIML, qui
 
 **[tables de l'OIML](/table/)** : vérifiez que le modèle est correct.. ou servez vous-en comme à l'ancienne
 
+**[Diagrammes](/chart/)** : visualisez comment le modèle relie entre elles différentes grandeurs physiques
+
 ## Valeurs
 
 | valeur              | nom OIML | unité            | description                                                                            |

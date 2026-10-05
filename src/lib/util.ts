@@ -28,6 +28,9 @@ export function getArray(from: number, to: number, step: number): number[] {
   );
 }
 
+/**
+ * (it also does extrapolation)
+ */
 export function linearInterpolate(
   x1: number,
   y1: number,
@@ -41,6 +44,20 @@ export function linearInterpolate(
   return y1 + (x - x1) * ((y2 - y1) / (x2 - x1));
 }
 
+/**
+ * assumes a rectangle
+ *
+ * coordinates:
+ * ```
+ *     y
+ *     ^
+ *   2 | 12  22
+ *     |
+ *   1 | 11  21
+ *     +--------> x
+ *        1   2
+ * ```
+ */
 export function bilinearInterpolate(
   x1: number,
   y1: number,
@@ -58,9 +75,11 @@ export function bilinearInterpolate(
   return linearInterpolate(y1, xy1, y2, xy2, y);
 }
 
-/*
-bilinear interpolation with two known dimensions out of three
-*/
+/**
+ * bilinear interpolation with two known dimensions out of three
+ *
+ * points must form a trapezoid
+ */
 export function interpolateFourPoints<T extends { [key: string]: number }>(
   points: T[],
   knownQuantity1Type: keyof T,
@@ -72,21 +91,136 @@ export function interpolateFourPoints<T extends { [key: string]: number }>(
   const K1 = knownQuantity1Type;
   const K2 = knownQuantity2Type;
   const S = searchedQuantityType;
-  points = points.toSorted((a, b) => {
-    if (a[K1] != b[K1]) {
+
+  /*
+  We have no guarantee those four points form a rectangle yet the call to bilinearInterpolate requires it.
+  To solve this, we synthesize two new points that form a rectangle with the extremities.
+  
+  I implement the trapezoid special case because it matches our data which is always temp-aligned.
+
+  Example:
+  
+  Kvar (abv/abm/dens)
+  ^
+  |
+  |    *        o
+  |    o
+  |       +
+  |
+  |             o
+  |    o        *
+  |
+  +----+--------+----------> Kref (temp)
+       10       20
+  
+  Where "o" are the known points, "+" the point we want to interpolate, and "*" the points we're going to synthetise
+  
+  henceforth I use left/rights for Kref (temp) and top/bottom for the other quantity, but it works in any dimension
+  */
+
+  const haveSameCoordinates = (a: T, b: T) => a[K1] == b[K1] && a[K2] == b[K2];
+
+  const pointsSorted = {
+    [K1]: points.toSorted((a, b) => {
+      if (a[K1] == b[K1]) return a[K2] - b[K2];
       return a[K1] - b[K1];
-    }
-    return a[K2] - b[K2];
-  });
+    }),
+    [K2]: points.toSorted((a, b) => {
+      if (a[K2] == b[K2]) return a[K1] - b[K1];
+      return a[K2] - b[K2];
+    }),
+  } as { [Property in keyof T]: T[] };
+  let Kref: keyof T;
+  let Kvar: keyof T;
+  if (
+    pointsSorted[K1][0][K1] == pointsSorted[K1][1][K1] &&
+    pointsSorted[K1][2][K1] == pointsSorted[K1][3][K1]
+  ) {
+    Kref = K1;
+    Kvar = K2;
+  } else if (
+    pointsSorted[K2][0][K2] == pointsSorted[K2][1][K2] &&
+    pointsSorted[K2][2][K2] == pointsSorted[K2][3][K2]
+  ) {
+    Kref = K2;
+    Kvar = K1;
+  } else {
+    throw Error("bilinear interpolation in arbitrary quad not implemented");
+  }
+
+  // just a cool property of the sort
+  // (note there's no guarantee that "bottom right" isn't actually higher than "top left")
+  points = pointsSorted[Kref];
+  enum D {
+    BOTTOM_LEFT = 0,
+    TOP_LEFT = 1,
+    BOTTOM_RIGHT = 2,
+    TOP_RIGHT = 3,
+  }
+
+  const naturalBottom = pointsSorted[Kvar][0];
+  const naturalBottomPosition = points.findIndex((p) =>
+    haveSameCoordinates(p, naturalBottom),
+  ) as D;
+  const naturalTop = pointsSorted[Kvar][3];
+  const naturalTopPosition = points.findIndex((p) =>
+    haveSameCoordinates(p, naturalTop),
+  ) as D;
+
+  let synthBottom = {
+    [Kvar]: naturalBottom[Kvar],
+    [Kref]: pointsSorted[Kvar].filter((p) => p[Kref] != naturalBottom[Kref])[0][
+      Kref
+    ],
+  } as { [Property in keyof T]: T[keyof T] | number };
+
+  if (haveSameCoordinates(synthBottom as T, pointsSorted[Kvar][1])) {
+    synthBottom[S] = pointsSorted[Kvar][1][S];
+  } else {
+    synthBottom[S] = interpolateTwoPoints(
+      pointsSorted[Kref].filter((p) => p[Kref] == synthBottom[Kref]),
+      Kvar,
+      naturalBottom[Kvar],
+      S,
+    );
+  }
+
+  let synthTop = {
+    [Kvar]: naturalTop[Kvar],
+    [Kref]: pointsSorted[Kvar].filter((p) => p[Kref] != naturalTop[Kref])[0][
+      Kref
+    ],
+  } as { [Property in keyof T]: T[keyof T] | number };
+
+  if (haveSameCoordinates(synthTop as T, pointsSorted[Kvar][2])) {
+    synthTop[S] = pointsSorted[Kvar][2][S];
+  } else {
+    synthTop[S] = interpolateTwoPoints(
+      pointsSorted[Kref].filter((p) => p[Kref] == synthTop[Kref]),
+      Kvar,
+      naturalTop[Kvar],
+      S,
+    );
+  }
+
+  let [x1, y1, q11, q21] =
+    naturalBottomPosition == D.BOTTOM_LEFT
+      ? [naturalBottom[K1], naturalBottom[K2], naturalBottom[S], synthBottom[S]]
+      : [synthBottom[K1], synthBottom[K2], synthBottom[S], naturalBottom[S]];
+  let [x2, y2, q12, q22] =
+    naturalTopPosition == D.TOP_RIGHT
+      ? [naturalTop[K1], naturalTop[K2], synthTop[S], naturalTop[S]]
+      : [synthTop[K1], synthTop[K2], naturalTop[S], synthTop[S]];
+
   return bilinearInterpolate(
-    points[0][K1],
-    points[0][K2],
-    points[3][K1],
-    points[3][K2],
-    points[0][S],
-    points[1][S],
-    points[2][S],
-    points[3][S],
+    x1,
+    y1,
+    x2,
+    y2,
+    q11,
+    q12,
+    q21,
+    q22,
     knownQuantity1,
     knownQuantity2,
   );
@@ -150,7 +284,6 @@ export function findNearestElements(
   // (however density is ordered reverse to ABV and ABM)
   let center = table.length / 2;
   let range = table.length / 4;
-
   // find the center
   let iterations = 0;
   let iL = -1;
@@ -195,7 +328,6 @@ export function findNearestElements(
       }
     }
   }
-
   // widen to nbPoints
   let dL = distance(qType, table[iL], target);
   let dH = distance(qType, table[iH], target);

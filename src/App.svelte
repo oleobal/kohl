@@ -4,6 +4,7 @@
   import Calculator from "./routes/Calculator.svelte";
   import NotFound from "./routes/NotFound.svelte";
   import Tables from "./routes/Tables.svelte";
+  import Charts from "./routes/Charts.svelte";
 
   const path = window.location.pathname.slice(import.meta.env.BASE_URL.length);
 </script>
@@ -20,6 +21,8 @@
   <Tables />
 {:else if path.startsWith("table/")}
   <TableLoader no={path.slice("table/".length)} />
+{:else if path == "chart/"}
+  <Charts />
 {:else if path == "/" || path == ""}
   <Calculator />
 {:else}

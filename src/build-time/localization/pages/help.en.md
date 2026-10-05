@@ -17,6 +17,8 @@ It aims to be fully compliant with OIML recommendation 22, which is the current 
 
 **[OIML tables](/table/)**: check for compliance, or just use them the old-fashioned way
 
+**[Charts](/chart/)**: visualize how the model relates quantities together
+
 ## Quantities
 
 | quantity            | OIML name | unit             | description                                                                                                      |
@@ -48,9 +50,3 @@ There are still other issues for ever more precise measurements, such as:
 - how instruments and containers themselves react to temperature,
 - the change in surface tension depending on temperature and alcohol content,
 - atmospheric pressure.
-
-### Model details
-
-The model implemented here performs correction for temperature and expansion of the glass measuring instrument. It does **not** correct for surface tension.
-
-Volume values are ideal and do not adjust for expansion of the vessel or other factors.

@@ -177,12 +177,16 @@
         onclick={deleteSelf}>{@html trashIcon}</button
       >
     {:else}
-      <span style="color: var(--l-green);">20°C</span>
+      <span style="color: var(--l-green);"
+        >{model.table.tempRange.reference}°C</span
+      >
       <span style="flex: 2"></span>
       <span style="font-weight: bold; color: var(--l-green);"
         >{localizeCap("result")}</span
       >
-      <span style="color: transparent; user-select: none;">20°C</span>
+      <span style="color: transparent; user-select: none;"
+        >{model.table.tempRange.reference}°C</span
+      >
       <!-- easy centering-->
     {/if}
     <div style="flex: 2"></div>

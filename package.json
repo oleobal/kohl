@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@sweet-monads/either": "^3.3.1",
+    "chart.js": "^4.5.1",
+    "svelte-chartjs": "^4.0.1",
     "svelte-modals": "^2.0.1",
     "ts-proto": "^2.11.8",
     "vitest": "^5.0.1"

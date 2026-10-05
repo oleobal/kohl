@@ -76,5 +76,12 @@
       )}
     </div>
   </div>
+  <details>
+    <summary
+      >{localizeCap("model_details")}{localize(":")}
+      <i>{KnownModels[model.id].name}</i></summary
+    >
+    {@html localizePage("model_details_" + String(model.id).toLowerCase())}
+  </details>
   {@html localizePage("about")}
 </BaseModal>

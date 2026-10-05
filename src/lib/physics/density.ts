@@ -89,14 +89,14 @@ export class Table {
     this.glassAlpha = glassAlpha;
     if (isContinuous(model)) {
       this.computeDensity = model.computeDensity;
-      this.densRange = {
+      this.densRange = model.densRange || {
         min: this.computeDensity(1, 40) - 1,
         max: this.computeDensity(0, 3.984) + 1, // densest water
       };
       this.sampleDensities(this.tempRange.reference);
     } else if (isTabular(model)) {
       this.tables = model.tables;
-      this.densRange = {
+      this.densRange = model.densRange || {
         min: this.getDensityFromABM(100, 40) - 1,
         max: this.getDensityFromABM(0, 3.984) + 1,
       };
@@ -271,21 +271,21 @@ export class Table {
   ): number {
     const temps = findNearestElements(
       Object.entries(this.tables).map(([k, v]) => {
-        return { t: Number(k), v: v };
+        return { temp: Number(k), v: v };
       }),
-      0,
+      "temp",
       temp,
       2,
       CollectionDirection.ASC,
-    ) as { d: number; p: { t: number; v: MeasuredPoint[] } }[];
+    ) as { d: number; p: { temp: number; v: MeasuredPoint[] } }[];
     const p0 = findNearestPointsAtTemp(temps[0].p.v, from, value, 2);
     const p1 = findNearestPointsAtTemp(temps[1].p.v, from, value, 2);
     return interpolateFourPoints(
       [
-        { temp: temps[0].p.t, [from]: p0[0].p[from], [that]: p0[0].p[that] },
-        { temp: temps[0].p.t, [from]: p0[1].p[from], [that]: p0[1].p[that] },
-        { temp: temps[1].p.t, [from]: p1[0].p[from], [that]: p1[0].p[that] },
-        { temp: temps[1].p.t, [from]: p1[1].p[from], [that]: p1[1].p[that] },
+        { temp: temps[0].p.temp, [from]: p0[0].p[from], [that]: p0[0].p[that] },
+        { temp: temps[0].p.temp, [from]: p0[1].p[from], [that]: p0[1].p[that] },
+        { temp: temps[1].p.temp, [from]: p1[0].p[from], [that]: p1[0].p[that] },
+        { temp: temps[1].p.temp, [from]: p1[1].p[from], [that]: p1[1].p[that] },
       ],
       "temp",
       temp,
@@ -336,6 +336,23 @@ export class Table {
         const dPrime = this.distortDensity(d, temp);
         return this.get(from, "dens", dPrime, this.tempRange.reference);
       } else {
+        // these aren't used by the calculator but they're convenient to have for charting
+        if (MeasuredQuantities.includes(from)) {
+          return this.get(
+            that,
+            String(from).slice(1),
+            this.get(String(from).slice(1), from, value, temp),
+            temp,
+          );
+        }
+        if (MeasuredQuantities.includes(that)) {
+          return this.get(
+            that,
+            String(that).slice(1),
+            this.get(String(that).slice(1), from, value, temp),
+            temp,
+          );
+        }
         console.error(`trying to convert ${from}:${value} to ${that}`);
         return -1;
       }

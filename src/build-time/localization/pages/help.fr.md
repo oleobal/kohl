@@ -15,9 +15,9 @@ Cet outil vise la compatibilité totale avec la recommendation 22 de l'OIML, qui
 - **J'ai une quantité fixe d'un liquide. Combien faudrait-il que j'ajoute de cet _autre_ liquide pour obtenir un TAV donné ?**
   - Créez deux liquides, remplissez en un complètement, mais l'autre juste la colonne de droite. Remplisse uniquement la colonne de droite sur le résultat.
 
-**[tables de l'OIML](/table/)** : vérifiez que le modèle est correct.. ou servez vous-en comme à l'ancienne
+**[tables de l'OIML](#/table/)** : vérifiez que le modèle est correct.. ou servez vous-en comme à l'ancienne
 
-**[Diagrammes](/chart/)** : visualisez comment les modèles relient entre elles différentes grandeurs physiques
+**[Diagrammes](#/chart/)** : visualisez comment les modèles relient entre elles différentes grandeurs physiques
 
 ## Valeurs
 

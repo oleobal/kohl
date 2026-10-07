@@ -41,3 +41,6 @@ export const doubleChevronDownIcon =
 
 export const doubleChevronUpIcon =
   '<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1{fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:1px;}</style></defs><line class="cls-1" x1="3" y1="18" x2="12" y2="8"/><line class="cls-1" x1="12" y1="8" x2="21" y2="18"/><line class="cls-1" x1="3" y1="14" x2="12" y2="4"/><line class="cls-1" x1="12" y1="4" x2="21" y2="14"/></svg>';
+
+export const homeIcon =
+  '<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1{fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:1.83px;}</style></defs><polyline class="cls-1" points="1 12 12 2.83 23 12"/><polyline class="cls-1" points="19.33 9.25 19.33 21.17 14.75 21.17 14.75 13.83 9.25 13.83 9.25 21.17 4.67 21.17 4.67 9.25"/></svg>';

@@ -31,6 +31,7 @@
     "chart.js": "^4.5.1",
     "svelte-chartjs": "^4.0.1",
     "svelte-modals": "^2.0.1",
+    "svelte-spa-router": "^5.1.1",
     "ts-proto": "^2.11.8",
     "vitest": "^5.0.1"
   }

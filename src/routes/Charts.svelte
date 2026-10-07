@@ -17,6 +17,7 @@
   import type { MeasuredPoint } from "../lib/physics/density";
   import { localize } from "../lib/content/locales";
   import { GlassExpansionCoefficient } from "../lib/physics/oiml/practical";
+  import { homeIcon } from "../lib/content/icons";
 
   ChartJS.register(
     Title,
@@ -41,7 +42,7 @@
       .map((it) => Number(it)),
   );
 
-  let models = $state([["OIML_R22", "SODA_LIME"]]) as [
+  let models = $state([[model.id, "SODA_LIME"]]) as [
     keyof typeof KnownModels,
     keyof typeof GlassExpansionCoefficient,
   ][];
@@ -89,6 +90,13 @@
 <div
   style="display: flex; flex-direction: row; gap: 10px; align-items: center;"
 >
+  <button
+    class="round-btn"
+    style="height: 24px"
+    onclick={() => {
+      location.href = "#/";
+    }}>{@html homeIcon}</button
+  >
   <select bind:value={from}>
     {#each quantities as q}
       <option value={q}>

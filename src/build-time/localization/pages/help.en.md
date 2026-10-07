@@ -15,9 +15,9 @@ It aims to be fully compliant with OIML recommendation 22, which is the current 
 - **I have a set amount of one liquid. How much would I need to add of this _other_ liquid to achieve a given ABV?**
   - Create two liquids, fill in one fully, but only the right column on the other. Fill in only the right column on the result.
 
-**[OIML tables](/table/)**: check for compliance, or just use them the old-fashioned way
+**[OIML tables](#/table/)**: check for compliance, or just use them the old-fashioned way
 
-**[Charts](/chart/)**: visualize how models relate quantities together
+**[Charts](#/chart/)**: visualize how models relate quantities together
 
 ## Quantities
 

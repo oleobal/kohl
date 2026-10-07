@@ -527,6 +527,11 @@ readdirp@^4.0.1:
   resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-4.1.2.tgz#eb85801435fbf2a7ee58f19e0921b068fc69948d"
   integrity sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==
 
+regexparam@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/regexparam/-/regexparam-2.0.2.tgz#a0f6aa057c67b1c9c09508c45823c0755b1f6e58"
+  integrity sha512-A1PeDEYMrkLrfyOwv2jwihXbo9qxdGD3atBYQA9JJgreAx8/7rC6IUkWOw2NQlOxLp2wL0ifQbh1HuidDfYA6w==
+
 rolldown@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/rolldown/-/rolldown-1.0.3.tgz#db88a3008fb0e28230a00423727ce75ba32121ac"
@@ -599,6 +604,13 @@ svelte-modals@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/svelte-modals/-/svelte-modals-2.0.1.tgz#f85a760db76e4f9f001710c83fab5d6ecd1f3f6d"
   integrity sha512-4nGWxveM0eILQnkjmlA7nComRSsCW5QssY9d1qNklZaNlnwnziW5xYqLN3ufjyA0/Cn9oMO4i9+8s8zmlw4IiQ==
+
+svelte-spa-router@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/svelte-spa-router/-/svelte-spa-router-5.1.1.tgz#35b8f1891f5aebd9d34860fc491f4ea65133cd60"
+  integrity sha512-/9PiiyS2jQIXlP+NlKRcPl/Bgwm6WTCTmJq8TZw5IShEbozwcfpX2V3YEL4lAVgJJ2Ni+ipAH7aYVEupeNwtHA==
+  dependencies:
+    regexparam "2.0.2"
 
 svelte@^5.55.5:
   version "5.56.3"

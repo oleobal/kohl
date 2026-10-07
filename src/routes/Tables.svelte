@@ -2,7 +2,7 @@
   import {  modals } from "svelte-modals";
   import TableLoader from "../components/TableLoader.svelte";
   import { localize, localizeCap } from "../lib/content/locales";
-  import { wrenchIcon } from "../lib/content/icons";
+  import { homeIcon, wrenchIcon } from "../lib/content/icons";
   import Settings from "../components/modals/Settings.svelte";
 
   const tableChoices = {
@@ -31,6 +31,13 @@
 </svelte:head>
 
 <div style="display: flex; width: 100%; justify-content: space-between;">
+  <button
+    class="round-btn"
+    style="height: 24px"
+    onclick={() => {
+      location.href="#/"
+    }}>{@html homeIcon}</button
+  >
   <div>
     <select bind:value={sel}>
       {#each Object.keys(tableChoices) as t}
@@ -41,7 +48,7 @@
         {/each}
     </select>
     {#if sel != "none"}
-    <a href={`./${sel}`} style="font-size: 70%">direct link</a>
+    <a href={`#/table/${sel}`} style="font-size: 70%">direct link</a>
     {/if}
   </div>
   <button

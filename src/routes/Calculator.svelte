@@ -110,18 +110,7 @@
 
   onMount(() => {
     if (liquids.ids.length == 0) {
-      if (window.location.hash) {
-        const loadedState = StateObject.decode(
-          Uint8Array.fromBase64(window.location.hash.substring(1)),
-        );
-        console.debug("loaded app state", loadedState);
-        title = loadedState.title;
-        loadedState.liquids.forEach((l) => {
-          addLiquid(undefined, l);
-        });
-      } else {
-        addLiquid();
-      }
+      addLiquid();
     }
 
     if (localeChoices.indexOf(navigator.language) != -1) {
@@ -137,9 +126,6 @@
           .snapshot(liquids.ids)
           .map((id) => removeNullValues(l.data[id])),
       };
-
-      window.location.hash =
-        "#" + StateObject.encode(exportObject).finish().toBase64();
     }
   });
 

@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+  import { on } from "svelte/events";
+
   const {
     // provided by <Modals />
     isOpen,
@@ -6,6 +8,12 @@
     title,
     children,
   } = $props();
+
+  function closeIfLink(e: any) {
+    if (e.target.localName == "a") {
+      close();
+    }
+  }
 </script>
 
 {#if isOpen}
@@ -14,7 +22,9 @@
       <div class="title-box">
         <h1 style="color: white; padding: 0;">{title}</h1>
       </div>
-      <div class="text">
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div class="text" onclick={closeIfLink}>
         {@render children?.()}
       </div>
       <div class="actions">

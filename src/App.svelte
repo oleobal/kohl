@@ -5,8 +5,13 @@
   import NotFound from "./routes/NotFound.svelte";
   import Tables from "./routes/Tables.svelte";
   import Charts from "./routes/Charts.svelte";
+  import { model } from "./lib/state.svelte";
 
   const path = window.location.pathname.slice(import.meta.env.BASE_URL.length);
+
+  $effect(() => {
+    model.loadAndSelect(model.id, model.glassAlpha);
+  });
 </script>
 
 <Modals>

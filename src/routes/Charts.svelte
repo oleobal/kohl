@@ -10,14 +10,13 @@
     PointElement,
     CategoryScale,
   } from "chart.js";
-  import Settings from "../components/modals/Settings.svelte";
-  import { modals } from "svelte-modals";
-  import { wrenchIcon } from "../lib/content/icons";
   import { getArray } from "../lib/util";
   import { model } from "../lib/state.svelte";
   import { MeasuredQuantities, PointQuantities } from "../lib/physics/density";
+  import { KnownModels } from "../lib/physics/models";
   import type { MeasuredPoint } from "../lib/physics/density";
   import { localize } from "../lib/content/locales";
+  import { GlassExpansionCoefficient } from "../lib/physics/oiml/practical";
 
   ChartJS.register(
     Title,
@@ -35,32 +34,54 @@
   let from: keyof MeasuredPoint = $state("mabv");
   let to: keyof MeasuredPoint = $state("abv");
   let tempsStr = $state("0,10,20,30");
-  let temps = $derived(tempsStr.split(",").map((it) => Number(it)));
+  let temps = $derived(
+    tempsStr
+      .split(",")
+      .filter((it) => it != "")
+      .map((it) => Number(it)),
+  );
+
+  let models = $state([["OIML_R22", "SODA_LIME"]]) as [
+    keyof typeof KnownModels,
+    keyof typeof GlassExpansionCoefficient,
+  ][];
 
   function getScale(quantity: keyof MeasuredPoint) {
     if (quantity == "dens" || quantity == "mdens") {
       return getArray(780, 1005, 1);
     }
-    return getArray(0, 100, 1);
+    return getArray(0, 100, 0.5);
   }
   let xScale = $derived(getScale(from));
 
   let d = $derived(
-    temps.map((temp) =>
-      getScale(from).map((q) => model.table.get(to, from, q, temp)),
-    ),
+    models.map(([id, glassAlpha]) => {
+      let m = model.load(id, glassAlpha);
+      return {
+        label: `${id}–${glassAlpha}`,
+        values: temps.map((temp) =>
+          getScale(from).map((q) => m.get(to, from, q, temp)),
+        ),
+      };
+    }),
   );
 
+  function getHue(dl: number, di: number, vl: number): [number, number] {
+    return [(360 / dl) * di, 360 / dl / vl / 4];
+  }
   let data = $derived({
     labels: xScale,
-    datasets: d.map((v, i) => {
-      return {
-        label: `${temps[i]}C`,
-        fill: true,
-        backgroundColor: `hsla(${(360 / d.length) * i},50%,50%, 0.2)`,
-        borderColor: `hsla(${(360 / d.length) * i},50%,50%, 1)`,
-        data: v,
-      };
+    datasets: d.flatMap(({ label, values }, di) => {
+      let [colorBase, colorWidth] = getHue(d.length, di, values.length);
+      return values.map((v, vi) => {
+        let color = colorBase + colorWidth * vi;
+        return {
+          label: `${label}, ${temps[vi]}C`,
+          backgroundColor: `hsla(${color},50%,50%, 0.2)`,
+          borderColor: `hsla(${color},50%,50%, 1)`,
+          data: v,
+        };
+      });
     }),
   });
 </script>
@@ -87,16 +108,31 @@
     >{localize("temps") + localize(":")}</label
   >
   <input id={`in-temp-${id}`} bind:value={tempsStr} />
-  <span style="font-size: 75%;">
-    {localize("model") + localize(":")}
-    {model.id}
-  </span>
-  <button
-    class="round-btn"
-    style="height: 24px"
-    onclick={() => {
-      modals.open(Settings, {});
-    }}>{@html wrenchIcon}</button
+  <label for={`in-model-${id}`} style="font-size: 75%; user-select: none;"
+    >{localize("models") + localize(":")}</label
   >
+  <span>
+    {#each models as _, i}
+      <span
+        style={`border-bottom: 3px solid hsl(${getHue(models.length, i, 0)[0]}, 50%, 50%)`}
+      >
+        <select bind:value={models[i][0]}>
+          {#each Object.keys(KnownModels) as mid}
+            <option value={mid}>
+              {KnownModels[mid as keyof typeof KnownModels].name}
+            </option>
+          {/each}
+        </select>
+        <select bind:value={models[i][1]}>
+          {#each Object.keys(GlassExpansionCoefficient).filter( (it) => isNaN(Number(it)), ) as g}
+            <option value={g}>
+              {localize(`glass_${g.toLowerCase()}_name`)}
+            </option>
+          {/each}
+        </select>
+      </span>
+    {/each}
+    <button onclick={() => models.push([model.id, "SODA_LIME"])}> + </button>
+  </span>
 </div>
-<Line {data} options={{ responsive: true }} />
+<Line {data} options={{ responsive: true, animation: false }} />

@@ -43,6 +43,7 @@ model_bettin_spieweck_desc = "An update to the Wagenbreth polynomial to simplify
 model_gay_lussac_1824_desc = "A reconstruction of the very first alcoholmetry model to relate ABV to density and temperature. Known wrong in multiple ways."
 model_naive_linear_desc = "This model assumes the change in density is linear with respect to the alcohol quantity. For demonstration purposes only!"
 model_oiml_r22_desc = "Published by OIML recommendation 22 in 1975. Legally mandated in many countries."
+models = "models"
 oiml_tables = "OIML tables"
 parameters_model = "model parameters"
 parameters_ui = "interface parameters"

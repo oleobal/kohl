@@ -17,7 +17,7 @@ It aims to be fully compliant with OIML recommendation 22, which is the current 
 
 **[OIML tables](/table/)**: check for compliance, or just use them the old-fashioned way
 
-**[Charts](/chart/)**: visualize how the model relates quantities together
+**[Charts](/chart/)**: visualize how models relate quantities together
 
 ## Quantities
 

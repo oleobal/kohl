@@ -5,7 +5,6 @@
     localizeCap,
     localizePage,
   } from "../../lib/content/locales";
-  import { Table } from "../../lib/physics/density";
   import { KnownModels } from "../../lib/physics/models";
   import { GlassExpansionCoefficient } from "../../lib/physics/oiml/practical";
   import { appSettings, model } from "../../lib/state.svelte";
@@ -27,10 +26,6 @@
   $effect(() => {
     model.id = chosenModel;
     model.glassAlpha = chosenGlassAlpha;
-    model.table = new Table(
-      KnownModels[chosenModel],
-      Number(GlassExpansionCoefficient[chosenGlassAlpha]),
-    );
   });
 </script>
 

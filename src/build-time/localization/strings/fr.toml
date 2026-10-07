@@ -43,6 +43,7 @@ model_bettin_spieweck_desc = "Une mise à jour du polynome de Wagenbreth, plus s
 model_gay_lussac_1824_desc = "Une reconstruction du tout premier modèle d'alcoométrie à relier le TAV à la densité et la température. Faux de plusieurs manières."
 model_naive_linear_desc = "Ce modèle suppose que la densité évolue linéairement par rapport à la quantité d'alcool. À valeur éducative uniquement!"
 model_oiml_r22_desc = "Publié par l'OIML dans sa recommendation 22 en 1975. A valeur légale dans de nombreux pays."
+models = "modèles"
 oiml_tables = "tables OIML"
 parameters_model = "paramètres du modèle"
 parameters_ui = "paramètres de l'interface"

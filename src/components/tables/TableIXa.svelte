@@ -13,7 +13,7 @@
 
   function computeCell(temperature: number, mdens: number) {
     const abm = model.table.getABMFromDensity(
-      model.table.getCorrectedDensity(mdens, temperature),
+      model.table.correctDensity(mdens, temperature),
       temperature,
     );
     if (isFrozenABM(abm, temperature)) {

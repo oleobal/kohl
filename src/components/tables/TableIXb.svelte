@@ -13,7 +13,7 @@
 
   function computeCell(temperature: number, mdens: number) {
     const abv = model.table.getABVFromDensity(
-      model.table.getCorrectedDensity(mdens, temperature),
+      model.table.correctDensity(mdens, temperature),
       temperature,
     );
     if (isFrozenABV(abv, temperature)) {

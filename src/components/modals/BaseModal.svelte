@@ -19,7 +19,7 @@
 {#if isOpen}
   <div role="dialog" class="modal">
     <div class="contents">
-      <div class="title-box">
+      <div class="title-box" style="border-top-width: 1px;">
         <h1 style="color: white; padding: 0;">{title}</h1>
       </div>
       <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -27,7 +27,7 @@
       <div class="text" onclick={closeIfLink}>
         {@render children?.()}
       </div>
-      <div class="actions">
+      <div class="actions" style="border-bottom-width: 1px;">
         <button class="round-btn" style="height: 35px;" onclick={() => close()}
           >OK</button
         >
@@ -55,7 +55,8 @@
   .contents {
     pointer-events: auto;
     width: min(calc(100vw - 30px), 800px);
-    max-height: calc(100vh - 30px);
+    max-height: calc(100vh - 60px);
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
   }
@@ -67,6 +68,7 @@
     justify-content: space-around;
     background-color: #0005;
     border: 1px solid white;
+    border-width: 0 1px;
   }
   .title-box > h1 {
     margin: 16px 0;
@@ -75,11 +77,12 @@
   .text {
     padding: 16px;
     padding-top: 0;
-    background: white;
+    background: var(--background-base);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    border: 1px solid white;
+    border-width: 0 1px;
     font-size: 75%;
     overflow: scroll;
   }

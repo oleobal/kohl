@@ -1,4 +1,3 @@
-export const choices = ["en", "fr"];
 import { appSettings } from "../state.svelte";
 import { capitalize } from "../util";
 import { pages } from "../machine-made/locales/pages";

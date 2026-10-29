@@ -16,10 +16,7 @@
 
   import { appSettings, liquids } from "../lib/state.svelte";
   import { countNonNullKeys, removeNullValues } from "../lib/util";
-  import {
-    choices as localeChoices,
-    localizeCap,
-  } from "../lib/content/locales";
+  import { localizeCap } from "../lib/content/locales";
   import { plusIcon, wrenchIcon } from "../lib/content/icons";
   import { modals, Modals } from "svelte-modals";
   import Help from "../components/modals/Help.svelte";
@@ -111,10 +108,6 @@
   onMount(() => {
     if (liquids.ids.length == 0) {
       addLiquid();
-    }
-
-    if (localeChoices.indexOf(navigator.language) != -1) {
-      appSettings.locale = navigator.language;
     }
   });
   $effect(() => {
@@ -213,6 +206,7 @@
   .container {
     display: flex;
     justify-content: center;
+    padding: 10px;
   }
   .liquids {
     display: flex;
@@ -229,8 +223,7 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background-color: white;
-    border: 1px solid black;
+    border: 1px solid var(--black);
 
     height: 50px;
   }
@@ -239,8 +232,7 @@
     border-color: var(--l-green);
   }
   .btn-add:active {
-    background-color: #ffe;
-    box-shadow: 0 0 10px var(--l-green);
+    box-shadow: 0 0 5px var(--l-green);
   }
 
   .title {

@@ -76,20 +76,26 @@
     padding: 5px;
   }
   .even-row {
-    background-color: #feea;
+    background-color: light-dark(
+      hsla(0, 100%, 97%, 0.667),
+      hsla(0, 50%, 17%, 0.667)
+    );
   }
   .even-column {
-    background-color: #eefa;
+    background-color: light-dark(
+      hsla(240, 100%, 97%, 0.667),
+      hsla(240, 50%, 17%, 0.667)
+    );
   }
 
   tr:hover {
-    background-color: #ffca;
+    background-color: light-dark(#ffca, hsla(60, 100%, 20%, 0.667));
   }
   td:hover {
-    background-color: #eeba;
+    background-color: light-dark(#eeba, hsla(60, 100%, 40%, 0.667));
   }
 
   .td-highlighted-row {
-    background-color: #ffca;
+    background-color: light-dark(#ffca, hsla(60, 100%, 20%, 0.667));
   }
 </style>

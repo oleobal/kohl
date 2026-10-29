@@ -31,11 +31,22 @@
 
 <BaseModal {isOpen} {close} title={localizeCap("settings")}>
   <h2>{localizeCap("parameters_ui")}</h2>
-  <div style="display: grid; grid-template-columns: 1fr 1fr;">
+  <div style="display: grid; grid-template-columns: 1.5fr 1fr; row-gap: 5px;">
     <label for="settings-select-language">{localizeCap("language")}</label>
     <select bind:value={appSettings.locale} id="settings-select-language">
       {#each knownLanguages as l}
         <option value={l}>{l} ({localize("_language_endonym", l)})</option>
+      {/each}
+    </select>
+    <label for="settings-select-color-scheme"
+      >{localizeCap("color_scheme")}</label
+    >
+    <select
+      bind:value={appSettings.colorScheme}
+      id="settings-select-color-scheme"
+    >
+      {#each [["light dark", "auto"], ["only light", "light"], ["only dark", "dark"]] as l}
+        <option value={l[0]}>{localize("color_" + l[1])}</option>
       {/each}
     </select>
     <!-- <label>theme</label>-->
@@ -43,7 +54,7 @@
   <!--x<p>quantity visibility</p>-->
   <h2>{localizeCap("parameters_model")}</h2>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr;">
+  <div style="display: grid; grid-template-columns: 1.5fr 1fr; row-gap: 5px;">
     <label for="settings-select-model">{localizeCap("model")}</label>
     <select bind:value={chosenModel} id="settings-select-model">
       {#each modelChoices as m}

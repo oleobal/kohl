@@ -2,10 +2,23 @@ import { Table } from "./physics/density";
 import type { Liquid } from "./liquid";
 import { GlassExpansionCoefficient } from "./physics/oiml/practical";
 import { KnownModels } from "./physics/models";
+import { knownLanguages } from "./content/locales";
 
-export let appSettings: { [key: string]: any } = $state({
-  locale: "en",
-});
+export const DEFAULT_APP_SETTINGS: { [key: string]: any } = {
+  locale:
+    knownLanguages.indexOf(navigator.language) != -1
+      ? navigator.language
+      : "en",
+  colorScheme: "light dark",
+};
+
+export let appSettings: { [key: string]: any } = $state(
+  (() => {
+    let z = localStorage.getItem("appSettings");
+    let loadedSettings = typeof z === "string" ? JSON.parse(z) : {};
+    return { ...DEFAULT_APP_SETTINGS, ...loadedSettings };
+  })(),
+);
 
 export let liquids: {
   ids: string[];

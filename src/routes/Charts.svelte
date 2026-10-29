@@ -17,7 +17,7 @@
   import type { MeasuredPoint } from "../lib/physics/density";
   import { localize } from "../lib/content/locales";
   import { GlassExpansionCoefficient } from "../lib/physics/oiml/practical";
-  import { homeIcon } from "../lib/content/icons";
+  import { homeIcon, plusIcon, trashIcon } from "../lib/content/icons";
 
   ChartJS.register(
     Title,
@@ -119,10 +119,12 @@
   <label for={`in-model-${id}`} style="font-size: 75%; user-select: none;"
     >{localize("models") + localize(":")}</label
   >
-  <span>
+  <span style="display: flex; align-items: center; gap: 10px;">
     {#each models as _, i}
-      <span
-        style={`border-bottom: 3px solid hsl(${getHue(models.length, i, 0)[0]}, 50%, 50%)`}
+      <div
+        style={"display: flex; flex-direction: row; gap: 2px; align-items: center;" +
+          `background-color: hsl(${getHue(models.length, i, 0)[0]}, 50%, 50%);` +
+          "padding: 5px; border-radius: 5px;"}
       >
         <select bind:value={models[i][0]}>
           {#each Object.keys(KnownModels) as mid}
@@ -138,9 +140,22 @@
             </option>
           {/each}
         </select>
-      </span>
+        <button
+          class="round-btn"
+          style="height: 20px;"
+          onclick={() => {
+            models = models.slice(0, i).concat(models.slice(i + 1));
+          }}>{@html trashIcon}</button
+        >
+      </div>
     {/each}
-    <button onclick={() => models.push([model.id, "SODA_LIME"])}> + </button>
+    <button
+      class="round-btn"
+      style="height: 30px"
+      onclick={() => models.push([model.id, "SODA_LIME"])}
+    >
+      {@html plusIcon}
+    </button>
   </span>
 </div>
 <Line {data} options={{ responsive: true, animation: false }} />

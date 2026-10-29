@@ -277,7 +277,6 @@
     border-color: red;
   }
   .btn-close:active {
-    background-color: #ffe;
     box-shadow: 0 0 10px red;
   }
   .btn-pro {
@@ -293,7 +292,7 @@
   .inside {
     display: flex;
     gap: 20px;
-    border: 1px solid black;
+    border: 1px solid var(--black);
     padding: 5px 10px;
     justify-content: space-between;
     margin: 0 12px;

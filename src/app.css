@@ -1,14 +1,28 @@
 :root {
+  /* font-family: "InterVariable", Avenir, Helvetica, Arial, sans-serif; */
+  font-family: serif;
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 
   font-size: 15pt;
+}
 
-  --l-blue: hsl(240, 100%, 40%);
-  --l-green: hsl(120, 100%, 25%);
-  --l-purple: hsl(300, 100%, 40%);
-  --l-orange: hsl(34, 100%, 40%);
+html {
+  --l-blue: light-dark(hsl(240, 100%, 40%), hsl(212, 100%, 65%));
+  --l-green: light-dark(hsl(120, 100%, 25%), hsl(120, 100%, 35%));
+  --l-purple: light-dark(hsl(300, 100%, 40%), hsl(300, 100%, 55%));
+  --l-orange: light-dark(hsl(34, 100%, 40%), hsl(34, 100%, 55%));
+
+  --background-base: light-dark(white, hsl(212, 20%, 9%));
+  /* --background-accent: light-dark(hsl(329, 50%, 95%), hsl(329, 15%, 9%)); */
+  --background-accent: light-dark(hsl(120, 50%, 95%), hsl(120, 20%, 8%));
+
+  --white: light-dark(white, black);
+  --black: light-dark(black, white);
+
+  background-color: var(--background-base);
 }
 
 a {
@@ -25,9 +39,9 @@ a:hover {
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
+  background-color: var(--background-base);
   place-items: center;
-  background-color: white;
-  border: 1px solid black;
+  border: 1px solid var(--black);
 }
 
 .round-btn:hover {
@@ -36,6 +50,5 @@ a:hover {
 }
 
 .round-btn:active {
-  background-color: #ffe;
-  box-shadow: 0 0 10px var(--l-blue);
+  box-shadow: 0 0 5px var(--l-blue);
 }

@@ -27,6 +27,9 @@
     document.documentElement.style.colorScheme = appSettings.colorScheme;
   });
   $effect(() => {
+    if (typeof localStorage === "undefined") {
+      return;
+    }
     const changedSettings = Object.entries(appSettings)
       .filter(([k, v]) => DEFAULT_APP_SETTINGS[k] != v)
       .reduce(

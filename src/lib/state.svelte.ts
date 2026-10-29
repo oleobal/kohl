@@ -14,6 +14,9 @@ export const DEFAULT_APP_SETTINGS: { [key: string]: any } = {
 
 export let appSettings: { [key: string]: any } = $state(
   (() => {
+    if (typeof localStorage === "undefined") {
+      return DEFAULT_APP_SETTINGS;
+    }
     let z = localStorage.getItem("appSettings");
     let loadedSettings = typeof z === "string" ? JSON.parse(z) : {};
     return { ...DEFAULT_APP_SETTINGS, ...loadedSettings };
